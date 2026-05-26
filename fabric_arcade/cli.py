@@ -26,7 +26,7 @@ def cmd_list(args) -> int:
     games = get_catalog()
     for game in games:
         workloads = ", ".join(w.value for w in game.workloads)
-        difficulty = "⭐" * game.difficulty
+        difficulty = "⭐" * game.difficulty.value
         print(f"\n{game.icon} {game.name}")
         print(f"   ID: {game.id}")
         print(f"   Workloads: {workloads}")
@@ -48,13 +48,12 @@ def cmd_info(args) -> int:
         return 1
     
     workloads = ", ".join(w.value for w in game.workloads)
-    difficulty = "⭐" * game.difficulty
+    difficulty = "⭐" * game.difficulty.value
     
     print(f"\n{game.icon} {game.name}")
     print("=" * 50)
     print(f"\nID: {game.id}")
-    print(f"Type: {game.type.value}")
-    print(f"Version: {game.version}")
+    print(f"Type: {game.game_type.value}")
     print(f"\nDescription:\n{game.description}")
     print(f"\nWorkloads: {workloads}")
     print(f"Difficulty: {difficulty}")
