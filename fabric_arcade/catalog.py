@@ -12,7 +12,7 @@ CATALOG_DATA = [
     {
         "id": "mission-artemis-2",
         "name": "Mission Artemis 2",
-        "description": "Missione lunare con 4 astronauti. Video 4 minuti sincronizzato con telemetria real-time: accelerazione, pressione, battito cardiaco, fasi di volo.",
+        "description": "Lunar mission with 4 astronauts. 4-minute video synchronized with real-time telemetry: acceleration, pressure, heart rate, flight phases.",
         "type": "mission",
         "workloads": ["RTI", "DE"],
         "difficulty": 3,
@@ -24,7 +24,7 @@ CATALOG_DATA = [
     {
         "id": "fabric-racing-game",
         "name": "Fabric Racing Game",
-        "description": "Un gioco HTML5 multiplayer per 4 piloti con telemetria real-time. Custom Endpoint, JSON mapping, dashboard live.",
+        "description": "HTML5 multiplayer racing game for 4 drivers with real-time telemetry. Custom Endpoint, JSON mapping, live dashboard.",
         "type": "mission",
         "workloads": ["RTI"],
         "difficulty": 2,
