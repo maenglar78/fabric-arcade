@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Arcade - Learn Microsoft Fabric Through Gaming</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <header class="hero">
+        <nav class="navbar">
+            <div class="logo">🎮 Fabric Arcade</div>
+            <ul class="nav-links">
+                <li><a href="#games">Games</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#start">Get Started</a></li>
+                <li><a href="https://github.com/fabricarcade/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+            </ul>
+        </nav>
+        
+        <div class="hero-content">
+            <h1 class="glitch" data-text="FABRIC ARCADE">FABRIC ARCADE</h1>
+            <p class="tagline">Impara Microsoft Fabric giocando 🚀</p>
+            <p class="subtitle">Real-Time Intelligence • Data Engineering • Power BI • Data Science</p>
+            
+            <div class="cta-buttons">
+                <a href="#start" class="btn btn-primary">▶ START GAME</a>
+                <a href="#games" class="btn btn-secondary">📚 BROWSE GAMES</a>
+            </div>
+            
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <pre class="terminal-body">
+<span class="prompt">$</span> pip install fabric-arcade
+<span class="prompt">$</span> python
+<span class="code">&gt;&gt;&gt;</span> <span class="keyword">import</span> fabric_arcade <span class="keyword">as</span> arcade
+<span class="code">&gt;&gt;&gt;</span> arcade.list_games()
+
+<span class="output">🎮 Available Games:</span>
+<span class="output">  🚀 Mission Artemis 2    ⭐⭐⭐  RTI + DE   45 min</span>
+<span class="output">  🏎️ Fabric Racing Game   ⭐⭐    RTI        30 min</span>
+<span class="output">  ⚽ Sports Tracker       ⭐⭐    RTI + DS   25 min</span>
+<span class="output">  🏰 Quest Pipeline       ⭐⭐⭐  DE         40 min</span>
+<span class="output">  🏙️ City Builder         ⭐⭐⭐  DW + PBI   45 min</span>
+
+<span class="code">&gt;&gt;&gt;</span> arcade.install(<span class="string">"fabric-racing-game"</span>)
+<span class="success">✅ Game deployed to your Fabric workspace!</span>
+                </pre>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="mouse"></div>
+        </div>
+    </header>
+
+    <!-- Games Section -->
+    <section id="games" class="games-section">
+        <h2>🎮 Game Catalog</h2>
+        <p class="section-subtitle">Choose your adventure and master Fabric workloads</p>
+        
+        <div class="game-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="RTI">Real-Time</button>
+            <button class="filter-btn" data-filter="DE">Data Engineering</button>
+            <button class="filter-btn" data-filter="PBI">Power BI</button>
+            <button class="filter-btn" data-filter="DW">Data Warehouse</button>
+        </div>
+        
+        <div class="games-grid">
+            <!-- Mission Artemis 2 -->
+            <div class="game-card" data-workloads="RTI DE">
+                <div class="game-icon">🚀</div>
+                <div class="game-badge mission">MISSION</div>
+                <h3>Mission Artemis 2</h3>
+                <p>Missione lunare con 4 astronauti. Video sincronizzato con telemetria real-time.</p>
+                <div class="game-meta">
+                    <span class="difficulty">⭐⭐⭐</span>
+                    <span class="duration">⏱️ 45 min</span>
+                </div>
+                <div class="game-workloads">
+                    <span class="workload rti">RTI</span>
+                    <span class="workload de">DE</span>
+                </div>
+                <a href="games/mission-artemis-2.html" class="btn-play">PLAY →</a>
+            </div>
+            
+            <!-- Fabric Racing Game -->
+            <div class="game-card" data-workloads="RTI">
+                <div class="game-icon">🏎️</div>
+                <div class="game-badge mission">MISSION</div>
+                <h3>Fabric Racing Game</h3>
+                <p>Gioco HTML5 multiplayer per 4 piloti con telemetria real-time.</p>
+                <div class="game-meta">
+                    <span class="difficulty">⭐⭐</span>
+                    <span class="duration">⏱️ 30 min</span>
+                </div>
+                <div class="game-workloads">
+                    <span class="workload rti">RTI</span>
+                </div>
+                <a href="games/fabric-racing-game.html" class="btn-play">PLAY →</a>
+            </div>
+            
+            <!-- Sports Tracker -->
+            <div class="game-card" data-workloads="RTI DS">
+                <div class="game-icon">⚽</div>
+                <div class="game-badge challenge">CHALLENGE</div>
+                <h3>Sports Tracker</h3>
+                <p>Analytics sportive con ML per predizioni in tempo reale.</p>
+                <div class="game-meta">
+                    <span class="difficulty">⭐⭐</span>
+                    <span class="duration">⏱️ 25 min</span>
+                </div>
+                <div class="game-workloads">
+                    <span class="workload rti">RTI</span>
+                    <span class="workload ds">DS</span>
+                </div>
+                <a href="games/sports-tracker.html" class="btn-play">PLAY →</a>
+            </div>
+            
+            <!-- Quest Pipeline -->
+            <div class="game-card" data-workloads="DE">
+                <div class="game-icon">🏰</div>
+                <div class="game-badge mission">MISSION</div>
+                <h3>Quest Data Pipeline</h3>
+                <p>Medallion Architecture come avventura fantasy: Bronze → Silver → Gold.</p>
+                <div class="game-meta">
+                    <span class="difficulty">⭐⭐⭐</span>
+                    <span class="duration">⏱️ 40 min</span>
+                </div>
+                <div class="game-workloads">
+                    <span class="workload de">DE</span>
+                </div>
+                <a href="games/quest-pipeline.html" class="btn-play">PLAY →</a>
+            </div>
+            
+            <!-- City Builder -->
+            <div class="game-card" data-workloads="DW PBI">
+                <div class="game-icon">🏙️</div>
+                <div class="game-badge mission">MISSION</div>
+                <h3>City Builder</h3>
+                <p>Costruisci una città e impara Star Schema e Data Warehouse.</p>
+                <div class="game-meta">
+                    <span class="difficulty">⭐⭐⭐</span>
+                    <span class="duration">⏱️ 45 min</span>
+                </div>
+                <div class="game-workloads">
+                    <span class="workload dw">DW</span>
+                    <span class="workload pbi">PBI</span>
+                </div>
+                <a href="games/city-builder.html" class="btn-play">PLAY →</a>
+            </div>
+            
+            <!-- Retro Arcade -->
+            <div class="game-card" data-workloads="PBI">
+                <div class="game-icon">🎰</div>
+                <div class="game-badge arcade">ARCADE</div>
+                <h3>Retro Arcade</h3>
+                <p>Impara Power BI analizzando i punteggi di giochi arcade classici.</p>
+                <div class="game-meta">
+                    <span class="difficulty">⭐</span>
+                    <span class="duration">⏱️ 15 min</span>
+                </div>
+                <div class="game-workloads">
+                    <span class="workload pbi">PBI</span>
+                </div>
+                <a href="games/retro-arcade.html" class="btn-play">PLAY →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <h2>✨ Features</h2>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Learn by Doing</h3>
+                <p>Ogni gioco crea risorse reali nel tuo workspace Fabric. Impari costruendo, non guardando.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Achievement System</h3>
+                <p>Sblocca badge completando obiettivi. Mostra le tue skill al mondo!</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Real Workloads</h3>
+                <p>RTI, Spark, Warehouse, Power BI - tutti i workload Fabric in formato gaming.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>One-Click Deploy</h3>
+                <p>Un comando per deployare l'intero ambiente di gioco nel tuo workspace.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Iterative Learning</h3>
+                <p>Arcade (5 min) → Challenge (15 min) → Mission (45 min). Cresci al tuo ritmo.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3>Open Source</h3>
+                <p>Contribuisci nuovi giochi, migliora quelli esistenti. Community-driven.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section id="start" class="start-section">
+        <h2>🚀 Get Started</h2>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Install</h3>
+                <code>pip install fabric-arcade</code>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Choose</h3>
+                <code>arcade.list_games()</code>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Deploy</h3>
+                <code>arcade.install("fabric-racing-game")</code>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Play!</h3>
+                <code>arcade.play("fabric-racing-game")</code>
+            </div>
+        </div>
+        
+        <div class="requirements">
+            <h3>📋 Requirements</h3>
+            <ul>
+                <li>Python 3.9+</li>
+                <li>Microsoft Fabric workspace (F2+ capacity)</li>
+                <li>Azure CLI logged in (<code>az login</code>)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">🎮 Fabric Arcade</div>
+            <p>Learn Microsoft Fabric through gaming</p>
+            
+            <div class="footer-links">
+                <a href="https://github.com/fabricarcade/fabric-arcade">GitHub</a>
+                <a href="https://pypi.org/project/fabric-arcade/">PyPI</a>
+                <a href="docs/">Documentation</a>
+                <a href="https://learn.microsoft.com/fabric/">Microsoft Fabric</a>
+            </div>
+            
+            <p class="copyright">© 2026 Fabric Arcade • MIT License</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+<!-- deployed -->
