@@ -15,7 +15,7 @@ Usage (Local CLI):
     >>> arcade install fabric-racing-game -w MyWorkspace
 """
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "Fabric Gaming Community"
 
 from .catalog import get_catalog, get_game, search_games

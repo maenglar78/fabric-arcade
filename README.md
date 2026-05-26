@@ -1,164 +1,150 @@
 # 🎮 Fabric Arcade
 
-> **Learn Microsoft Fabric by Playing** - Un catalogo di progetti gamificati per imparare Real-Time Intelligence, Data Engineering, Power BI e Data Science in modo divertente.
+> **Learn Microsoft Fabric by Playing** - A gamified catalog of projects to learn Real-Time Intelligence, Data Engineering, Power BI and Data Science through fun experiences.
 
-<!-- Badges -->
-[![CI](https://github.com/fabricarcade/fabric-arcade/actions/workflows/ci.yml/badge.svg)](https://github.com/fabricarcade/fabric-arcade/actions/workflows/ci.yml)
 [![PyPI version](https://img.shields.io/pypi/v/fabric-arcade?color=blue)](https://pypi.org/project/fabric-arcade/)
 [![Python](https://img.shields.io/pypi/pyversions/fabric-arcade)](https://pypi.org/project/fabric-arcade/)
-[![Downloads](https://img.shields.io/pypi/dm/fabric-arcade)](https://pypi.org/project/fabric-arcade/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
-
-<p align="center">
-  <a href="https://fabricarcade.github.io/fabric-arcade/">🌐 Website</a> •
-  <a href="https://fabricarcade.github.io/fabric-arcade/docs/">📚 Docs</a> •
-  <a href="#-quick-start">🚀 Quick Start</a> •
-  <a href="#-game-catalog">🎮 Games</a> •
-  <a href="CONTRIBUTING.md">🤝 Contribute</a>
-</p>
 
 ---
 
-## 🎯 La nostra missione
+## 🚀 Quick Start (Fabric Notebook)
 
-Trasformare l'apprendimento di Microsoft Fabric in un'esperienza **coinvolgente e divertente**. Invece di noiosi tutorial tecnici, impari costruendo:
+**Just 3 lines of code** to install a complete learning environment in your Fabric workspace!
 
-- 🚀 **Missioni spaziali** con telemetria real-time e video sincronizzato
-- 🏎️ **Gare automobilistiche** HTML5 multiplayer con streaming di dati
-- ⚽ **Analytics sportive** in tempo reale con ML predictions
-- 🏰 **Avventure fantasy** con Medallion Architecture
-- 🎰 **Giochi arcade** con dashboard interattive
-
-## 🕹️ Quick Start
-
-```bash
-# Install
-pip install fabric-arcade
-
-# Login to Azure (required for Fabric API)
-az login
+```python
+# Cell 1 - Install the package
+%pip install -q fabric-arcade
 ```
 
 ```python
-import fabric_arcade as arcade
+# Cell 2 - Import and explore
+from fabric_arcade import arcade
 
-# Sfoglia i giochi disponibili
-arcade.list_games()
-
-# Installa un gioco nel tuo workspace
-arcade.install("mission-artemis-2")
-
-# Inizia a giocare!
-arcade.play("mission-artemis-2")
+# List all available games
+arcade.list()
 ```
 
-## 📋 Requirements
-
-| Requisito | Dettaglio |
-|-----------|-----------|
-| Python | 3.9+ |
-| Fabric Capacity | F2 o superiore |
-| Azure CLI | Loggato (`az login`) |
-
-## 📚 Tipi di Esperienze
-
-### 🚀 Missioni (Mission)
-Progetti completi end-to-end che simulano scenari reali attraverso metafore gaming.
-- **Durata**: 30-60 minuti
-- **Complessità**: Intermedio/Avanzato
-- **Esempio**: Mission Artemis 2 - Missione lunare con 4 astronauti e video sincronizzato
-
-### 🏁 Sfide (Challenge)
-Mini-progetti focalizzati su un singolo workload o pattern.
-- **Durata**: 15-30 minuti
-- **Complessità**: Beginner/Intermedio
-- **Esempio**: Sports Tracker - Analytics sportive con ML predictions
-
-### 🎮 Demo (Arcade)
-Esperienze leggere e veloci per mostrare capacità specifiche.
-- **Durata**: 5-15 minuti
-- **Complessità**: Beginner
-- **Esempio**: Retro Dashboard - Dashboard in stile anni '80 con dati streaming
-
-## 🎲 Catalogo Giochi
-
-| Gioco | Tipo | Workload | Difficoltà | Tempo |
-|-------|------|----------|------------|-------|
-| 🚀 [Mission Artemis 2](catalog/mission-artemis/) | Mission | RTI + DE | ⭐⭐⭐ | 45 min |
-| 🏎️ [Fabric Racing Game](catalog/race-analytics/) | Mission | RTI | ⭐⭐ | 30 min |
-| ⚽ [Sports Tracker](catalog/sports-tracker/) | Challenge | RTI + DS | ⭐⭐ | 25 min |
-| 🏰 [Quest Data Pipeline](catalog/quest-pipeline/) | Mission | DE + DF | ⭐⭐⭐ | 40 min |
-| 🎰 [Retro Arcade Dashboard](catalog/retro-arcade/) | Arcade | PBI | ⭐ | 10 min |
-| 🌊 [Ocean Explorer](catalog/ocean-explorer/) | Mission | DS + RTI | ⭐⭐⭐ | 50 min |
-| 🎯 [Target Practice](catalog/target-practice/) | Challenge | RTI | ⭐ | 15 min |
-| 🏙️ [City Builder Analytics](catalog/city-builder/) | Mission | DE + DW | ⭐⭐⭐ | 60 min |
-| 🧙 [Wizard's Workshop](catalog/wizard-workshop/) | Challenge | DS | ⭐⭐ | 20 min |
-| 🚂 [Train Dispatch](catalog/train-dispatch/) | Arcade | RTI | ⭐⭐ | 15 min |
-
-**Legenda Workload:**
-- **RTI** = Real-Time Intelligence (Eventstream, Eventhouse, Real-Time Dashboard)
-- **DE** = Data Engineering (Spark, Lakehouse, Notebooks)
-- **PBI** = Power BI (Reports, Semantic Models)
-- **DS** = Data Science (ML Models, Experiments)
-- **DF** = Data Factory (Pipelines, Dataflows)
-- **DW** = Data Warehouse
-
-## 🏆 Gamification Features
-
-### 🎖️ Achievement System
-Guadagna badge completando obiettivi:
-- **First Launch** 🚀 - Completa il tuo primo progetto
-- **Speed Demon** ⚡ - Completa una challenge in meno di 10 minuti
-- **Data Wizard** 🧙 - Usa tutti i workload Fabric
-- **Real-Time Master** ⏱️ - Processa 1 milione di eventi
-- **Pipeline Architect** 🏗️ - Costruisci una pipeline medallion completa
-
-### 📊 Leaderboard
-Competi con la community su:
-- Tempo di completamento
-- Efficienza delle query
-- Creatività delle soluzioni
-
-### 🎯 Daily Challenges
-Ogni giorno una nuova micro-sfida per mantenere le skill affilate.
-
-## 🛠️ Per Contributor
-
-Vuoi creare un nuovo gioco? Vedi [CONTRIBUTING.md](CONTRIBUTING.md) per le linee guida.
-
-### Template Progetto
-```
-catalog/
-└── my-new-game/
-    ├── README.md           # Descrizione e obiettivi
-    ├── architecture.svg    # Diagramma architettura
-    ├── manifest.json       # Metadata progetto
-    ├── notebooks/          # Notebook Fabric
-    ├── pipelines/          # Pipeline definitions
-    ├── data/               # Sample data generators
-    └── assets/             # Immagini, icone, etc.
+```python
+# Cell 3 - Install a game in your current workspace!
+arcade.install("fabric-racing-game")
 ```
 
-## 📖 Documentazione
-
-- [Getting Started](docs/getting-started.md)
-- [API Reference](docs/api-reference.md)
-- [Game Design Guide](docs/game-design-guide.md)
-- [Contributing](CONTRIBUTING.md)
-
-## 🤝 Community
-
-- [Discord](https://discord.gg/fabricarcade)
-- [GitHub Discussions](https://github.com/fabricarcade/discussions)
-- [Twitter @FabricArcade](https://twitter.com/FabricArcade)
-
-## 📜 License
-
-MIT License - vedi [LICENSE](LICENSE) per dettagli.
+That's it! The game assets (Eventhouse, KQL Database, tables, notebooks) are automatically created in your workspace.
 
 ---
 
-**Made with ❤️ by the Fabric Gaming Community**
+## 🎯 What You Learn
+
+Instead of boring technical tutorials, you learn by building:
+
+| Game | You Learn | Workloads |
+|------|-----------|-----------|
+| 🏎️ **Fabric Racing Game** | Custom Endpoints, JSON mapping, streaming dashboards | RTI |
+| 🚀 **Mission Artemis 2** | Real-time telemetry, multi-table streaming, video sync | RTI, DE |
+| ⚽ **Sports Tracker** | ML predictions on streaming data | RTI, DS |
+| 🏰 **Quest Data Pipeline** | Medallion architecture (Bronze/Silver/Gold) | DE, DF |
+| 🎯 **Target Practice** | Eventstream → Eventhouse basics | RTI |
+
+---
+
+## 📋 Requirements
+
+| Requirement | Detail |
+|-------------|--------|
+| **Fabric Capacity** | F2 or higher (trial works!) |
+| **Workspace** | Any workspace where you have Contributor access |
+
+No local installation needed - everything runs inside Fabric notebooks!
+
+---
+
+## 🎮 API Reference
+
+### `arcade.list()`
+Display all available games with their difficulty and duration.
+
+### `arcade.info(game_id)`
+Show detailed information about a specific game.
+
+```python
+arcade.info("fabric-racing-game")
+```
+
+### `arcade.install(game_id, workspace_id=None)`
+Install a game in a workspace. If `workspace_id` is not provided, uses the current notebook's workspace.
+
+```python
+# Install in current workspace
+arcade.install("fabric-racing-game")
+
+# Install in a specific workspace
+arcade.install("fabric-racing-game", workspace_id="your-workspace-guid")
+```
+
+---
+
+## 🎲 Game Catalog
+
+| Game | Type | Difficulty | Duration | Status |
+|------|------|------------|----------|--------|
+| 🏎️ Fabric Racing Game | Mission | ⭐⭐ | 30 min | ✅ Available |
+| 🚀 Mission Artemis 2 | Mission | ⭐⭐⭐ | 45 min | ✅ Available |
+| ⚽ Sports Tracker | Challenge | ⭐⭐ | 25 min | 🔜 Coming Soon |
+| 🏰 Quest Data Pipeline | Mission | ⭐⭐⭐ | 40 min | 🔜 Coming Soon |
+| 🎯 Target Practice | Challenge | ⭐ | 15 min | 🔜 Coming Soon |
+
+**Workload Legend:**
+- **RTI** = Real-Time Intelligence (Eventstream, Eventhouse, KQL)
+- **DE** = Data Engineering (Spark, Lakehouse, Notebooks)
+- **DS** = Data Science (ML Models, Predictions)
+- **DF** = Data Factory (Pipelines, Dataflows)
+- **PBI** = Power BI (Reports, Dashboards)
+
+---
+
+## 🛠️ Local Development (CLI)
+
+For contributors or local testing:
+
+```bash
+# Clone and install
+git clone https://github.com/maenglar78/fabric-arcade.git
+cd fabric-arcade
+pip install -e .
+
+# Login to Azure
+az login
+
+# Use CLI
+arcade list
+arcade install fabric-racing-game -w "My Workspace"
+```
+
+---
+
+## 🤝 Contributing
+
+Want to create a new game? See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Project Structure
+```
+catalog/
+└── my-new-game/
+    ├── manifest.json       # Game metadata
+    ├── notebooks/          # Fabric notebooks
+    ├── schemas/            # KQL table schemas
+    └── eventstream/        # Eventstream definitions
+```
+
+---
+
+## 📜 License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+**Made with ❤️ for the Fabric Community**
 
 *"Data is more fun when you're playing with it!"*
