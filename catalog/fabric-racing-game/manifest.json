@@ -86,6 +86,12 @@
             "name": "Race_Dashboard",
             "file": "notebooks/race_dashboard.ipynb",
             "description": "Real-time KQL dashboard for race analytics"
+        },
+        {
+            "type": "Notebook",
+            "name": "Racing_Game",
+            "file": "notebooks/racing_game.ipynb",
+            "description": "🏎️ HTML5 racing game - Play and send telemetry to Eventstream!"
         }
     ],
     "tables": [

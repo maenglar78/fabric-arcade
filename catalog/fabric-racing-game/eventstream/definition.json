@@ -1,0 +1,34 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/eventstream/1.0.0/schema.json",
+    "sources": [
+        {
+            "id": "custom-endpoint-source",
+            "type": "CustomEndpoint",
+            "name": "GameEventsEndpoint",
+            "properties": {
+                "dataFormat": "Json"
+            }
+        }
+    ],
+    "operators": [],
+    "destinations": [
+        {
+            "id": "kql-destination",
+            "type": "KQLDatabase",
+            "name": "RaceDataDestination",
+            "properties": {
+                "databaseName": "RaceData",
+                "tableName": "GameEvents",
+                "inputDataFormat": "Json",
+                "mappingName": "GameEventsMapping"
+            }
+        }
+    ],
+    "streams": [
+        {
+            "id": "stream-to-kql",
+            "sourceId": "custom-endpoint-source",
+            "destinationId": "kql-destination"
+        }
+    ]
+}

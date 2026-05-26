@@ -1,0 +1,37 @@
+// EnvironmentalConditions Table Schema
+// Stores spacecraft environmental data during the Artemis 2 mission
+
+.create table EnvironmentalConditions (
+    EventId: string,
+    Timestamp: datetime,
+    MissionTime: real,           // Seconds since launch
+    CabinPressure: real,         // kPa
+    CabinTemperature: real,      // Celsius
+    CabinHumidity: real,         // Percentage
+    CO2Level: real,              // PPM
+    O2Level: real,               // Percentage
+    RadiationLevel: real,        // mSv/h
+    NoiseLevel: real,            // dB
+    Location: string,            // CommandModule, ServiceModule, CrewCompartment
+    SessionId: string
+)
+
+// Enable streaming ingestion
+.alter table EnvironmentalConditions policy streamingingestion enable
+
+// Create JSON mapping
+.create table EnvironmentalConditions ingestion json mapping 'EnvironmentalConditionsMapping'
+'['
+'    {"column": "EventId", "path": "$.EventId", "datatype": "string"},'
+'    {"column": "Timestamp", "path": "$.Timestamp", "datatype": "datetime"},'
+'    {"column": "MissionTime", "path": "$.MissionTime", "datatype": "real"},'
+'    {"column": "CabinPressure", "path": "$.CabinPressure", "datatype": "real"},'
+'    {"column": "CabinTemperature", "path": "$.CabinTemperature", "datatype": "real"},'
+'    {"column": "CabinHumidity", "path": "$.CabinHumidity", "datatype": "real"},'
+'    {"column": "CO2Level", "path": "$.CO2Level", "datatype": "real"},'
+'    {"column": "O2Level", "path": "$.O2Level", "datatype": "real"},'
+'    {"column": "RadiationLevel", "path": "$.RadiationLevel", "datatype": "real"},'
+'    {"column": "NoiseLevel", "path": "$.NoiseLevel", "datatype": "real"},'
+'    {"column": "Location", "path": "$.Location", "datatype": "string"},'
+'    {"column": "SessionId", "path": "$.SessionId", "datatype": "string"}'
+']'
