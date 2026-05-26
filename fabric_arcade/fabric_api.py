@@ -343,12 +343,44 @@ class Arcade:
                         created_items[item["name"]] = result["id"]
                         print(f"    ✅ Creato: {result['id'][:8]}...")
             
+            # 6. Create README notebook with instructions
+            print(f"  ⏳ Creazione notebook README...")
+            
+            # Get game info for the notebook
+            catalog = _get_catalog()
+            game_info = next((g for g in catalog if g["id"] == game_id), {"name": game_id})
+            
+            readme_content = _create_readme_notebook(
+                game_id, 
+                game_info.get("name", game_id),
+                manifest, 
+                created_items
+            )
+            
+            encoded_readme = base64.b64encode(readme_content.encode()).decode()
+            readme_result = _api_call("POST", f"{FABRIC_API}/workspaces/{workspace_id}/items", {
+                "displayName": f"{game_id}_README",
+                "type": "Notebook",
+                "description": f"Guida post-deploy per {game_info.get('name', game_id)}",
+                "definition": {
+                    "format": "ipynb",
+                    "parts": [{
+                        "path": "notebook-content.ipynb",
+                        "payload": encoded_readme,
+                        "payloadType": "InlineBase64"
+                    }]
+                }
+            })
+            created_items[f"{game_id}_README"] = readme_result["id"]
+            print(f"    ✅ README creato: {readme_result['id'][:8]}...")
+            
             # Success!
             print(f"\n🎉 Installazione completata!")
             print(f"   Creati {len([k for k in created_items if not k.endswith('_eventhouse')])} items")
             print(f"\n📖 Prossimi passi:")
-            print(f"   1. Configura l'Eventstream (Custom Endpoint → KQL Database)")
-            print(f"   2. Apri il notebook del gioco e divertiti!")
+            print(f"   1. Apri il notebook '{game_id}_README' per le istruzioni complete")
+            print(f"   2. Configura l'Eventstream (Custom Endpoint → KQL Database)")
+            print(f"   3. Avvia il gioco dal notebook principale!")
             
         except Exception as e:
             print(f"\n❌ Errore durante l'installazione: {e}")
@@ -404,6 +436,201 @@ def _execute_kql(query_uri: str, database: str, command: str) -> dict:
     )
     response.raise_for_status()
     return response.json()
+
+
+def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, created_items: dict) -> str:
+    """Generate README notebook content with post-deploy instructions"""
+    
+    # Get game-specific instructions based on game_id
+    if game_id == "fabric-racing-game":
+        game_instructions = '''## 🏎️ Come Giocare
+
+### Passo 1: Configura l'Eventstream
+1. Apri **RacingEventstream** nel tuo workspace
+2. Clicca su **Edit** per entrare in modalità modifica
+3. Aggiungi una **Custom Endpoint Source**:
+   - Nome: `TelemetryInput`
+   - Questo creerà un endpoint HTTP per ricevere i dati
+4. Aggiungi una **KQL Database Destination**:
+   - Seleziona **RacingEventhouse** → **RacingDB**
+   - Tabella: **Telemetry**
+5. Collega Source → Destination e clicca **Publish**
+
+### Passo 2: Copia l'URL dell'Eventstream
+1. Dopo il publish, clicca sulla Custom Endpoint Source
+2. Copia l'**Ingestion URL** (ti servirà nel gioco)
+
+### Passo 3: Avvia il Gioco
+1. Apri il notebook **RacingGame_Play**
+2. Incolla l'URL dell'Eventstream nella cella di configurazione
+3. Esegui tutte le celle
+4. Si aprirà il gioco HTML5 nel browser!
+
+### Passo 4: Gioca! 🎮
+- **WASD** o **Frecce**: Sterza e accelera
+- **Spazio**: Freno
+- Invita fino a 4 giocatori per gare multiplayer!'''
+
+    elif game_id == "mission-artemis-2":
+        game_instructions = '''## 🚀 Come Iniziare la Missione
+
+### Passo 1: Configura l'Eventstream
+1. Apri **ArtemisEventstream** nel tuo workspace
+2. Clicca su **Edit** per entrare in modalità modifica
+3. Aggiungi **4 Custom Endpoint Sources**:
+   - `VehicleTelemetryInput`
+   - `CrewVitalsInput`
+   - `EnvironmentalInput`
+   - `MissionEventsInput`
+4. Aggiungi una **KQL Database Destination**:
+   - Seleziona **ArtemisEventhouse** → **MissionData**
+5. Mappa ogni Source alla tabella corrispondente
+6. Clicca **Publish**
+
+### Passo 2: Avvia la Simulazione
+1. Apri il notebook **Artemis_Simulator**
+2. Configura gli URL degli Eventstream Custom Endpoints
+3. Esegui la cella di configurazione
+4. Avvia la simulazione con `start_mission()`
+
+### Passo 3: Monitora dal Mission Control
+1. Apri il notebook **Mission_Control**
+2. Esegui le celle per visualizzare:
+   - 📊 Telemetria veicolo in tempo reale
+   - 👨‍🚀 Segni vitali equipaggio
+   - 🌡️ Condizioni ambientali
+   - 📜 Log eventi missione
+3. Il video della missione è sincronizzato con i dati!
+
+### Passo 4: Analizza con KQL
+Esplora i dati con query KQL nella sezione "Query KQL" sotto.'''
+
+    else:
+        game_instructions = '''## 🎮 Come Iniziare
+
+### Passo 1: Configura l'Eventstream
+1. Apri l'Eventstream creato nel tuo workspace
+2. Configura le sorgenti dati appropriate
+3. Collega al KQL Database
+4. Clicca **Publish**
+
+### Passo 2: Avvia il Gioco
+1. Apri il notebook principale del gioco
+2. Configura i parametri necessari
+3. Esegui le celle in ordine
+
+### Passo 3: Divertiti!
+Segui le istruzioni nel notebook del gioco.'''
+
+    # Build items list
+    items_list = ""
+    for name, item_id in created_items.items():
+        if not name.endswith('_eventhouse'):
+            items_list += f"- **{name}**: `{item_id[:8]}...`\n"
+
+    # Build notebook JSON
+    notebook_content = {
+        "cells": [
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    f"# 📖 {game_name} - Guida Post-Deploy\n",
+                    "\n",
+                    f"Benvenuto in **{game_name}**! Questa guida ti aiuterà a configurare e avviare il gioco.\n",
+                    "\n",
+                    "---"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## ✅ Items Creati\n",
+                    "\n",
+                    "I seguenti items sono stati creati nel tuo workspace:\n",
+                    "\n",
+                    items_list
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": game_instructions.split('\n')
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## 🔍 Query KQL di Esempio\n",
+                    "\n",
+                    "Ecco alcune query KQL utili per esplorare i dati:"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "metadata": {},
+                "source": [
+                    "# Query KQL - Eseguile nel KQL Queryset o dal notebook\n",
+                    "\n",
+                    "# Ultimi 10 record\n",
+                    "# Telemetry | take 10\n",
+                    "\n",
+                    "# Aggregazione per driver/astronauta\n",
+                    "# Telemetry | summarize count() by DriverId\n",
+                    "\n",
+                    "# Serie temporale\n",
+                    "# Telemetry | summarize avg(Speed) by bin(Timestamp, 1s) | render timechart"
+                ],
+                "execution_count": None,
+                "outputs": []
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## 🆘 Troubleshooting\n",
+                    "\n",
+                    "### L'Eventstream non riceve dati\n",
+                    "- Verifica che l'Eventstream sia in stato **Running**\n",
+                    "- Controlla che l'URL del Custom Endpoint sia corretto\n",
+                    "- Assicurati che il mapping Source → Destination sia configurato\n",
+                    "\n",
+                    "### Le tabelle KQL sono vuote\n",
+                    "- Attendi qualche secondo dopo l'invio dei primi dati\n",
+                    "- Verifica la connessione Eventstream → KQL Database\n",
+                    "- Controlla i log dell'Eventstream per errori\n",
+                    "\n",
+                    "### Il notebook non si connette\n",
+                    "- Verifica che il Lakehouse sia collegato al notebook\n",
+                    "- Riavvia il kernel se necessario\n",
+                    "\n",
+                    "---\n",
+                    "\n",
+                    "## 🎮 Buon Divertimento!\n",
+                    "\n",
+                    "Per supporto: [GitHub Issues](https://github.com/maenglar78/fabric-arcade/issues)\n",
+                    "\n",
+                    "Per altri giochi: `from fabric_arcade import arcade; arcade.list()`"
+                ]
+            }
+        ],
+        "metadata": {
+            "kernelspec": {
+                "display_name": "Python 3",
+                "language": "python",
+                "name": "python3"
+            },
+            "language_info": {
+                "name": "python",
+                "version": "3.10"
+            }
+        },
+        "nbformat": 4,
+        "nbformat_minor": 5
+    }
+    
+    return json.dumps(notebook_content, indent=2, ensure_ascii=False)
 
 
 # Create global instance for easy access

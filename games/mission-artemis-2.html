@@ -136,7 +136,63 @@
 
 arcade.install(<span class="string">"mission-artemis-2"</span>)</code></pre>
             </div>
-            <p>After deployment, open <strong>Artemis_Simulator</strong> to start the telemetry, then <strong>Mission_Control</strong> to watch the mission!</p>
+            <p>A README notebook with complete instructions will be created automatically!</p>
+        </section>
+
+        <section class="game-section post-deploy">
+            <h2>⚙️ Post-Deploy Configuration</h2>
+            
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Configure Eventstream</h4>
+                    <p>Open <strong>ArtemisEventstream</strong> and click <strong>Edit</strong>.</p>
+                    <ul>
+                        <li>Add <strong>4 Custom Endpoint Sources</strong>:
+                            <code>VehicleTelemetryInput</code>, <code>CrewVitalsInput</code>, 
+                            <code>EnvironmentalInput</code>, <code>MissionEventsInput</code>
+                        </li>
+                        <li>Add <strong>KQL Database Destination</strong> → <code>ArtemisEventhouse</code> → <code>MissionData</code></li>
+                        <li>Map each Source to its corresponding table</li>
+                        <li>Click <strong>Publish</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Start the Simulation</h4>
+                    <p>Open <strong>Artemis_Simulator</strong> notebook:</p>
+                    <ul>
+                        <li>Configure Eventstream Custom Endpoint URLs</li>
+                        <li>Run the setup cell</li>
+                        <li>Start the mission with <code>start_mission()</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Open Mission Control</h4>
+                    <p>Open <strong>Mission_Control</strong> notebook to monitor:</p>
+                    <ul>
+                        <li>📊 Vehicle telemetry in real-time</li>
+                        <li>👨‍🚀 Crew vital signs</li>
+                        <li>🌡️ Environmental conditions</li>
+                        <li>📜 Mission event log</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Watch the Mission! 🚀</h4>
+                    <p>The 4-minute mission video is synchronized with the telemetry data. Watch as the data updates in real-time during each mission phase!</p>
+                </div>
+            </div>
         </section>
 
         <section class="game-section">
