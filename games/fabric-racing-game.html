@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Racing Game - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#games" class="back-link">← Back to Catalog</a>
+        
+        <header class="game-header">
+            <div class="game-icon-large">🏎️</div>
+            <div class="game-title-section">
+                <span class="game-badge mission">ACCELERATOR</span>
+                <h1>Fabric Racing Game</h1>
+                <p class="game-tagline">HTML5 multiplayer racing game for 4 drivers with real-time telemetry streaming</p>
+            </div>
+        </header>
+
+        <div class="game-meta-bar">
+            <div class="meta-item">
+                <span class="meta-label">Difficulty</span>
+                <span class="meta-value">⭐⭐ Intermediate</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Deploy Time</span>
+                <span class="meta-value">~3 min</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Complete Time</span>
+                <span class="meta-value">~30 min</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Status</span>
+                <span class="meta-value status-available">✅ Available</span>
+            </div>
+        </div>
+
+        <section class="game-section">
+            <h2>📋 Overview</h2>
+            <p>Race against 3 AI drivers in an HTML5 game while streaming real-time telemetry to Microsoft Fabric. Learn how to build Custom Endpoints, configure JSON mapping, and create live dashboards - all while having fun!</p>
+        </section>
+
+        <section class="game-section">
+            <h2>🔧 Workloads</h2>
+            <div class="workload-tags">
+                <span class="workload-tag rti">Real-Time Intelligence</span>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>📦 Fabric Items Deployed</h2>
+            <div class="items-grid">
+                <div class="item-card">
+                    <span class="item-icon">🏠</span>
+                    <span class="item-name">Eventhouse</span>
+                    <span class="item-detail">RacingEventhouse</span>
+                </div>
+                <div class="item-card">
+                    <span class="item-icon">📊</span>
+                    <span class="item-name">KQL Database</span>
+                    <span class="item-detail">RaceData</span>
+                </div>
+                <div class="item-card">
+                    <span class="item-icon">🌊</span>
+                    <span class="item-name">Eventstream</span>
+                    <span class="item-detail">RacingStream</span>
+                </div>
+                <div class="item-card">
+                    <span class="item-icon">📓</span>
+                    <span class="item-name">Notebook</span>
+                    <span class="item-detail">Racing_Game</span>
+                </div>
+                <div class="item-card">
+                    <span class="item-icon">📓</span>
+                    <span class="item-name">Notebook</span>
+                    <span class="item-detail">Race_Simulator</span>
+                </div>
+                <div class="item-card">
+                    <span class="item-icon">📓</span>
+                    <span class="item-name">Notebook</span>
+                    <span class="item-detail">Race_Dashboard</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>🎯 Scenarios</h2>
+            <div class="scenario-tags">
+                <span class="scenario-tag">Streaming</span>
+                <span class="scenario-tag">Gaming</span>
+                <span class="scenario-tag">Real-Time Dashboard</span>
+            </div>
+        </section>
+
+        <section class="game-section quickstart">
+            <h2>🚀 Quick Start</h2>
+            <p>Open a Fabric Notebook and run:</p>
+            <div class="code-block">
+                <pre><code><span class="comment"># Cell 1 - Install</span>
+%pip install -q fabric-arcade</code></pre>
+            </div>
+            <div class="code-block">
+                <pre><code><span class="comment"># Cell 2 - Deploy</span>
+<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+
+arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
+            </div>
+            <p>That's it! The game is now deployed to your workspace. Open the <strong>Racing_Game</strong> notebook and run all cells to play!</p>
+        </section>
+
+        <section class="game-section">
+            <h2>✨ What You'll Learn</h2>
+            <ul class="learn-list">
+                <li>🎮 Build interactive HTML5 games in Fabric notebooks</li>
+                <li>📡 Configure Custom Endpoints for data ingestion</li>
+                <li>🗺️ Set up JSON mapping in Eventstream</li>
+                <li>📊 Create real-time KQL dashboards</li>
+                <li>⚡ Stream events with sub-second latency</li>
+            </ul>
+        </section>
+
+        <section class="game-section">
+            <h2>🏛️ Architecture</h2>
+            <div class="architecture-diagram">
+                <pre>
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  HTML5 Racing   │────▶│   Eventstream   │────▶│   Eventhouse    │
+│     Game        │     │  (Custom EP)    │     │  (KQL Database) │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                                                        │
+                                                        ▼
+                                                ┌─────────────────┐
+                                                │  Race Dashboard │
+                                                │   (KQL Queries) │
+                                                └─────────────────┘
+                </pre>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>📋 Prerequisites</h2>
+            <ul class="prereq-list">
+                <li>✅ Microsoft Fabric workspace (F2+ capacity or Trial)</li>
+                <li>✅ Contributor permissions on the workspace</li>
+            </ul>
+        </section>
+
+        <div class="cta-section">
+            <a href="../#start" class="btn btn-primary btn-large">▶ START NOW</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2026 Fabric Arcade • MIT License</p>
+        </div>
+    </footer>
+</body>
+</html>
