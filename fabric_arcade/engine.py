@@ -294,7 +294,7 @@ class GameDeployer:
         if not manifest_path.exists():
             raise ValueError(f"No manifest.json found for game '{game_id}'")
         
-        with open(manifest_path) as f:
+        with open(manifest_path, encoding='utf-8') as f:
             manifest = json.load(f)
         
         # Create deployment context
@@ -352,7 +352,7 @@ class GameDeployer:
             schema_file = ctx.game_path / table["schema"]
             if schema_file.exists():
                 print(f"  Creating table: {table['name']}...")
-                with open(schema_file) as f:
+                with open(schema_file, encoding='utf-8') as f:
                     kql_command = f.read()
                 
                 self.client.execute_kql_command(ctx.workspace_id, db_id, kql_command)
@@ -369,7 +369,7 @@ class GameDeployer:
                 if "definition" in item:
                     def_path = ctx.game_path / item["definition"]
                     if def_path.exists():
-                        with open(def_path) as f:
+                        with open(def_path, encoding='utf-8') as f:
                             definition = json.load(f)
                 
                 result = self.client.create_eventstream(
@@ -386,7 +386,7 @@ class GameDeployer:
                 
                 notebook_path = ctx.game_path / item["file"]
                 if notebook_path.exists():
-                    with open(notebook_path) as f:
+                    with open(notebook_path, encoding='utf-8') as f:
                         content = f.read()
                     
                     result = self.client.create_notebook(
@@ -413,7 +413,7 @@ class GameDeployer:
         if not manifest_path.exists():
             raise ValueError(f"No manifest.json found for game '{game_id}'")
         
-        with open(manifest_path) as f:
+        with open(manifest_path, encoding='utf-8') as f:
             manifest = json.load(f)
         
         # Get all items in workspace
