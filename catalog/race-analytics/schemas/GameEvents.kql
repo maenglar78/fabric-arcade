@@ -1,0 +1,35 @@
+// GameEvents Table Schema for Fabric Racing Game
+// Creates the table to store all race telemetry events
+
+.create table GameEvents (
+    EventId: string,
+    Timestamp: datetime,
+    PlayerId: string,
+    EventType: string,
+    CarId: int,
+    PositionX: real,
+    PositionY: real,
+    Speed: real,
+    LapNumber: int,
+    TrackSection: string,
+    GameSessionId: string
+)
+
+// Enable streaming ingestion for real-time data
+.alter table GameEvents policy streamingingestion enable
+
+// Create JSON mapping for Eventstream ingestion
+.create table GameEvents ingestion json mapping 'GameEventsMapping' 
+'['
+'    {"column": "EventId", "path": "$.EventId", "datatype": "string"},'
+'    {"column": "Timestamp", "path": "$.Timestamp", "datatype": "datetime"},'
+'    {"column": "PlayerId", "path": "$.PlayerId", "datatype": "string"},'
+'    {"column": "EventType", "path": "$.EventType", "datatype": "string"},'
+'    {"column": "CarId", "path": "$.CarId", "datatype": "int"},'
+'    {"column": "PositionX", "path": "$.PositionX", "datatype": "real"},'
+'    {"column": "PositionY", "path": "$.PositionY", "datatype": "real"},'
+'    {"column": "Speed", "path": "$.Speed", "datatype": "real"},'
+'    {"column": "LapNumber", "path": "$.LapNumber", "datatype": "int"},'
+'    {"column": "TrackSection", "path": "$.TrackSection", "datatype": "string"},'
+'    {"column": "GameSessionId", "path": "$.GameSessionId", "datatype": "string"}'
+']'

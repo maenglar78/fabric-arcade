@@ -62,6 +62,7 @@ Changelog = "https://github.com/fabricarcade/fabric-arcade/blob/main/CHANGELOG.m
 
 [project.scripts]
 fabric-arcade = "fabric_arcade.cli:main"
+arcade = "fabric_arcade.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["fabric_arcade"]

@@ -60,43 +60,39 @@
     "items": [
         {
             "type": "Eventhouse",
-            "name": "racing-events",
-            "description": "Motore KQL per analytics real-time delle gare"
+            "name": "RacingEventhouse",
+            "description": "KQL engine for real-time race analytics"
         },
         {
             "type": "KQLDatabase",
-            "name": "race-data",
-            "description": "Database con tabella GameEvents (11 colonne)"
+            "name": "RaceData",
+            "parent": "RacingEventhouse",
+            "description": "Database with GameEvents table (11 columns)"
         },
         {
             "type": "Eventstream",
-            "name": "racing-stream",
-            "description": "Custom Endpoint → Eventhouse per eventi di gara"
+            "name": "RacingStream",
+            "definition": "eventstream/definition.json",
+            "description": "Custom Endpoint → Eventhouse for race events"
         },
         {
             "type": "Notebook",
-            "name": "Deploy_FabricRacingGame",
-            "description": "Notebook di deploy automatico (10 celle)"
+            "name": "Race_Simulator",
+            "file": "notebooks/race_simulator.ipynb",
+            "description": "Python simulator to generate race events"
         },
         {
             "type": "Notebook",
-            "name": "Race_P1",
-            "description": "Gioco HTML5 - Player 1 (Red Car)"
-        },
+            "name": "Race_Dashboard",
+            "file": "notebooks/race_dashboard.ipynb",
+            "description": "Real-time KQL dashboard for race analytics"
+        }
+    ],
+    "tables": [
         {
-            "type": "Notebook",
-            "name": "Race_P2",
-            "description": "Gioco HTML5 - Player 2 (Blue Car)"
-        },
-        {
-            "type": "Notebook",
-            "name": "Race_P3",
-            "description": "Gioco HTML5 - Player 3 (Green Car)"
-        },
-        {
-            "type": "Notebook",
-            "name": "Race_P4",
-            "description": "Gioco HTML5 - Player 4 (Yellow Car)"
+            "name": "GameEvents",
+            "database": "RaceData",
+            "schema": "schemas/GameEvents.kql"
         }
     ],
     "story": {

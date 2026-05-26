@@ -3,25 +3,38 @@
 
 A gamified catalog of projects to learn Real-Time Intelligence,
 Data Engineering, Power BI and Data Science through fun experiences.
+
+Usage:
+    >>> import fabric_arcade as arcade
+    >>> arcade.list()           # List available games
+    >>> arcade.install("fabric-racing-game", workspace="MyWorkspace")
+    >>> arcade.uninstall("fabric-racing-game", workspace="MyWorkspace")
 """
 
 __version__ = "0.1.0"
 __author__ = "Fabric Gaming Community"
 
-from .core import list_games, install, play, achievements
-from .catalog import get_catalog, search_games
-from .deploy import deploy_game, remove_game
+from .catalog import get_catalog, get_game, search_games
+from .engine import install, uninstall, FabricClient, GameDeployer
 
 __all__ = [
-    "list_games",
-    "install", 
-    "play",
-    "achievements",
+    # Catalog functions
     "get_catalog",
+    "get_game",
     "search_games",
-    "deploy_game",
-    "remove_game",
+    # Deployment functions
+    "install",
+    "uninstall",
+    "FabricClient",
+    "GameDeployer",
 ]
 
-# Alias for backward compatibility with jumpstart-like interface
-list = list_games
+
+def list():
+    """List all available games"""
+    games = get_catalog()
+    print("🎮 Fabric Arcade - Available Games\n")
+    for game in games:
+        print(f"  {game.icon} {game.name} ({game.id})")
+    print(f"\nTotal: {len(games)} games")
+    return games
