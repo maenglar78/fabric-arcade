@@ -1,0 +1,59 @@
+{
+    "version": "1.0.0",
+    "updated": "2026-05-26",
+    "games": [
+        {
+            "id": "fabric-racing-game",
+            "name": "Fabric Racing Game",
+            "description": "🏎️ Un gioco HTML5 multiplayer per 4 piloti con telemetria real-time. Custom Endpoint, JSON mapping, dashboard live.",
+            "workloads": ["RTI"],
+            "difficulty": 2,
+            "duration_minutes": 30,
+            "icon": "🏎️",
+            "tags": ["racing", "html5", "multiplayer", "gaming"]
+        },
+        {
+            "id": "mission-artemis-2",
+            "name": "Mission Artemis 2",
+            "description": "🚀 Missione lunare con 4 astronauti. Telemetria real-time: accelerazione, pressione, battito cardiaco, fasi di volo.",
+            "workloads": ["RTI", "DE"],
+            "difficulty": 3,
+            "duration_minutes": 45,
+            "icon": "🚀",
+            "tags": ["space", "telemetry", "streaming", "video-sync"]
+        },
+        {
+            "id": "sports-tracker",
+            "name": "Sports Tracker",
+            "description": "⚽ Track live sports statistics from matches. Analyze player performance and predict outcomes using ML.",
+            "workloads": ["RTI", "DS"],
+            "difficulty": 2,
+            "duration_minutes": 25,
+            "icon": "⚽",
+            "tags": ["sports", "analytics", "ml", "predictions"],
+            "status": "coming-soon"
+        },
+        {
+            "id": "quest-pipeline",
+            "name": "Quest Data Pipeline",
+            "description": "🏰 Build a medallion architecture as a fantasy quest. Bronze = Raw loot, Silver = Cleaned treasures, Gold = Legendary items.",
+            "workloads": ["DE", "DF"],
+            "difficulty": 3,
+            "duration_minutes": 40,
+            "icon": "🏰",
+            "tags": ["fantasy", "medallion", "pipeline", "etl"],
+            "status": "coming-soon"
+        },
+        {
+            "id": "target-practice",
+            "name": "Target Practice",
+            "description": "🎯 Quick-fire RTI basics. Hit targets by routing events through Eventstream to Eventhouse. Perfect for beginners.",
+            "workloads": ["RTI"],
+            "difficulty": 1,
+            "duration_minutes": 15,
+            "icon": "🎯",
+            "tags": ["beginner", "rti", "eventstream", "quick"],
+            "status": "coming-soon"
+        }
+    ]
+}
