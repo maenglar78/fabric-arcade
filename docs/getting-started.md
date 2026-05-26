@@ -1,103 +1,199 @@
-# 🎮 Getting Started with Fabric Arcade
+# 🚀 Getting Started with Fabric Arcade
 
-Benvenuto in Fabric Arcade! Questa guida ti aiuterà a iniziare in pochi minuti.
+Welcome to Fabric Arcade! This guide will help you install your first game and start learning Microsoft Fabric through play.
 
-## 🚀 Installazione
+---
 
-### Opzione 1: pip install (consigliato)
+## What is Fabric Arcade?
 
-```bash
-pip install fabric-arcade
-```
+Fabric Arcade is a collection of **gamified learning experiences** for Microsoft Fabric. Instead of reading documentation, you learn by:
 
-### Opzione 2: Da sorgente
+- 🏎️ Racing cars while streaming telemetry to Eventhouse
+- 🚀 Monitoring astronaut vitals during a lunar mission
+- ⚽ Predicting sports outcomes with ML models
+- 🏰 Building data pipelines as fantasy quests
 
-```bash
-git clone https://github.com/fabricarcade/fabric-arcade.git
-cd fabric-arcade
-pip install -e .
-```
+Each game automatically deploys real Fabric items (Eventhouses, Eventstreams, Notebooks, etc.) to your workspace.
 
-## 📋 Prerequisiti
+---
 
-1. **Microsoft Fabric workspace** con capacità F2+ (alcuni giochi richiedono F4+)
-2. **Azure CLI** installato e autenticato:
-   ```bash
-   az login
-   ```
-3. **Python 3.9+**
+## Prerequisites
 
-## 🎯 Il Tuo Primo Gioco
+| Requirement | Details |
+|-------------|---------|
+| **Fabric Workspace** | Any workspace where you have Contributor access |
+| **Fabric Capacity** | F2 or higher (Trial capacity works for most games!) |
 
-### Step 1: Importa la libreria
+That's it! No local installation needed.
+
+---
+
+## Quick Start (3 Steps)
+
+### Step 1: Open a Fabric Notebook
+
+Create a new notebook in your Fabric workspace or use an existing one.
+
+### Step 2: Install the Package
+
+Run this in the first cell:
 
 ```python
-import fabric_arcade as arcade
+%pip install -q fabric-arcade
 ```
 
-### Step 2: Esplora il catalogo
+Wait for the installation to complete. The kernel will restart automatically.
+
+### Step 3: Install a Game!
+
+Run this in the next cell:
 
 ```python
-# Vedi tutti i giochi disponibili
+from fabric_arcade import arcade
+
+# See what's available
 arcade.list()
 
-# Filtra per workload
-from fabric_arcade.core import Workload
-arcade.list(workload=Workload.RTI)  # Solo Real-Time Intelligence
-
-# Filtra per difficoltà
-from fabric_arcade.core import Difficulty
-arcade.list(difficulty=Difficulty.BEGINNER)  # Solo per principianti
-```
-
-Output esempio:
-```
-🎮 FABRIC ARCADE - Game Catalog
-================================================================================
-Icon Game                           Type         Workloads       Diff   Time    
---------------------------------------------------------------------------------
-🚀   Mission Artemis                mission      RTI+DE          ⭐⭐⭐   45 min
-🏎️   Race Analytics                 mission      RTI+PBI         ⭐⭐    30 min
-⚽   Sports Tracker                 challenge    RTI+DS          ⭐⭐    25 min
-🏰   Quest Data Pipeline            mission      DE+DF           ⭐⭐⭐   40 min
-🎰   Retro Arcade Dashboard         arcade       PBI             ⭐      10 min
-...
---------------------------------------------------------------------------------
-Total: 10 games available
-```
-
-### Step 3: Installa un gioco
-
-```python
-# Scegli un gioco adatto al tuo livello
-# Per principianti: retro-arcade o target-practice
-# Per intermedi: fabric-racing-game o sports-tracker
-# Per avanzati: mission-artemis-2 o city-builder
-
+# Install your first game
 arcade.install("fabric-racing-game")
 ```
 
-Questo creerà automaticamente nel tuo workspace Fabric:
-- Eventhouse e KQL Database
-- Eventstream configurato
-- Notebook con il simulatore
-- Dashboard di base
+🎉 **That's it!** The game is now deployed to your workspace.
 
-### Step 4: Gioca!
+---
+
+## What Happens When You Install a Game?
+
+When you run `arcade.install("game-id")`, the following happens automatically:
+
+1. ✅ **Eventhouse** is created (if the game uses Real-Time Intelligence)
+2. ✅ **KQL Database** is created with proper schemas
+3. ✅ **Tables** are created with correct column types
+4. ✅ **Eventstream** is created for data ingestion
+5. ✅ **Notebooks** are deployed with game code and dashboards
+
+All items are created in your current workspace with proper naming and relationships.
+
+---
+
+## Available Commands
+
+### `arcade.list()`
+
+Display all available games with their difficulty and estimated time.
 
 ```python
-arcade.play("fabric-racing-game")
+arcade.list()
 ```
 
-Questo aprirà il notebook principale con le istruzioni del gioco.
+Output:
+```
+🎮 Fabric Arcade - Available Games
+──────────────────────────────────
+🏎️ Fabric Racing Game  ⭐⭐   RTI  30 min  ✅ Available
+🚀 Mission Artemis 2   ⭐⭐⭐  RTI  45 min  ✅ Available
+⚽ Sports Tracker      ⭐⭐   RTI  25 min  🔜 Coming Soon
+```
 
-## 🗺️ Scegliere il Gioco Giusto
+### `arcade.info(game_id)`
 
-### Per Principianti (< 15 min)
-| Gioco | Impari |
-|-------|--------|
-| 🎰 Retro Arcade | Power BI basics |
-| 🎯 Target Practice | Eventstream + Eventhouse basics |
+Get detailed information about a specific game.
+
+```python
+arcade.info("fabric-racing-game")
+```
+
+### `arcade.install(game_id)`
+
+Install a game in your current workspace.
+
+```python
+arcade.install("fabric-racing-game")
+```
+
+### `arcade.install(game_id, workspace_id="...")`
+
+Install a game in a specific workspace (if different from current).
+
+```python
+arcade.install("fabric-racing-game", workspace_id="your-workspace-guid")
+```
+
+---
+
+## After Installation
+
+Once a game is installed:
+
+1. **Refresh your workspace** - New items should appear
+2. **Open the main notebook** - Usually named after the game
+3. **Run all cells** - Follow the instructions in the notebook
+4. **Have fun learning!** - Each game teaches specific Fabric concepts
+
+---
+
+## Choosing the Right Game
+
+### For Beginners (< 20 min)
+
+| Game | You'll Learn |
+|------|--------------|
+| 🎯 Target Practice | Eventstream → Eventhouse basics |
+
+### For Intermediate Users (20-35 min)
+
+| Game | You'll Learn |
+|------|--------------|
+| 🏎️ Fabric Racing Game | Custom Endpoints, JSON mapping, Real-Time dashboards |
+| ⚽ Sports Tracker | ML predictions on streaming data |
+
+### For Advanced Users (35+ min)
+
+| Game | You'll Learn |
+|------|--------------|
+| 🚀 Mission Artemis 2 | Multi-table streaming, IoT telemetry, complex KQL |
+| 🏰 Quest Data Pipeline | Medallion architecture, Data Factory pipelines |
+
+---
+
+## Troubleshooting
+
+### "Package not found" error
+Make sure you're running in a Fabric notebook (not local Python):
+```python
+%pip install -q fabric-arcade
+```
+
+### "Workspace not found" error
+The arcade uses your current notebook's workspace. Make sure you have Contributor permissions.
+
+### Items not appearing after install
+- Wait 30-60 seconds for creation to complete
+- Refresh your workspace view in the browser
+- Check the notebook output for any error messages
+
+### Game requires higher capacity
+Some advanced games require F4+ capacity. Check the game requirements in the catalog.
+
+---
+
+## Getting Help
+
+- 📚 **Documentation:** [Browse the Catalog](catalog/index.md)
+- 🐛 **Issues:** [GitHub Issues](https://github.com/maenglar78/fabric-arcade/issues)
+- 💬 **Discussions:** [GitHub Discussions](https://github.com/maenglar78/fabric-arcade/discussions)
+
+---
+
+## Next Steps
+
+1. **[Browse the Game Catalog](catalog/index.md)** - Find a game that interests you
+2. **[Fabric Racing Game](catalog/fabric-racing-game.md)** - Great first game for beginners
+3. **[Mission Artemis 2](catalog/mission-artemis-2.md)** - Advanced multi-stream architecture
+
+---
+
+*Happy Learning! 🎮*
 
 ### Per Intermedi (15-30 min)
 | Gioco | Impari |
