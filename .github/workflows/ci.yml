@@ -1,0 +1,181 @@
+# Fabric Arcade - CI Workflow
+# Runs tests, linting, and type checking on every push and PR
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # ============================================
+  # Lint and Type Check
+  # ============================================
+  lint:
+    name: 🔍 Lint & Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff mypy
+          pip install -e ".[dev]"
+
+      - name: 🔍 Run Ruff linter
+        run: ruff check fabric_arcade/
+
+      - name: 📐 Run Ruff formatter check
+        run: ruff format --check fabric_arcade/
+
+      - name: 🔬 Run MyPy type check
+        run: mypy fabric_arcade/ --ignore-missing-imports
+
+  # ============================================
+  # Unit Tests
+  # ============================================
+  test:
+    name: 🧪 Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: 🧪 Run pytest
+        run: |
+          pytest tests/ -v --cov=fabric_arcade --cov-report=xml --cov-report=term
+
+      - name: 📊 Upload coverage to Codecov
+        if: matrix.python-version == '3.11'
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+
+  # ============================================
+  # Build Package
+  # ============================================
+  build:
+    name: 📦 Build Package
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 📦 Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: 🏗️ Build package
+        run: python -m build
+
+      - name: ✅ Check package
+        run: twine check dist/*
+
+      - name: 📤 Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 5
+
+  # ============================================
+  # Validate Catalog
+  # ============================================
+  validate-catalog:
+    name: 📋 Validate Game Catalog
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 📦 Install package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: 📋 Validate catalog entries
+        run: |
+          python -c "
+          from fabric_arcade.catalog import get_catalog, get_game
+          
+          print('🎮 Validating Fabric Arcade Catalog...')
+          print('=' * 50)
+          
+          catalog = get_catalog()
+          print(f'Total games: {len(catalog)}')
+          
+          for game in catalog:
+              print(f'  ✅ {game.icon} {game.name} ({game.id})')
+              # Validate game can be retrieved
+              assert get_game(game.id) is not None
+          
+          print('=' * 50)
+          print('✅ All catalog entries valid!')
+          "
+
+      - name: 📋 Validate manifest files
+        run: |
+          python -c "
+          import json
+          from pathlib import Path
+          
+          print('📋 Validating manifest.json files...')
+          
+          catalog_dir = Path('catalog')
+          for manifest_path in catalog_dir.glob('*/manifest.json'):
+              with open(manifest_path) as f:
+                  manifest = json.load(f)
+              
+              required_fields = ['id', 'name', 'version', 'type', 'workloads']
+              for field in required_fields:
+                  assert field in manifest, f'Missing {field} in {manifest_path}'
+              
+              print(f'  ✅ {manifest_path}')
+          
+          print('✅ All manifests valid!')
+          "

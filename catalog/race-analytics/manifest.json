@@ -1,0 +1,130 @@
+{
+    "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
+    "id": "fabric-racing-game",
+    "name": "Fabric Racing Game",
+    "version": "1.0.0",
+    "description": "Un gioco di corse HTML5 per 4 giocatori con telemetria real-time. Ogni partita genera eventi che fluiscono attraverso Fabric Real-Time Intelligence.",
+    "type": "mission",
+    "workloads": ["RTI"],
+    "difficulty": 2,
+    "duration_minutes": 30,
+    "icon": "🏎️",
+    "tags": ["racing", "multiplayer", "html5", "streaming", "gaming"],
+    "author": {
+        "name": "Fabric Gaming Community"
+    },
+    "prerequisites": {
+        "fabric_capacity": "F2",
+        "python_packages": [],
+        "skills": ["HTML5 basics", "KQL basics"]
+    },
+    "learning_objectives": [
+        "Creare Custom Endpoints in Eventstream",
+        "Configurare JSON mapping per ingestion KQL",
+        "Integrare HTML5 games in Fabric Notebooks",
+        "Costruire dashboard real-time con KQL",
+        "Gestire sessioni multiplayer con telemetria"
+    ],
+    "achievements": [
+        {
+            "id": "first-start",
+            "name": "First Start",
+            "description": "Lancia la prima gara",
+            "icon": "🏁"
+        },
+        {
+            "id": "full-grid",
+            "name": "Full Grid",
+            "description": "4 giocatori connessi contemporaneamente",
+            "icon": "👥"
+        },
+        {
+            "id": "photo-finish",
+            "name": "Photo Finish",
+            "description": "Arrivo entro 0.5s di distacco",
+            "icon": "📸"
+        },
+        {
+            "id": "speed-demon",
+            "name": "Speed Demon",
+            "description": "Raggiungi velocità max > 200",
+            "icon": "⚡"
+        },
+        {
+            "id": "champion",
+            "name": "Champion",
+            "description": "Vinci 3 gare di fila",
+            "icon": "🏆"
+        }
+    ],
+    "items": [
+        {
+            "type": "Eventhouse",
+            "name": "racing-events",
+            "description": "Motore KQL per analytics real-time delle gare"
+        },
+        {
+            "type": "KQLDatabase",
+            "name": "race-data",
+            "description": "Database con tabella GameEvents (11 colonne)"
+        },
+        {
+            "type": "Eventstream",
+            "name": "racing-stream",
+            "description": "Custom Endpoint → Eventhouse per eventi di gara"
+        },
+        {
+            "type": "Notebook",
+            "name": "Deploy_FabricRacingGame",
+            "description": "Notebook di deploy automatico (10 celle)"
+        },
+        {
+            "type": "Notebook",
+            "name": "Race_P1",
+            "description": "Gioco HTML5 - Player 1 (Red Car)"
+        },
+        {
+            "type": "Notebook",
+            "name": "Race_P2",
+            "description": "Gioco HTML5 - Player 2 (Blue Car)"
+        },
+        {
+            "type": "Notebook",
+            "name": "Race_P3",
+            "description": "Gioco HTML5 - Player 3 (Green Car)"
+        },
+        {
+            "type": "Notebook",
+            "name": "Race_P4",
+            "description": "Gioco HTML5 - Player 4 (Yellow Car)"
+        }
+    ],
+    "story": {
+        "intro": "Benvenuto al Fabric Racing Championship! 4 piloti, telemetria real-time, e il brivido della gara. Costruisci l'infrastruttura RTI che alimenterà la competizione.",
+        "chapters": [
+            {
+                "title": "Qualifying",
+                "description": "Setup KQL Database con tabella GameEvents e JSON mapping"
+            },
+            {
+                "title": "Race Start",
+                "description": "Configura Eventstream con Custom Endpoint"
+            },
+            {
+                "title": "Mid-Race",
+                "description": "Lancia i 4 notebook HTML5 e inizia la gara"
+            },
+            {
+                "title": "Checkered Flag",
+                "description": "Crea dashboard live e analizza i risultati"
+            }
+        ]
+    },
+    "post_deploy_steps": [
+        "Compila CAPACITY_ID nel notebook deploy",
+        "Pubblica l'Eventstream nel portale Fabric",
+        "Copia SAS URL dal Custom Endpoint nei 4 notebook",
+        "Aggiorna CLUSTER_URI nei notebook",
+        "Test con query KQL sulla tabella GameEvents"
+    ]
+}

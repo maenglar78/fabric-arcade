@@ -1,0 +1,76 @@
+{
+    "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
+    "id": "GAME_ID_HERE",
+    "name": "Game Name Here",
+    "version": "1.0.0",
+    "description": "A brief, exciting description of your game (1-2 sentences)",
+    "type": "mission",
+    "workloads": ["RTI"],
+    "difficulty": 2,
+    "duration_minutes": 30,
+    "icon": "🎮",
+    "tags": ["tag1", "tag2", "tag3"],
+    "author": {
+        "name": "Your Name",
+        "url": "https://github.com/yourusername"
+    },
+    "prerequisites": {
+        "fabric_capacity": "F2",
+        "python_packages": [],
+        "skills": ["Basic Python", "Fabric fundamentals"]
+    },
+    "learning_objectives": [
+        "Learning objective 1",
+        "Learning objective 2",
+        "Learning objective 3"
+    ],
+    "achievements": [
+        {
+            "id": "starter",
+            "name": "Getting Started",
+            "description": "Deploy the game and begin",
+            "icon": "🚀"
+        },
+        {
+            "id": "halfway",
+            "name": "Halfway There",
+            "description": "Complete 50% of objectives",
+            "icon": "⭐"
+        },
+        {
+            "id": "winner",
+            "name": "Game Complete",
+            "description": "Finish all objectives",
+            "icon": "🏆"
+        }
+    ],
+    "items": [
+        {
+            "type": "Eventhouse",
+            "name": "game-eventhouse",
+            "description": "Main event store"
+        },
+        {
+            "type": "Notebook",
+            "name": "game-notebook",
+            "description": "Main game notebook"
+        }
+    ],
+    "story": {
+        "intro": "Set the scene for your game here. Make it engaging!",
+        "chapters": [
+            {
+                "title": "Chapter 1: Setup",
+                "description": "Initial setup and configuration"
+            },
+            {
+                "title": "Chapter 2: Build",
+                "description": "Main building phase"
+            },
+            {
+                "title": "Chapter 3: Complete",
+                "description": "Final steps and achievement"
+            }
+        ]
+    }
+}
