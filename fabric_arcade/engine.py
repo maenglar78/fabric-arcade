@@ -130,14 +130,27 @@ class FabricClient:
         return response.json()
     
     def execute_kql_command(self, workspace_id: str, database_id: str, 
-                            command: str) -> Dict:
+                            command: str, eventhouse_id: str = None) -> Dict:
         """Execute a KQL management command"""
-        # Get the query URI for the database
+        # Get the query URI - try database first, then eventhouse
         db_info = self.get_item(workspace_id, database_id)
         query_uri = db_info.get("properties", {}).get("queryUri")
         
+        # If no queryUri in database, try to get from eventhouse
+        if not query_uri and eventhouse_id:
+            eh_info = self.get_item(workspace_id, eventhouse_id)
+            query_uri = eh_info.get("properties", {}).get("queryServiceUri")
+        
+        # If still no queryUri, try the KQL Database API
         if not query_uri:
-            raise ValueError("Could not get query URI for database")
+            db_props_url = f"{FABRIC_API_BASE}/workspaces/{workspace_id}/kqlDatabases/{database_id}"
+            props_response = requests.get(db_props_url, headers=self.headers)
+            if props_response.status_code == 200:
+                props_data = props_response.json()
+                query_uri = props_data.get("properties", {}).get("queryServiceUri")
+        
+        if not query_uri:
+            raise ValueError(f"Could not get query URI for database {database_id}")
         
         # Execute the command
         kusto_headers = {
@@ -219,9 +232,10 @@ class FabricClient:
     def _wait_for_operation(self, response: requests.Response, 
                            timeout: int = 300) -> Dict:
         """Wait for a long-running operation to complete"""
+        import re
+        
         operation_url = response.headers.get("Location")
         if not operation_url:
-            # Try to get result from response
             return response.json() if response.text else {}
         
         start_time = time.time()
@@ -233,16 +247,55 @@ class FabricClient:
                 status = result.get("status", "").lower()
                 
                 if status == "succeeded":
-                    # Get the created item
-                    if "resourceLocation" in op_response.headers:
-                        item_response = requests.get(
-                            op_response.headers["resourceLocation"],
-                            headers=self.headers
+                    # Check for Location header pointing to /result
+                    result_location = op_response.headers.get("Location")
+                    if result_location and "/result" in result_location:
+                        result_response = requests.get(
+                            result_location, headers=self.headers
                         )
-                        return item_response.json()
+                        if result_response.status_code == 200:
+                            result_data = result_response.json()
+                            if "id" in result_data:
+                                return result_data
+                    
+                    # From resourceLocation headers
+                    for header_name in ["resourceLocation", "Resource-Location", "x-ms-resource-location"]:
+                        resource_location = op_response.headers.get(header_name)
+                        if resource_location:
+                            item_response = requests.get(
+                                resource_location, headers=self.headers
+                            )
+                            if item_response.status_code == 200:
+                                return item_response.json()
+                    
+                    # If result contains the item ID directly
+                    if "id" in result:
+                        return result
+                    
+                    # Parse item ID from the operation URL
+                    match = re.search(r'/items/([a-f0-9-]+)', operation_url)
+                    if match:
+                        item_id = match.group(1)
+                        ws_match = re.search(r'/workspaces/([a-f0-9-]+)/', operation_url)
+                        if ws_match:
+                            workspace_id = ws_match.group(1)
+                            item_response = requests.get(
+                                f"{FABRIC_API_BASE}/workspaces/{workspace_id}/items/{item_id}",
+                                headers=self.headers
+                            )
+                            if item_response.status_code == 200:
+                                return item_response.json()
+                    
+                    # Check for nested resourceId
+                    for key in ["resourceId", "itemId", "objectId"]:
+                        if key in result:
+                            return {"id": result[key], **result}
+                    
                     return result
+                    
                 elif status == "failed":
-                    raise Exception(f"Operation failed: {result}")
+                    error_info = result.get("error", result)
+                    raise Exception(f"Operation failed: {error_info}")
             
             time.sleep(2)
         
@@ -250,8 +303,14 @@ class FabricClient:
     
     def _get_kusto_token(self) -> str:
         """Get token for Kusto operations"""
-        credential = DefaultAzureCredential()
-        return credential.get_token("https://kusto.kusto.windows.net/.default").token
+        # Use AzureCliCredential for consistency with main auth
+        try:
+            credential = AzureCliCredential()
+            return credential.get_token("https://kusto.kusto.windows.net/.default").token
+        except Exception:
+            # Fallback to DefaultAzureCredential
+            credential = DefaultAzureCredential()
+            return credential.get_token("https://kusto.kusto.windows.net/.default").token
 
 
 class GameDeployer:
@@ -339,12 +398,19 @@ class GameDeployer:
                     ctx.workspace_id, parent_id, name
                 )
                 ctx.created_items[item["name"]] = result["id"]
+                # Also track parent eventhouse for this database
+                ctx.created_items[f"{item['name']}_eventhouse"] = parent_id
                 print(f"    ✓ Created: {result['id']}")
         
-        # 3. Create tables
+        # 3. Create tables (wait for database to be ready)
+        if manifest.get("tables"):
+            print(f"  Waiting for database to be ready...")
+            time.sleep(5)  # Give database time to become operational
+            
         for table in manifest.get("tables", []):
             db_name = table.get("database")
             db_id = ctx.created_items.get(db_name)
+            eventhouse_id = ctx.created_items.get(f"{db_name}_eventhouse")
             
             if not db_id:
                 raise ValueError(f"Database '{db_name}' not found")
@@ -353,9 +419,16 @@ class GameDeployer:
             if schema_file.exists():
                 print(f"  Creating table: {table['name']}...")
                 with open(schema_file, encoding='utf-8') as f:
-                    kql_command = f.read()
+                    kql_content = f.read()
                 
-                self.client.execute_kql_command(ctx.workspace_id, db_id, kql_command)
+                # Parse KQL commands and execute each separately
+                # Remove comments and split by command
+                kql_commands = self._parse_kql_commands(kql_content)
+                
+                for cmd in kql_commands:
+                    self.client.execute_kql_command(
+                        ctx.workspace_id, db_id, cmd, eventhouse_id
+                    )
                 print(f"    ✓ Table created")
         
         # 4. Create Eventstream(s)
@@ -364,19 +437,19 @@ class GameDeployer:
                 name = f"{prefix}{item['name']}" if prefix else item["name"]
                 print(f"  Creating Eventstream: {name}...")
                 
-                # Load definition if specified
-                definition = None
-                if "definition" in item:
-                    def_path = ctx.game_path / item["definition"]
-                    if def_path.exists():
-                        with open(def_path, encoding='utf-8') as f:
-                            definition = json.load(f)
-                
+                # Create Eventstream without definition for now
+                # Definition format for Eventstream is complex and requires 
+                # proper Fabric definition structure with base64-encoded parts
+                # TODO: Support eventstream definitions once format is confirmed
                 result = self.client.create_eventstream(
-                    ctx.workspace_id, name, definition
+                    ctx.workspace_id, name, None
                 )
                 ctx.created_items[item["name"]] = result["id"]
                 print(f"    ✓ Created: {result['id']}")
+                
+                # If there was a definition file, show instructions
+                if "definition" in item:
+                    print(f"    ⚠️ Note: Configure Eventstream manually using definition in {item['definition']}")
         
         # 5. Create Notebook(s)
         for item in manifest.get("items", []):
@@ -394,6 +467,53 @@ class GameDeployer:
                     )
                     ctx.created_items[item["name"]] = result["id"]
                     print(f"    ✓ Created: {result['id']}")
+    
+    def _parse_kql_commands(self, kql_content: str) -> list:
+        """
+        Parse KQL content into individual commands.
+        Removes comments and splits by command.
+        """
+        import re
+        
+        # Remove single-line comments (// ...)
+        lines = []
+        for line in kql_content.split('\n'):
+            # Strip leading/trailing whitespace
+            stripped = line.strip()
+            # Skip comment-only lines
+            if stripped.startswith('//'):
+                continue
+            # Remove inline comments
+            if '//' in line:
+                line = line.split('//')[0]
+            lines.append(line)
+        
+        # Join and split by KQL command markers
+        content = '\n'.join(lines)
+        
+        # Split by commands that start with a dot (management commands)
+        # Each command starts with a dot at the beginning of a line
+        commands = []
+        current_cmd = []
+        
+        for line in content.split('\n'):
+            stripped = line.strip()
+            if stripped.startswith('.') and current_cmd:
+                # New command starts, save previous
+                cmd = '\n'.join(current_cmd).strip()
+                if cmd:
+                    commands.append(cmd)
+                current_cmd = [line]
+            elif stripped:
+                current_cmd.append(line)
+        
+        # Don't forget the last command
+        if current_cmd:
+            cmd = '\n'.join(current_cmd).strip()
+            if cmd:
+                commands.append(cmd)
+        
+        return commands
     
     def uninstall(self, game_id: str, workspace_name: str, 
                   prefix: str = "") -> None:
