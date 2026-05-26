@@ -13,7 +13,7 @@ from typing import Optional, Dict, Any, List
 from dataclasses import dataclass, field
 
 import requests
-from azure.identity import DefaultAzureCredential
+from azure.identity import DefaultAzureCredential, AzureCliCredential
 
 
 # Fabric API endpoints
@@ -39,8 +39,13 @@ class FabricClient:
         if token:
             self.token = token
         else:
-            credential = DefaultAzureCredential()
-            self.token = credential.get_token("https://api.fabric.microsoft.com/.default").token
+            # Try Azure CLI first, then fall back to DefaultAzureCredential
+            try:
+                credential = AzureCliCredential()
+                self.token = credential.get_token("https://api.fabric.microsoft.com/.default").token
+            except Exception:
+                credential = DefaultAzureCredential()
+                self.token = credential.get_token("https://api.fabric.microsoft.com/.default").token
         
         self.headers = {
             "Authorization": f"Bearer {self.token}",
