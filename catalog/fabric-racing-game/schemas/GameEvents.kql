@@ -1,18 +1,20 @@
-// GameEvents Table Schema for Fabric Racing Game
-// Creates the table to store all race telemetry events
+// GameEvents Table Schema for Fabric Racing Game - Championship Edition
+// Creates the table to store all race telemetry events with scoring
 
 .create table GameEvents (
     EventId: string,
     Timestamp: datetime,
+    SessionId: string,
     PlayerId: string,
     EventType: string,
-    CarId: int,
+    Level: int,
+    Score: int,
+    Multiplier: int,
+    StarsCollected: int,
+    Lap: int,
     PositionX: real,
     PositionY: real,
-    Speed: real,
-    LapNumber: int,
-    TrackSection: string,
-    GameSessionId: string
+    Speed: real
 )
 
 // Enable streaming ingestion for real-time data
@@ -23,13 +25,15 @@
 '['
 '    {"column": "EventId", "path": "$.EventId", "datatype": "string"},'
 '    {"column": "Timestamp", "path": "$.Timestamp", "datatype": "datetime"},'
+'    {"column": "SessionId", "path": "$.SessionId", "datatype": "string"},'
 '    {"column": "PlayerId", "path": "$.PlayerId", "datatype": "string"},'
 '    {"column": "EventType", "path": "$.EventType", "datatype": "string"},'
-'    {"column": "CarId", "path": "$.CarId", "datatype": "int"},'
+'    {"column": "Level", "path": "$.Level", "datatype": "int"},'
+'    {"column": "Score", "path": "$.Score", "datatype": "int"},'
+'    {"column": "Multiplier", "path": "$.Multiplier", "datatype": "int"},'
+'    {"column": "StarsCollected", "path": "$.StarsCollected", "datatype": "int"},'
+'    {"column": "Lap", "path": "$.Lap", "datatype": "int"},'
 '    {"column": "PositionX", "path": "$.PositionX", "datatype": "real"},'
 '    {"column": "PositionY", "path": "$.PositionY", "datatype": "real"},'
-'    {"column": "Speed", "path": "$.Speed", "datatype": "real"},'
-'    {"column": "LapNumber", "path": "$.LapNumber", "datatype": "int"},'
-'    {"column": "TrackSection", "path": "$.TrackSection", "datatype": "string"},'
-'    {"column": "GameSessionId", "path": "$.GameSessionId", "datatype": "string"}'
+'    {"column": "Speed", "path": "$.Speed", "datatype": "real"}'
 ']'
