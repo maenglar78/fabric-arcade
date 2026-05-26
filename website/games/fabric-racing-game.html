@@ -26,7 +26,7 @@
             <div class="game-title-section">
                 <span class="game-badge mission">ACCELERATOR</span>
                 <h1>Fabric Racing Game</h1>
-                <p class="game-tagline">HTML5 multiplayer racing game for 4 drivers with real-time telemetry streaming</p>
+                <p class="game-tagline">Championship Edition - 10 tracks, collect ⭐ stars, avoid 🚧 obstacles, climb the leaderboard!</p>
             </div>
         </header>
 
@@ -41,7 +41,7 @@
             </div>
             <div class="meta-item">
                 <span class="meta-label">Complete Time</span>
-                <span class="meta-value">~30 min</span>
+                <span class="meta-value">~45 min</span>
             </div>
             <div class="meta-item">
                 <span class="meta-label">Status</span>
@@ -51,7 +51,37 @@
 
         <section class="game-section">
             <h2>📋 Overview</h2>
-            <p>Race against 3 AI drivers in an HTML5 game while streaming real-time telemetry to Microsoft Fabric. Learn how to build Custom Endpoints, configure JSON mapping, and create live dashboards - all while having fun!</p>
+            <p>Race through <strong>10 challenging tracks</strong> in the Championship Edition! Collect ⭐ <strong>bonus stars</strong> for points with a <strong>consecutive multiplier up to x10</strong>, avoid 🚧 <strong>obstacles</strong> (speed penalty!), and compete on the <strong>leaderboard</strong>. All telemetry streams to Microsoft Fabric in real-time!</p>
+        </section>
+
+        <section class="game-section">
+            <h2>🏆 Championship Levels</h2>
+            <div class="levels-table">
+                <table>
+                    <tr><th>Level</th><th>Track</th><th>Target</th><th>Stars</th><th>Obstacles</th></tr>
+                    <tr><td>1</td><td>Rookie Circuit</td><td>1,000</td><td>5</td><td>3</td></tr>
+                    <tr><td>2</td><td>Coastal Road</td><td>2,000</td><td>7</td><td>5</td></tr>
+                    <tr><td>3</td><td>Mountain Pass</td><td>3,500</td><td>8</td><td>7</td></tr>
+                    <tr><td>4</td><td>Desert Storm</td><td>5,000</td><td>10</td><td>9</td></tr>
+                    <tr><td>5</td><td>Night City</td><td>7,000</td><td>12</td><td>12</td></tr>
+                    <tr><td>6</td><td>Arctic Ice</td><td>9,500</td><td>14</td><td>15</td></tr>
+                    <tr><td>7</td><td>Volcano Ring</td><td>12,500</td><td>16</td><td>18</td></tr>
+                    <tr><td>8</td><td>Sky Highway</td><td>16,000</td><td>18</td><td>22</td></tr>
+                    <tr><td>9</td><td>Quantum Loop</td><td>20,000</td><td>20</td><td>26</td></tr>
+                    <tr><td>10</td><td>Champion's Road</td><td>25,000</td><td>25</td><td>30</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>📊 Scoring System</h2>
+            <div class="scoring-grid">
+                <div class="scoring-item"><span class="scoring-icon">⭐</span><span>Star Bonus: +100 × multiplier</span></div>
+                <div class="scoring-item"><span class="scoring-icon">🔥</span><span>Consecutive: x2, x3... up to x10</span></div>
+                <div class="scoring-item"><span class="scoring-icon">🚧</span><span>Obstacle Hit: -50 + speed penalty</span></div>
+                <div class="scoring-item"><span class="scoring-icon">🏁</span><span>Lap Bonus: +500 pts</span></div>
+                <div class="scoring-item"><span class="scoring-icon">⏱️</span><span>Time Bonus: up to +1800 pts</span></div>
+            </div>
         </section>
 
         <section class="game-section">
@@ -82,12 +112,7 @@
                 <div class="item-card">
                     <span class="item-icon">📓</span>
                     <span class="item-name">Notebook</span>
-                    <span class="item-detail">Racing_Game</span>
-                </div>
-                <div class="item-card">
-                    <span class="item-icon">📓</span>
-                    <span class="item-name">Notebook</span>
-                    <span class="item-detail">Race_Simulator</span>
+                    <span class="item-detail">Racing_Championship</span>
                 </div>
                 <div class="item-card">
                     <span class="item-icon">📓</span>
@@ -160,9 +185,12 @@ arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
                 <div class="step-content">
                     <h4>Play! 🎮</h4>
                     <ul>
-                        <li><strong>WASD</strong> or <strong>Arrow Keys</strong>: Steer and accelerate</li>
-                        <li><strong>Space</strong>: Brake</li>
-                        <li>Invite up to 4 players for multiplayer races!</li>
+                        <li><strong>⬆️ Arrow Up</strong>: Accelerate</li>
+                        <li><strong>⬇️ Arrow Down</strong>: Brake</li>
+                        <li><strong>⬅️➡️ Arrows</strong>: Steer</li>
+                        <li><strong>SPACE</strong>: Start Race</li>
+                        <li>Collect ⭐ stars for combo multipliers!</li>
+                        <li>Reach target score to unlock next level!</li>
                     </ul>
                 </div>
             </div>

@@ -410,3 +410,72 @@
         font-size: 0.6rem;
     }
 }
+
+/* Championship Edition - Levels Table */
+.levels-table {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+.levels-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.levels-table th,
+.levels-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.levels-table th {
+    background: rgba(0, 255, 136, 0.2);
+    color: var(--accent);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.levels-table tr:last-child td {
+    border-bottom: none;
+}
+
+.levels-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.levels-table td:first-child {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+/* Scoring Grid */
+.scoring-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.scoring-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent);
+}
+
+.scoring-icon {
+    font-size: 1.5rem;
+}
+
+.scoring-item span:last-child {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+}
