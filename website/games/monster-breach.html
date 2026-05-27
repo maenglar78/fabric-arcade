@@ -340,6 +340,38 @@ arcade.install(<span class="string">"monster-breach"</span>)</code></pre>
             </p>
         </section>
 
+        <!-- HOW IT WORKS -->
+        <section class="game-section">
+            <h2>🧩 How You Play (Real Fabric, Not a Simulation)</h2>
+            <p>Monster Breach is a <strong>learning quest</strong>: you build <strong>real Fabric Data Pipelines</strong> to defeat monsters. Every level follows the same loop:</p>
+            <ol style="line-height: 2; color: #ccc;">
+                <li>📖 Read the <strong>briefing</strong> in the <code>MonsterBreach_Judge</code> notebook (e.g. <em>"The Null Bug invaded the mines — build a Copy Activity that filters non-null CrystalId"</em>).</li>
+                <li>🔧 Open the matching <strong>empty pipeline</strong> in Fabric (e.g. <code>Lvl01_CopyQuest</code>) and assemble it in the UI.</li>
+                <li>▶️ <strong>Run the pipeline</strong> from the Fabric UI.</li>
+                <li>⚖️ Back in the notebook, run <code>judge.check_level(1)</code> — the judge compares your output to the expected oracle dataset and emits a <code>LevelComplete</code> or <code>LevelFailed</code> event to the Eventhouse.</li>
+                <li>📊 The <code>MonsterBreach_Dashboard</code> notebook updates live with boss HP, crystals saved, and the leaderboard.</li>
+            </ol>
+        </section>
+
+        <!-- ITEMS INSTALLED -->
+        <section class="game-section">
+            <h2>📦 What Gets Installed in Your Workspace</h2>
+            <p><code>arcade.install("monster-breach")</code> deploys:</p>
+            <ul style="line-height: 2; color: #ccc;">
+                <li>🏠 <strong>1 Lakehouse</strong> <code>MonsterBreach_LH</code> — holds <code>dirty_crystals</code> (input), <code>clean_crystals_expected</code> (oracle), and your output tables.</li>
+                <li>⚡ <strong>1 Eventhouse</strong> <code>MonsterBreach_EH</code> with KQL Database <code>BattleData</code> and table <code>BattleEvents</code> — telemetry for every attempt.</li>
+                <li>📓 <strong>3 Notebooks</strong>:
+                    <ul>
+                        <li><code>MonsterBreach_Seed</code> — generates synthetic dirty + expected datasets (run once).</li>
+                        <li><code>MonsterBreach_Judge</code> — briefings + <code>check_level(N)</code> validator.</li>
+                        <li><code>MonsterBreach_Dashboard</code> — live KQL/Plotly dashboard.</li>
+                    </ul>
+                </li>
+                <li>🛠️ <strong>8 empty level pipelines</strong> <code>Lvl01_CopyQuest</code> → <code>Lvl08_RetryReef</code> — you fill them in.</li>
+                <li>👑 <strong>1 empty boss pipeline</strong> <code>BossBattle_CorruptionKing</code> — orchestrate all 10 activities in one mega-flow.</li>
+            </ul>
+        </section>
+
         <!-- GAMEPLAY -->
         <section class="game-section">
             <h2>🎮 Gameplay</h2>

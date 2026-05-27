@@ -1,0 +1,148 @@
+{
+    "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
+    "id": "monster-breach",
+    "name": "Monster Breach - Pipeline Defense",
+    "version": "0.1.0-scaffold",
+    "description": "🧙‍♂️ Build real Fabric Data Pipelines to defeat the Corruption Horde. Each level teaches a Pipeline Activity. Defeat 8 bosses then face the Corruption King in a 10-activity mega-pipeline.",
+    "type": "quest",
+    "workloads": ["DataFactory", "DataEngineering", "RTI"],
+    "difficulty": 3,
+    "duration_minutes": 90,
+    "icon": "🧙‍♂️",
+    "tags": ["quest", "pipelines", "data-factory", "lakehouse", "eventhouse", "fabric", "learning"],
+    "author": {
+        "name": "Fabric Gaming Community"
+    },
+    "status": "scaffold",
+    "prerequisites": {
+        "fabric_capacity": "F2",
+        "python_packages": [],
+        "skills": ["Fabric workspace basics", "Data Factory pipeline UI"]
+    },
+    "learning_objectives": [
+        "Build Copy, Filter, Dataflow, Lookup, ForEach, If, Switch, Retry activities",
+        "Orchestrate multi-activity pipelines with error handling",
+        "Use Lakehouse as pipeline source and sink",
+        "Track real-time progress via Eventhouse + KQL dashboard",
+        "Validate pipeline output against expected results"
+    ],
+    "items": [
+        {
+            "type": "Lakehouse",
+            "name": "MonsterBreach_LH",
+            "description": "Holds dirty_crystals (input), clean_crystals_expected (oracle), and player output tables"
+        },
+        {
+            "type": "Eventhouse",
+            "name": "MonsterBreach_EH",
+            "description": "Telemetry for level completions, monsters slain, scores"
+        },
+        {
+            "type": "KQLDatabase",
+            "name": "BattleData",
+            "parent": "MonsterBreach_EH",
+            "description": "Database with BattleEvents table"
+        },
+        {
+            "type": "Notebook",
+            "name": "MonsterBreach_Seed",
+            "file": "notebooks/seed_dirty_data.ipynb",
+            "description": "Generates synthetic dirty + expected datasets for all 8 levels"
+        },
+        {
+            "type": "Notebook",
+            "name": "MonsterBreach_Judge",
+            "file": "notebooks/monster_breach_judge.ipynb",
+            "description": "Per-level briefing + validator (judge.check_level(N))"
+        },
+        {
+            "type": "Notebook",
+            "name": "MonsterBreach_Dashboard",
+            "file": "notebooks/monster_breach_dashboard.ipynb",
+            "description": "KQL/Plotly dashboard: boss HP, crystals saved, leaderboard"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "Lvl01_CopyQuest",
+            "description": "Empty pipeline — player adds Copy Activity"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "Lvl02_FilterFortress",
+            "description": "Empty pipeline — player adds Dataflow with Distinct"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "Lvl03_SchemaShrine",
+            "description": "Empty pipeline — player adds schema mapping / cast"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "Lvl04_TriggerTower",
+            "description": "Empty pipeline — player configures scheduled trigger"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "Lvl05_ForEachField",
+            "description": "Empty pipeline — player adds ForEach + parameters"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "Lvl06_IfMimicLair",
+            "description": "Empty pipeline — player adds If Condition + expressions"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "Lvl07_SwitchHydraDen",
+            "description": "Empty pipeline — player adds Switch Activity multi-branch"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "Lvl08_RetryReef",
+            "description": "Empty pipeline — player adds Retry policy + error handling"
+        },
+        {
+            "type": "DataPipeline",
+            "name": "BossBattle_CorruptionKing",
+            "description": "Empty mega-pipeline — player orchestrates ALL 10 activities (Copy + Filter + Dataflow + Lookup + ForEach + If + Switch + Retry + Notification + Validation) in one flow"
+        }
+    ],
+    "tables": [
+        {
+            "name": "BattleEvents",
+            "database": "BattleData",
+            "schema": "schemas/BattleEvents.kql",
+            "columns": [
+                "EventId", "Timestamp", "SessionId", "PlayerId", "EventType",
+                "Level", "Monster", "ActivityUsed", "Score", "CrystalsSaved",
+                "RowsProcessed", "ValidationResult"
+            ]
+        }
+    ],
+    "eventTypes": [
+        { "name": "QuestStart", "description": "Player begins Monster Breach" },
+        { "name": "LevelAttempt", "description": "Player runs judge.check_level(N)" },
+        { "name": "LevelComplete", "description": "Validation passed — monster defeated" },
+        { "name": "LevelFailed", "description": "Validation failed — try again" },
+        { "name": "BossDefeated", "description": "Corruption King defeated — quest complete" }
+    ],
+    "levels": [
+        { "n": 1, "name": "Copy Quest",          "monster": "🐛 Null Bug",         "skill": "Copy Activity",                       "pipeline": "Lvl01_CopyQuest" },
+        { "n": 2, "name": "Filter Fortress",     "monster": "👻 Duplicate Ghost",  "skill": "Dataflow Gen2 with Distinct",         "pipeline": "Lvl02_FilterFortress" },
+        { "n": 3, "name": "Schema Shrine",       "monster": "🔥 Schema Dragon",    "skill": "Schema mapping / data type cast",     "pipeline": "Lvl03_SchemaShrine" },
+        { "n": 4, "name": "Trigger Tower",       "monster": "⏰ Latency Demon",     "skill": "Trigger / scheduling",                "pipeline": "Lvl04_TriggerTower" },
+        { "n": 5, "name": "ForEach Field",       "monster": "🌀 Loop Wraith",      "skill": "ForEach + parameters",                "pipeline": "Lvl05_ForEachField" },
+        { "n": 6, "name": "If Mimic Lair",       "monster": "🎭 If Mimic",         "skill": "If Condition + expressions",          "pipeline": "Lvl06_IfMimicLair" },
+        { "n": 7, "name": "Switch Hydra Den",    "monster": "⚡ Switch Hydra",     "skill": "Switch Activity multi-branch",        "pipeline": "Lvl07_SwitchHydraDen" },
+        { "n": 8, "name": "Retry Reef",          "monster": "💀 Failure Phantom",  "skill": "Retry policy + error handling",       "pipeline": "Lvl08_RetryReef" },
+        { "n": 9, "name": "Boss Battle",         "monster": "👑 Corruption King",  "skill": "Mega-pipeline: all 10 activities",    "pipeline": "BossBattle_CorruptionKing" }
+    ],
+    "post_deploy_steps": [
+        "Run MonsterBreach_Seed notebook once to populate dirty_crystals + clean_crystals_expected tables",
+        "Open MonsterBreach_Judge notebook and read the Level 1 briefing",
+        "Open Lvl01_CopyQuest pipeline in Fabric UI and build it as instructed",
+        "Run the pipeline, then run judge.check_level(1) in the notebook",
+        "Watch MonsterBreach_Dashboard update with your progress",
+        "Advance through all 8 levels, then face the Corruption King in BossBattle_CorruptionKing"
+    ]
+}

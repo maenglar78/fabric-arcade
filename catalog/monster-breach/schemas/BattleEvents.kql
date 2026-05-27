@@ -1,0 +1,17 @@
+// BattleEvents — KQL schema for Monster Breach telemetry
+.create-merge table BattleEvents (
+    EventId: string,
+    Timestamp: datetime,
+    SessionId: string,
+    PlayerId: string,
+    EventType: string,        // QuestStart | LevelAttempt | LevelComplete | LevelFailed | BossDefeated
+    Level: int,
+    Monster: string,
+    ActivityUsed: string,     // Copy | Filter | Dataflow | Lookup | ForEach | If | Switch | Retry
+    Score: long,
+    CrystalsSaved: long,
+    RowsProcessed: long,
+    ValidationResult: string  // PASS | FAIL | PARTIAL
+)
+
+.alter-merge table BattleEvents policy retention softdelete = 90d
