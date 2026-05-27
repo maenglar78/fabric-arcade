@@ -460,9 +460,11 @@ def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, create
    - Input data format: **Json**
 5. Connect Source → Destination and click **Publish**
 
-### Step 2: Copy the Eventstream URL
-1. After publishing, click on the Custom Endpoint Source
-2. Copy the **Ingestion URL** (you'll need it in the game)
+### Step 2: Get the Ingestion URL
+1. After publishing, click on the **Custom Endpoint** node in the canvas
+2. In the right panel, click the **"Keys"** tab
+3. Copy the **"Event hub namespace"** URL or use the **connection string**
+4. The URL format is: `https://<your-eventstream>.servicebus.windows.net/...`
 
 ### Step 3: Start the Game
 1. Open the **Racing_Championship** notebook
