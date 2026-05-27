@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fabric-arcade"
-version = "0.1.9"
+version = "0.2.0"
 description = "🎮 Learn Microsoft Fabric by Playing - Gamified tutorials and demos"
 readme = "README.md"
 license = {text = "MIT"}
@@ -36,14 +36,13 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 dependencies = [
-    "azure-identity>=1.15.0",
-    "azure-storage-file-datalake>=12.14.0",
-    "requests>=2.31.0",
-    "rich>=13.0.0",
-    "pydantic>=2.0.0",
+    "requests>=2.25.0",
 ]
 
 [project.optional-dependencies]
+cli = [
+    "azure-identity>=1.15.0",
+]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",

@@ -13,7 +13,20 @@ from typing import Optional, Dict, Any, List
 from dataclasses import dataclass, field
 
 import requests
-from azure.identity import DefaultAzureCredential, AzureCliCredential
+
+# Optional azure-identity (for CLI/local use)
+try:
+    from azure.identity import DefaultAzureCredential, AzureCliCredential
+    HAS_AZURE_IDENTITY = True
+except ImportError:
+    HAS_AZURE_IDENTITY = False
+
+# Optional notebookutils (for Fabric notebooks)
+try:
+    import notebookutils
+    HAS_NOTEBOOKUTILS = True
+except ImportError:
+    HAS_NOTEBOOKUTILS = False
 
 
 # Fabric API endpoints
@@ -38,14 +51,19 @@ class FabricClient:
     def __init__(self, token: Optional[str] = None):
         if token:
             self.token = token
-        else:
-            # Try Azure CLI first, then fall back to DefaultAzureCredential
+        elif HAS_NOTEBOOKUTILS:
+            # In Fabric notebook - use notebookutils
+            self.token = notebookutils.credentials.getToken("https://api.fabric.microsoft.com")
+        elif HAS_AZURE_IDENTITY:
+            # Local/CLI - use Azure Identity
             try:
                 credential = AzureCliCredential()
                 self.token = credential.get_token("https://api.fabric.microsoft.com/.default").token
             except Exception:
                 credential = DefaultAzureCredential()
                 self.token = credential.get_token("https://api.fabric.microsoft.com/.default").token
+        else:
+            raise RuntimeError("No authentication method available. Install azure-identity or run in Fabric notebook.")
         
         self.headers = {
             "Authorization": f"Bearer {self.token}",
