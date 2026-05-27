@@ -171,12 +171,13 @@ arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
             <div class="step-card">
                 <div class="step-number">2</div>
                 <div class="step-content">
-                    <h4>Get the Ingestion URL</h4>
-                    <p>The ingestion URL is in the <strong>Eventhouse</strong>:</p>
+                    <h4>Get the Ingestion URI</h4>
+                    <p>The Ingestion URI is in the KQL Database details:</p>
                     <ul>
                         <li>Open <strong>RacingEventhouse</strong> in your workspace</li>
-                        <li>Find the <strong>Ingestion URL</strong> or <strong>Query URI</strong></li>
-                        <li>Copy the URL (you'll need it in the game notebook)</li>
+                        <li>Click on <strong>RaceData</strong> database (in the left panel under "KQL databases")</li>
+                        <li>In the <strong>Database details</strong> panel on the right, find <strong>Ingestion URI</strong></li>
+                        <li>Click <strong>Copy URI</strong></li>
                     </ul>
                 </div>
             </div>
@@ -185,7 +186,7 @@ arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
                 <div class="step-number">3</div>
                 <div class="step-content">
                     <h4>Start the Game</h4>
-                    <p>Open the <strong>Racing_Championship</strong> notebook, paste the Eventstream URL, and run all cells.</p>
+                    <p>Open the <strong>Racing_Championship</strong> notebook, paste the Ingestion URI, and run all cells.</p>
                 </div>
             </div>
 

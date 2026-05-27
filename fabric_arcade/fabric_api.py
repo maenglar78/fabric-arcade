@@ -460,14 +460,15 @@ def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, create
    - Input data format: **Json**
 5. Connect Source → Destination and click **Publish**
 
-### Step 2: Get the Ingestion URL
+### Step 2: Get the Ingestion URI
 1. Open **RacingEventhouse** in your workspace
-2. Find the **Ingestion URL** or **Query URI**
-3. Copy the URL (you'll need it in the game notebook)
+2. Click on **RaceData** database (in the left panel under "KQL databases")
+3. In the **Database details** panel on the right, find **Ingestion URI**
+4. Click **Copy URI**
 
 ### Step 3: Start the Game
 1. Open the **Racing_Championship** notebook
-2. Paste the Eventstream URL in the configuration cell
+2. Paste the Ingestion URI in the configuration cell
 3. Run all cells
 4. The HTML5 game will open in your browser!
 
