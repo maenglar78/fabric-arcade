@@ -1,22 +1,22 @@
 # 🏎️ Fabric Racing Game
 
-> **Un gioco di corse HTML5 multiplayer con telemetria real-time su Microsoft Fabric**
+> **A multiplayer HTML5 racing game with real-time telemetry on Microsoft Fabric**
 
 ![Difficulty](https://img.shields.io/badge/Difficulty-Intermediate-orange)
 ![Duration](https://img.shields.io/badge/Duration-30%20min-blue)
-![Workloads](https://img.shields.io/badge/Workloads-RTI-green)
+![Workloads](https://img.shields.io/badge/Workloads-Real--Time%20Intelligence-green)
 
 ## 🏁 Race Briefing
 
-Benvenuto al **Fabric Racing Championship**! Un vero gioco di corse HTML5 per **4 giocatori**, dove ogni partita genera telemetria real-time che fluisce attraverso l'architettura Fabric Real-Time Intelligence.
+Welcome to the **Fabric Racing Championship**! A real HTML5 racing game for **4 players**, where every race generates real-time telemetry flowing through Fabric Real-Time Intelligence architecture.
 
-Ogni giocatore ha il proprio notebook con il gioco integrato. Mentre giocano, gli eventi di gara (posizione, velocità, collisioni, giri) vengono inviati in real-time all'Eventhouse per analytics live!
+Each player has their own notebook with the embedded game. While playing, race events (position, speed, collisions, laps) are sent in real-time to the Eventhouse for live analytics!
 
-### 🎮 Il Concept
-- **4 Notebook HTML5** - Uno per ogni pilota (Race_P1, Race_P2, Race_P3, Race_P4)
-- **Gioco arcade** - Controlli semplici, grafica retrò, massimo divertimento
-- **Telemetria real-time** - Ogni azione genera eventi verso l'Eventstream
-- **Dashboard live** - Visualizza la gara in tempo reale con KQL
+### 🎮 The Concept
+- **4 HTML5 Notebooks** - One for each driver (Race_P1, Race_P2, Race_P3, Race_P4)
+- **Arcade game** - Simple controls, retro graphics, maximum fun
+- **Real-time telemetry** - Every action generates events to the Eventstream
+- **Live dashboard** - Watch the race in real-time with KQL
 
 ## 🛠️ What You'll Learn
 
@@ -28,7 +28,7 @@ Ogni giocatore ha il proprio notebook con il gioco integrato. Mentre giocano, gl
 | HTML5 in notebooks | Notebook | ⭐⭐ |
 | Live dashboards | Real-Time Dashboard | ⭐⭐ |
 
-## 🏗️ Architettura
+## 🏗️ Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -36,7 +36,7 @@ Ogni giocatore ha il proprio notebook con il gioco integrato. Mentre giocano, gl
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                       │
-│  │ Race_P1  │ │ Race_P2  │ │ Race_P3  │ │ Race_P4  │  ← 4 Notebook HTML5   │
+│  │ Race_P1  │ │ Race_P2  │ │ Race_P3  │ │ Race_P4  │  ← 4 HTML5 Notebooks  │
 │  │ 🏎️ Red   │ │ 🏎️ Blue  │ │ 🏎️ Green │ │ 🏎️ Yellow│                       │
 │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘                       │
 │       │            │            │            │                              │
@@ -55,7 +55,7 @@ Ogni giocatore ha il proprio notebook con il gioco integrato. Mentre giocano, gl
 │                          │                                                   │
 │                          ▼                                                   │
 │                 ┌─────────────────┐                                         │
-│                 │  KQL Database   │  ← Tabella GameEvents                   │
+│                 │  KQL Database   │  ← GameEvents Table                     │
 │                 │  (race-data)    │     + JSON Mapping                      │
 │                 └────────┬────────┘                                         │
 │                          │                                                   │
@@ -70,30 +70,30 @@ Ogni giocatore ha il proprio notebook con il gioco integrato. Mentre giocano, gl
 
 ## 📋 Prerequisites
 
-- Microsoft Fabric workspace con F2+ capacity
-- 4 persone per giocare (o testa da solo con più browser!)
+- Microsoft Fabric workspace with F2+ capacity
+- 4 people to play (or test solo with multiple browsers!)
 
 ## 🏎️ Quick Start
 
 ```python
 import fabric_arcade as arcade
 
-# Deploy automatico del workspace completo
+# Automatic deployment of the complete workspace
 arcade.install("fabric-racing-game")
 
-# Il notebook di deploy crea tutto:
-# 1. Workspace con capacity
+# The deploy notebook creates everything:
+# 1. Workspace with capacity
 # 2. Eventhouse + KQL Database
-# 3. Tabella GameEvents + JSON mapping
+# 3. GameEvents table + JSON mapping
 # 4. Eventstream (Custom Endpoint)
-# 5. I 4 notebook giocatore con gioco HTML5
+# 5. The 4 player notebooks with HTML5 game
 ```
 
 ## 📖 Race Chapters
 
 ### 🔧 Qualifying: Setup KQL Database
 
-Crea la tabella **GameEvents** nel KQL Database con 11 colonne per tutti i tipi di eventi:
+Create the **GameEvents** table in the KQL Database with 11 columns for all event types:
 
 ```kql
 .create table GameEvents (
@@ -107,7 +107,7 @@ Crea la tabella **GameEvents** nel KQL Database con 11 colonne per tutti i tipi 
     Speed: real,
     LapNumber: int,
     LapTime: real,
-    GameData: dynamic       // Dati extra in JSON
+    GameData: dynamic       // Extra data in JSON
 )
 
 // JSON mapping per ingestion
@@ -129,10 +129,10 @@ Crea la tabella **GameEvents** nel KQL Database con 11 colonne per tutti i tipi 
 
 ### 🚦 Race Start: Eventstream Setup
 
-1. Crea l'Eventstream `racing-stream`
-2. Configura **Custom Endpoint** come source
-3. Aggiungi **Eventhouse** come destination
-4. **Pubblica** l'Eventstream nel portale Fabric
+1. Create the Eventstream `racing-stream`
+2. Configure **Custom Endpoint** as source
+3. Add **Eventhouse** as destination
+4. **Publish** the Eventstream in the Fabric portal
 
 ```
 Custom Endpoint (SAS URL)
@@ -147,11 +147,11 @@ Custom Endpoint (SAS URL)
 
 ### 🎮 Mid-Race: Notebook HTML5 Game
 
-Ogni notebook contiene un gioco HTML5 completo con:
-- **Pista 2D** con curve e rettilineo
-- **4 auto colorate** (🔴 Red, 🔵 Blue, 🟢 Green, 🟡 Yellow)
-- **Controlli** con tastiera (frecce o WASD)
-- **Telemetria** inviata ogni 100ms al Custom Endpoint
+Each notebook contains a complete HTML5 game with:
+- **2D Track** with curves and straightaways
+- **4 colored cars** (🔴 Red, 🔵 Blue, 🟢 Green, 🟡 Yellow)
+- **Controls** via keyboard (arrows or WASD)
+- **Telemetry** sent every 100ms to the Custom Endpoint
 
 ```python
 # Race_P1.ipynb - Player 1 (Red Car)
@@ -172,7 +172,7 @@ const playerId = "{PLAYER_ID}";
 const playerName = "{PLAYER_NAME}";
 const sasUrl = "{SAS_URL}";
 
-// Game loop - invia telemetria ogni 100ms
+// Game loop - sends telemetry every 100ms
 function sendTelemetry() {{
     const event = {{
         timestamp: new Date().toISOString(),
@@ -256,46 +256,46 @@ GameEvents
 
 ### 🏆 Checkered Flag: Post-Race Report
 
-Crea una **Real-Time Dashboard** con:
+Create a **Real-Time Dashboard** with:
 
-1. **Leaderboard Panel** - Posizioni in tempo reale
-2. **Speed Chart** - Velocità di ogni giocatore
-3. **Lap Times Grid** - Confronto tempi sul giro
-4. **Track Map** - Posizione auto sulla pista
+1. **Leaderboard Panel** - Real-time positions
+2. **Speed Chart** - Speed of each player
+3. **Lap Times Grid** - Lap times comparison
+4. **Track Map** - Car positions on track
 
-## 🛠️ Configurazione Post-Deploy
+## 🛠️ Post-Deploy Configuration
 
-| Step | Azione | Dove |
-|------|--------|------|
-| 1 | Compila CAPACITY_ID nel notebook deploy | Deploy_FabricRacingGame |
-| 2 | Pubblica l'Eventstream | Portale Fabric |
-| 3 | Copia SAS URL nei 4 notebook | Race_P1 - Race_P4 |
-| 4 | Aggiorna CLUSTER_URI | Tutti i notebook |
-| 5 | Test con query KQL | KQL Database |
+| Step | Action | Where |
+|------|--------|-------|
+| 1 | Fill in CAPACITY_ID in deploy notebook | Deploy_FabricRacingGame |
+| 2 | Publish the Eventstream | Fabric Portal |
+| 3 | Copy SAS URL to the 4 notebooks | Race_P1 - Race_P4 |
+| 4 | Update CLUSTER_URI | All notebooks |
+| 5 | Test with KQL query | KQL Database |
 
 ## 🏅 Achievements
 
 | Achievement | Requirement | Badge |
 |-------------|-------------|-------|
-| First Start | Lancia la prima gara | 🏁 |
-| Full Grid | 4 giocatori connessi contemporaneamente | 👥 |
-| Photo Finish | Arrivo entro 0.5s di distacco | 📸 |
-| Speed Demon | Raggiungi velocità max > 200 | ⚡ |
-| Clean Race | Completa 5 giri senza collisioni | 🧹 |
-| Champion | Vinci 3 gare di fila | 🏆 |
+| First Start | Launch the first race | 🏁 |
+| Full Grid | 4 players connected simultaneously | 👥 |
+| Photo Finish | Finish within 0.5s of each other | 📸 |
+| Speed Demon | Reach max speed > 200 | ⚡ |
+| Clean Race | Complete 5 laps without collisions | 🧹 |
+| Champion | Win 3 races in a row | 🏆 |
 
-## 🎮 I 4 Piloti
+## 🎮 The 4 Drivers
 
-| Notebook | Giocatore | Colore | Emoji |
-|----------|-----------|--------|-------|
+| Notebook | Player | Color | Emoji |
+|----------|--------|-------|-------|
 | Race_P1 | Red Racer | 🔴 #FF0000 | 🏎️ |
 | Race_P2 | Blue Bolt | 🔵 #0000FF | 🚙 |
 | Race_P3 | Green Machine | 🟢 #00FF00 | 🚗 |
 | Race_P4 | Yellow Flash | 🟡 #FFFF00 | 🚕 |
 
-## 📁 Contenuto del Deploy
+## 📁 Deploy Contents
 
-Il notebook **Deploy_FabricRacingGame** (10 celle) crea automaticamente:
+The **Deploy_FabricRacingGame** notebook (10 cells) automatically creates:
 
 ```
 FabricRacingGame/
@@ -321,9 +321,9 @@ FabricRacingGame/
 
 ## 🎮 Related Games
 
-- 🚀 **Mission Artemis 2** - RTI avanzato con video sincronizzato
-- ⚽ **Sports Tracker** - Analytics per sport di squadra
-- 🎯 **Target Practice** - Fondamentali RTI in 5 minuti
+- 🚀 **Mission Artemis 2** - Advanced RTI with synchronized video
+- ⚽ **Sports Tracker** - Analytics for team sports
+- 🎯 **Target Practice** - RTI fundamentals in 5 minutes
 
 ---
 
