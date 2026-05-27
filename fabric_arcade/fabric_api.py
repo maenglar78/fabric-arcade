@@ -574,7 +574,7 @@ Follow the instructions in the game notebook.'''
             {
                 "cell_type": "markdown",
                 "metadata": {},
-                "source": game_instructions.split('\n')
+                "source": [line + '\n' for line in game_instructions.split('\n')[:-1]] + [game_instructions.split('\n')[-1]] if game_instructions else []
             },
             {
                 "cell_type": "markdown",
