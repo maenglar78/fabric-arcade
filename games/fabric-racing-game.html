@@ -26,7 +26,7 @@
             <div class="game-title-section">
                 <span class="game-badge mission">ACCELERATOR</span>
                 <h1>Fabric Racing Game</h1>
-                <p class="game-tagline">HTML5 multiplayer racing game for 4 drivers with real-time telemetry streaming</p>
+                <p class="game-tagline">Data Pipeline Edition - 10 Fabric-themed tracks, collect ⭐ data points, avoid 🐛 bugs!</p>
             </div>
         </header>
 
@@ -41,7 +41,7 @@
             </div>
             <div class="meta-item">
                 <span class="meta-label">Complete Time</span>
-                <span class="meta-value">~30 min</span>
+                <span class="meta-value">~45 min</span>
             </div>
             <div class="meta-item">
                 <span class="meta-label">Status</span>
@@ -51,7 +51,37 @@
 
         <section class="game-section">
             <h2>📋 Overview</h2>
-            <p>Race against 3 AI drivers in an HTML5 game while streaming real-time telemetry to Microsoft Fabric. Learn how to build Custom Endpoints, configure JSON mapping, and create live dashboards - all while having fun!</p>
+            <p>Race through <strong>10 Fabric-themed tracks</strong> in the Data Pipeline Edition! Collect ⭐ <strong>data points</strong> with a <strong>consecutive multiplier up to x10</strong>, avoid 🐛 <strong>bugs</strong>, and reach the <strong>finish line</strong> with enough points to advance. Vertical scrolling with START and FINISH lines!</p>
+        </section>
+
+        <section class="game-section">
+            <h2>🏆 Fabric-Themed Tracks</h2>
+            <div class="levels-table">
+                <table>
+                    <tr><th>Level</th><th>Track</th><th>Target</th><th>⭐ Data Points</th><th>🐛 Bugs</th></tr>
+                    <tr><td>1</td><td>Lakehouse Lane</td><td>500</td><td>12</td><td>5</td></tr>
+                    <tr><td>2</td><td>Pipeline Pass</td><td>800</td><td>14</td><td>7</td></tr>
+                    <tr><td>3</td><td>Warehouse Way</td><td>1,200</td><td>16</td><td>9</td></tr>
+                    <tr><td>4</td><td>Dataflow Drive</td><td>1,600</td><td>18</td><td>11</td></tr>
+                    <tr><td>5</td><td>Notebook Narrows</td><td>2,000</td><td>20</td><td>14</td></tr>
+                    <tr><td>6</td><td>Eventhouse Express</td><td>2,500</td><td>22</td><td>17</td></tr>
+                    <tr><td>7</td><td>Shortcut Sprint</td><td>3,000</td><td>24</td><td>20</td></tr>
+                    <tr><td>8</td><td>Capacity Canyon</td><td>3,500</td><td>26</td><td>24</td></tr>
+                    <tr><td>9</td><td>OneLake Overdrive</td><td>4,000</td><td>28</td><td>28</td></tr>
+                    <tr><td>10</td><td>Spark Summit</td><td>5,000</td><td>32</td><td>32</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>📊 Scoring System</h2>
+            <div class="scoring-grid">
+                <div class="scoring-item"><span class="scoring-icon">⭐</span><span>Data Point: +50 × multiplier</span></div>
+                <div class="scoring-item"><span class="scoring-icon">🔥</span><span>Multiplier: x2, x3... up to x10 (every 3 stars)</span></div>
+                <div class="scoring-item"><span class="scoring-icon">🐛</span><span>Bug Hit: -30 pts (resets multiplier)</span></div>
+                <div class="scoring-item"><span class="scoring-icon">🏁</span><span>Level Complete: Reach FINISH + target score</span></div>
+                <div class="scoring-item"><span class="scoring-icon">🔄</span><span>Score resets each level</span></div>
+            </div>
         </section>
 
         <section class="game-section">
@@ -82,12 +112,7 @@
                 <div class="item-card">
                     <span class="item-icon">📓</span>
                     <span class="item-name">Notebook</span>
-                    <span class="item-detail">Racing_Game</span>
-                </div>
-                <div class="item-card">
-                    <span class="item-icon">📓</span>
-                    <span class="item-name">Notebook</span>
-                    <span class="item-detail">Race_Simulator</span>
+                    <span class="item-detail">Racing_Championship</span>
                 </div>
                 <div class="item-card">
                     <span class="item-icon">📓</span>
@@ -160,9 +185,12 @@ arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
                 <div class="step-content">
                     <h4>Play! 🎮</h4>
                     <ul>
-                        <li><strong>WASD</strong> or <strong>Arrow Keys</strong>: Steer and accelerate</li>
-                        <li><strong>Space</strong>: Brake</li>
-                        <li>Invite up to 4 players for multiplayer races!</li>
+                        <li><strong>⬆️ Arrow Up</strong>: Accelerate</li>
+                        <li><strong>⬇️ Arrow Down</strong>: Brake</li>
+                        <li><strong>⬅️➡️ Arrows</strong>: Steer</li>
+                        <li><strong>SPACE</strong>: Start Race</li>
+                        <li>Collect ⭐ stars for combo multipliers!</li>
+                        <li>Reach target score to unlock next level!</li>
                     </ul>
                 </div>
             </div>
