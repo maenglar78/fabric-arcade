@@ -124,7 +124,7 @@ def _get_catalog() -> List[dict]:
         {
             "id": "fabric-racing-game",
             "name": "Fabric Racing Game",
-            "description": "🏎️ Un gioco HTML5 multiplayer per 4 piloti con telemetria real-time",
+            "description": "🏎️ HTML5 multiplayer racing game for 4 drivers with real-time telemetry",
             "workloads": ["RTI"],
             "difficulty": 2,
             "duration_minutes": 30,
@@ -133,7 +133,7 @@ def _get_catalog() -> List[dict]:
         {
             "id": "mission-artemis-2",
             "name": "Mission Artemis 2",
-            "description": "🚀 Missione lunare con 4 astronauti e telemetria real-time",
+            "description": "🚀 Lunar mission with 4 astronauts and real-time telemetry",
             "workloads": ["RTI", "DE"],
             "difficulty": 3,
             "duration_minutes": 45,
@@ -187,7 +187,7 @@ class Arcade:
         """List all available games"""
         catalog = _get_catalog()
         
-        print("🎮 Fabric Arcade - Giochi Disponibili\n")
+        print("🎮 Fabric Arcade - Available Games\n")
         print("-" * 60)
         
         for game in catalog:
@@ -198,12 +198,12 @@ class Arcade:
             print(f"\n{game.get('icon', '🎮')} {game['name']}")
             print(f"   ID: {game['id']}")
             print(f"   {game.get('description', '')}")
-            print(f"   Difficoltà: {difficulty}  |  Durata: {duration} min")
+            print(f"   Difficulty: {difficulty}  |  Duration: {duration} min")
             print(f"   Workloads: {workloads}")
         
         print("\n" + "-" * 60)
-        print(f"\nTotale: {len(catalog)} giochi")
-        print("\nUsa arcade.install('game-id') per installare un gioco")
+        print(f"\nTotal: {len(catalog)} games")
+        print("\nUse arcade.install('game-id') to install a game")
     
     def info(self, game_id: str) -> None:
         """Show detailed info about a game"""
@@ -211,18 +211,18 @@ class Arcade:
         game = next((g for g in catalog if g["id"] == game_id), None)
         
         if not game:
-            print(f"❌ Gioco '{game_id}' non trovato")
+            print(f"❌ Game '{game_id}' not found")
             return
         
         print(f"\n{game.get('icon', '🎮')} {game['name']}")
         print("=" * 50)
         print(f"\nID: {game['id']}")
-        print(f"Descrizione: {game.get('description', '')}")
-        print(f"Difficoltà: {'⭐' * game.get('difficulty', 1)}")
-        print(f"Durata: {game.get('duration_minutes', 30)} minuti")
+        print(f"Description: {game.get('description', '')}")
+        print(f"Difficulty: {'⭐' * game.get('difficulty', 1)}")
+        print(f"Duration: {game.get('duration_minutes', 30)} minutes")
         print(f"Workloads: {', '.join(game.get('workloads', []))}")
         print("\n" + "=" * 50)
-        print(f"\nPer installare: arcade.install('{game_id}')")
+        print(f"\nTo install: arcade.install('{game_id}')")
     
     def install(self, game_id: str, workspace_id: str = None) -> None:
         """Install a game in the current workspace"""
@@ -231,20 +231,20 @@ class Arcade:
         if workspace_id is None:
             try:
                 workspace_id = _get_current_workspace()
-                print(f"📍 Workspace corrente: {workspace_id[:8]}...")
+                print(f"📍 Current workspace: {workspace_id[:8]}...")
             except RuntimeError:
-                print("❌ Errore: Specifica workspace_id o esegui da un notebook Fabric")
+                print("❌ Error: Specify workspace_id or run from a Fabric notebook")
                 return
         
-        print(f"\n🎮 Installazione '{game_id}'...\n")
+        print(f"\n🎮 Installing '{game_id}'...\n")
         
         # Download game assets
         try:
-            print("📥 Download assets...")
+            print("📥 Downloading assets...")
             assets = _get_game_assets(game_id)
             manifest = assets["manifest"]
         except Exception as e:
-            print(f"❌ Errore download: {e}")
+            print(f"❌ Download error: {e}")
             return
         
         created_items = {}
@@ -253,14 +253,14 @@ class Arcade:
             # 1. Create Eventhouse
             for item in manifest.get("items", []):
                 if item["type"] == "Eventhouse":
-                    print(f"  ⏳ Creazione Eventhouse: {item['name']}...")
+                    print(f"  ⏳ Creating Eventhouse: {item['name']}...")
                     result = _api_call("POST", f"{FABRIC_API}/workspaces/{workspace_id}/items", {
                         "displayName": item["name"],
                         "type": "Eventhouse",
                         "description": f"Fabric Arcade - {item['name']}"
                     })
                     created_items[item["name"]] = result["id"]
-                    print(f"    ✅ Creato: {result['id'][:8]}...")
+                    print(f"    ✅ Created: {result['id'][:8]}...")
             
             # 2. Create KQL Database
             for item in manifest.get("items", []):
@@ -269,7 +269,7 @@ class Arcade:
                     if not parent_id:
                         continue
                     
-                    print(f"  ⏳ Creazione KQL Database: {item['name']}...")
+                    print(f"  ⏳ Creating KQL Database: {item['name']}...")
                     result = _api_call("POST", f"{FABRIC_API}/workspaces/{workspace_id}/items", {
                         "displayName": item["name"],
                         "type": "KQLDatabase",
@@ -281,10 +281,10 @@ class Arcade:
                     })
                     created_items[item["name"]] = result["id"]
                     created_items[f"{item['name']}_eventhouse"] = parent_id
-                    print(f"    ✅ Creato: {result['id'][:8]}...")
+                    print(f"    ✅ Created: {result['id'][:8]}...")
             
             # 3. Create tables
-            print("  ⏳ Attesa database ready...")
+            print("  ⏳ Waiting for database to be ready...")
             time.sleep(5)
             
             for table in manifest.get("tables", []):
@@ -293,7 +293,7 @@ class Arcade:
                 schema = assets["schemas"].get(table["name"])
                 
                 if db_id and schema:
-                    print(f"  ⏳ Creazione tabella: {table['name']}...")
+                    print(f"  ⏳ Creating table: {table['name']}...")
                     
                     # Get query URI
                     db_info = _api_call("GET", f"{FABRIC_API}/workspaces/{workspace_id}/kqlDatabases/{db_id}")
@@ -304,27 +304,27 @@ class Arcade:
                         commands = _parse_kql(schema)
                         for cmd in commands:
                             _execute_kql(query_uri, db_info["displayName"], cmd)
-                        print(f"    ✅ Tabella creata")
+                        print(f"    ✅ Table created")
             
             # 4. Create Eventstream
             for item in manifest.get("items", []):
                 if item["type"] == "Eventstream":
-                    print(f"  ⏳ Creazione Eventstream: {item['name']}...")
+                    print(f"  ⏳ Creating Eventstream: {item['name']}...")
                     result = _api_call("POST", f"{FABRIC_API}/workspaces/{workspace_id}/items", {
                         "displayName": item["name"],
                         "type": "Eventstream",
                         "description": f"Fabric Arcade - {item['name']}"
                     })
                     created_items[item["name"]] = result["id"]
-                    print(f"    ✅ Creato: {result['id'][:8]}...")
-                    print(f"    ⚠️ Configura manualmente: Custom Endpoint → KQL Database")
+                    print(f"    ✅ Created: {result['id'][:8]}...")
+                    print(f"    ⚠️ Configure manually: Custom Endpoint → KQL Database")
             
             # 5. Create Notebooks
             for item in manifest.get("items", []):
                 if item["type"] == "Notebook":
                     nb_content = assets["notebooks"].get(item["name"])
                     if nb_content:
-                        print(f"  ⏳ Creazione Notebook: {item['name']}...")
+                        print(f"  ⏳ Creating Notebook: {item['name']}...")
                         
                         encoded = base64.b64encode(nb_content.encode()).decode()
                         result = _api_call("POST", f"{FABRIC_API}/workspaces/{workspace_id}/items", {
@@ -341,10 +341,10 @@ class Arcade:
                             }
                         })
                         created_items[item["name"]] = result["id"]
-                        print(f"    ✅ Creato: {result['id'][:8]}...")
+                        print(f"    ✅ Created: {result['id'][:8]}...")
             
             # 6. Create README notebook with instructions
-            print(f"  ⏳ Creazione notebook README...")
+            print(f"  ⏳ Creating README notebook...")
             
             # Get game info for the notebook
             catalog = _get_catalog()
@@ -361,7 +361,7 @@ class Arcade:
             readme_result = _api_call("POST", f"{FABRIC_API}/workspaces/{workspace_id}/items", {
                 "displayName": f"{game_id}_README",
                 "type": "Notebook",
-                "description": f"Guida post-deploy per {game_info.get('name', game_id)}",
+                "description": f"Post-deploy guide for {game_info.get('name', game_id)}",
                 "definition": {
                     "format": "ipynb",
                     "parts": [{
@@ -372,18 +372,18 @@ class Arcade:
                 }
             })
             created_items[f"{game_id}_README"] = readme_result["id"]
-            print(f"    ✅ README creato: {readme_result['id'][:8]}...")
+            print(f"    ✅ README created: {readme_result['id'][:8]}...")
             
             # Success!
-            print(f"\n🎉 Installazione completata!")
-            print(f"   Creati {len([k for k in created_items if not k.endswith('_eventhouse')])} items")
-            print(f"\n📖 Prossimi passi:")
-            print(f"   1. Apri il notebook '{game_id}_README' per le istruzioni complete")
-            print(f"   2. Configura l'Eventstream (Custom Endpoint → KQL Database)")
-            print(f"   3. Avvia il gioco dal notebook principale!")
+            print(f"\n🎉 Installation complete!")
+            print(f"   Created {len([k for k in created_items if not k.endswith('_eventhouse')])} items")
+            print(f"\n📖 Next steps:")
+            print(f"   1. Open the '{game_id}_README' notebook for complete instructions")
+            print(f"   2. Configure the Eventstream (Custom Endpoint → KQL Database)")
+            print(f"   3. Start the game from the main notebook!")
             
         except Exception as e:
-            print(f"\n❌ Errore durante l'installazione: {e}")
+            print(f"\n❌ Error during installation: {e}")
             raise
 
 
@@ -443,84 +443,89 @@ def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, create
     
     # Get game-specific instructions based on game_id
     if game_id == "fabric-racing-game":
-        game_instructions = '''## 🏎️ Come Giocare
+        game_instructions = '''## 🏎️ How to Play
 
-### Passo 1: Configura l'Eventstream
-1. Apri **RacingEventstream** nel tuo workspace
-2. Clicca su **Edit** per entrare in modalità modifica
-3. Aggiungi una **Custom Endpoint Source**:
-   - Nome: `TelemetryInput`
-   - Questo creerà un endpoint HTTP per ricevere i dati
-4. Aggiungi una **KQL Database Destination**:
-   - Seleziona **RacingEventhouse** → **RacingDB**
-   - Tabella: **Telemetry**
-5. Collega Source → Destination e clicca **Publish**
+### Step 1: Configure the Eventstream
+1. Open **RacingEventstream** in your workspace
+2. Click **Edit** to enter edit mode
+3. Add a **Custom Endpoint** source:
+   - Name: `TelemetryInput`
+   - This will create an HTTP endpoint to receive data
+4. Add an **Eventhouse** destination:
+   - Data ingestion mode: **Event processing before ingestion**
+   - Workspace: **Your workspace**
+   - Eventhouse: **RacingEventhouse**
+   - KQL Database: **RaceData**
+   - KQL Destination table: **GameEvents**
+   - Input data format: **Json**
+5. Connect Source → Destination and click **Publish**
 
-### Passo 2: Copia l'URL dell'Eventstream
-1. Dopo il publish, clicca sulla Custom Endpoint Source
-2. Copia l'**Ingestion URL** (ti servirà nel gioco)
+### Step 2: Copy the Eventstream URL
+1. After publishing, click on the Custom Endpoint Source
+2. Copy the **Ingestion URL** (you'll need it in the game)
 
-### Passo 3: Avvia il Gioco
-1. Apri il notebook **RacingGame_Play**
-2. Incolla l'URL dell'Eventstream nella cella di configurazione
-3. Esegui tutte le celle
-4. Si aprirà il gioco HTML5 nel browser!
+### Step 3: Start the Game
+1. Open the **Racing_Championship** notebook
+2. Paste the Eventstream URL in the configuration cell
+3. Run all cells
+4. The HTML5 game will open in your browser!
 
-### Passo 4: Gioca! 🎮
-- **WASD** o **Frecce**: Sterza e accelera
-- **Spazio**: Freno
-- Invita fino a 4 giocatori per gare multiplayer!'''
+### Step 4: Play! 🎮
+- **Arrow Keys**: Steer left/right
+- **Collect ⭐** data points for bonus score
+- **Avoid 🐛** bugs or lose points
+- Reach the FINISH line with enough points to advance!'''
 
     elif game_id == "mission-artemis-2":
-        game_instructions = '''## 🚀 Come Iniziare la Missione
+        game_instructions = '''## 🚀 How to Start the Mission
 
-### Passo 1: Configura l'Eventstream
-1. Apri **ArtemisEventstream** nel tuo workspace
-2. Clicca su **Edit** per entrare in modalità modifica
-3. Aggiungi **4 Custom Endpoint Sources**:
+### Step 1: Configure the Eventstream
+1. Open **ArtemisEventstream** in your workspace
+2. Click **Edit** to enter edit mode
+3. Add **4 Custom Endpoint Sources**:
    - `VehicleTelemetryInput`
    - `CrewVitalsInput`
    - `EnvironmentalInput`
    - `MissionEventsInput`
-4. Aggiungi una **KQL Database Destination**:
-   - Seleziona **ArtemisEventhouse** → **MissionData**
-5. Mappa ogni Source alla tabella corrispondente
-6. Clicca **Publish**
+4. Add a **KQL Database Destination**:
+   - Select **ArtemisEventhouse** → **MissionData**
+5. Map each Source to its corresponding table
+6. Click **Publish**
 
-### Passo 2: Avvia la Simulazione
-1. Apri il notebook **Artemis_Simulator**
-2. Configura gli URL degli Eventstream Custom Endpoints
-3. Esegui la cella di configurazione
-4. Avvia la simulazione con `start_mission()`
+### Step 2: Start the Simulation
+1. Open the **Artemis_Simulator** notebook
+2. Configure the Eventstream Custom Endpoint URLs
+3. Run the configuration cell
+4. Start the simulation with `start_mission()`
 
-### Passo 3: Monitora dal Mission Control
-1. Apri il notebook **Mission_Control**
-2. Esegui le celle per visualizzare:
-   - 📊 Telemetria veicolo in tempo reale
-   - 👨‍🚀 Segni vitali equipaggio
-   - 🌡️ Condizioni ambientali
-   - 📜 Log eventi missione
-3. Il video della missione è sincronizzato con i dati!
+### Step 3: Monitor from Mission Control
+1. Open the **Mission_Control** notebook
+2. Run the cells to visualize:
+   - 📊 Real-time vehicle telemetry
+   - 👨‍🚀 Crew vital signs
+   - 🌡️ Environmental conditions
+   - 📜 Mission event log
+3. The mission video is synchronized with the data!
 
-### Passo 4: Analizza con KQL
-Esplora i dati con query KQL nella sezione "Query KQL" sotto.'''
+### Step 4: Analyze with KQL
+Explore the data with KQL queries in the "KQL Queries" section below.'''
 
     else:
-        game_instructions = '''## 🎮 Come Iniziare
+        game_instructions = '''## 🎮 How to Get Started
 
-### Passo 1: Configura l'Eventstream
-1. Apri l'Eventstream creato nel tuo workspace
-2. Configura le sorgenti dati appropriate
-3. Collega al KQL Database
-4. Clicca **Publish**
+### Step 1: Configure the Eventstream
+1. Open the Eventstream created in your workspace
+2. Configure the appropriate data sources
+3. Connect to the KQL Database
+4. Click **Publish**
 
-### Passo 2: Avvia il Gioco
-1. Apri il notebook principale del gioco
-2. Configura i parametri necessari
-3. Esegui le celle in ordine
+### Step 2: Start the Game
+1. Open the main game notebook
+2. Configure the required parameters
+3. Run the cells in order
 
-### Passo 3: Divertiti!
-Segui le istruzioni nel notebook del gioco.'''
+### Step 3: Have Fun!
+Follow the instructions in the game notebook.'''
 
     # Build items list
     items_list = ""

@@ -151,8 +151,17 @@ arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
                     <h4>Configure Eventstream</h4>
                     <p>Open <strong>RacingEventstream</strong> in your workspace and click <strong>Edit</strong>.</p>
                     <ul>
-                        <li>Add a <strong>Custom Endpoint Source</strong> named <code>TelemetryInput</code></li>
-                        <li>Add a <strong>KQL Database Destination</strong> → <code>RacingEventhouse</code> → <code>RacingDB</code> → <code>Telemetry</code></li>
+                        <li>Add a <strong>Custom Endpoint</strong> source named <code>TelemetryInput</code></li>
+                        <li>Add an <strong>Eventhouse</strong> destination:
+                            <ul>
+                                <li>Data ingestion mode: <strong>Event processing before ingestion</strong></li>
+                                <li>Workspace: <strong>Your workspace</strong></li>
+                                <li>Eventhouse: <strong>RacingEventhouse</strong></li>
+                                <li>KQL Database: <strong>RaceData</strong></li>
+                                <li>KQL Destination table: <strong>GameEvents</strong></li>
+                                <li>Input data format: <strong>Json</strong></li>
+                            </ul>
+                        </li>
                         <li>Connect Source to Destination</li>
                         <li>Click <strong>Publish</strong></li>
                     </ul>
@@ -171,7 +180,7 @@ arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
                 <div class="step-number">3</div>
                 <div class="step-content">
                     <h4>Start the Game</h4>
-                    <p>Open the <strong>RacingGame_Play</strong> notebook, paste the Eventstream URL, and run all cells.</p>
+                    <p>Open the <strong>Racing_Championship</strong> notebook, paste the Eventstream URL, and run all cells.</p>
                 </div>
             </div>
 
@@ -180,12 +189,11 @@ arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
                 <div class="step-content">
                     <h4>Play! 🎮</h4>
                     <ul>
-                        <li><strong>⬆️ Arrow Up</strong>: Accelerate</li>
-                        <li><strong>⬇️ Arrow Down</strong>: Brake</li>
-                        <li><strong>⬅️➡️ Arrows</strong>: Steer</li>
-                        <li><strong>SPACE</strong>: Start Race</li>
-                        <li>Collect ⭐ stars for combo multipliers!</li>
-                        <li>Reach target score to unlock next level!</li>
+                        <li><strong>⬅️➡️ Arrow Keys</strong>: Steer left/right</li>
+                        <li>Collect <strong>⭐ data points</strong> for bonus score</li>
+                        <li>Avoid <strong>🐛 bugs</strong> or lose points</li>
+                        <li>Reach the <strong>FINISH</strong> line with enough points!</li>
+                        <li>Complete all <strong>10 Fabric-themed tracks</strong> to win!</li>
                     </ul>
                 </div>
             </div>
@@ -213,7 +221,7 @@ arcade.install(<span class="string">"fabric-racing-game"</span>)</code></pre>
                     <li>🔥 <strong>Max Multiplier</strong> reached</li>
                     <li>🏆 <strong>Current Level</strong> of each player</li>
                 </ul>
-                <p class="challenge-hint">💡 <em>Hint: Use KQL Queryset or Real-Time Dashboard with queries on the Telemetry table!</em></p>
+                <p class="challenge-hint">💡 <em>Hint: Use KQL Queryset or Real-Time Dashboard with queries on the GameEvents table!</em></p>
             </div>
         </section>
 
