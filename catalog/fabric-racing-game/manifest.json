@@ -99,8 +99,8 @@
         {
             "type": "Notebook",
             "name": "Racing_Championship",
-            "file": "notebooks/racing_game_v2.ipynb",
-            "description": "🏎️ Championship Edition - 10 tracks, stars, obstacles, leaderboard!"
+            "file": "notebooks/racing_game_v3.ipynb",
+            "description": "🏎️ Championship Edition - SDK telemetry, 10 tracks, stars, leaderboard!"
         },
         {
             "type": "Notebook",
