@@ -1,49 +1,49 @@
 # Contributing to Fabric Arcade 🎮
 
-Grazie per voler contribuire a Fabric Arcade! Questo documento spiega come creare nuovi giochi per il catalogo.
+Thank you for wanting to contribute to Fabric Arcade! This document explains how to create new games for the catalog.
 
-## 🎯 Tipi di Contributi
+## 🎯 Types of Contributions
 
-### 1. Nuovo Gioco
-Crea un nuovo progetto gamificato per imparare Fabric.
+### 1. New Game
+Create a new gamified project to learn Fabric.
 
-### 2. Miglioramento Gioco Esistente
-Aggiungi feature, correggi bug, o migliora la documentazione.
+### 2. Improve Existing Game
+Add features, fix bugs, or improve documentation.
 
-### 3. Traduzione
-Traduci i giochi in altre lingue.
+### 3. Translation
+Translate games into other languages.
 
-## 🎮 Creare un Nuovo Gioco
+## 🎮 Creating a New Game
 
-### Step 1: Scegli il Tipo
+### Step 1: Choose the Type
 
-| Tipo | Durata | Complessità | Ideale per |
-|------|--------|-------------|------------|
-| **Mission** | 30-60 min | Multi-workload | Scenari completi end-to-end |
-| **Challenge** | 15-30 min | Singolo workload | Focus su skill specifiche |
-| **Arcade** | 5-15 min | Beginner | Demo rapide e divertenti |
+| Type | Duration | Complexity | Ideal for |
+|------|----------|------------|-----------|
+| **Mission** | 30-60 min | Multi-workload | Complete end-to-end scenarios |
+| **Challenge** | 15-30 min | Single workload | Focus on specific skills |
+| **Arcade** | 5-15 min | Beginner | Quick and fun demos |
 
-### Step 2: Definisci la Storia
+### Step 2: Define the Story
 
-Ogni gioco deve avere:
-- **Tema accattivante**: Spazio, sport, fantasy, simulazione...
-- **Obiettivo chiaro**: Cosa costruisce l'utente?
-- **Progressione**: Capitoli/livelli con difficoltà crescente
-- **Achievement**: Badge per motivare il completamento
+Every game must have:
+- **Engaging theme**: Space, sports, fantasy, simulation...
+- **Clear objective**: What does the user build?
+- **Progression**: Chapters/levels with increasing difficulty
+- **Achievements**: Badges to motivate completion
 
-### Step 3: Struttura Cartelle
+### Step 3: Folder Structure
 
 ```
 catalog/
 └── my-game-name/
-    ├── manifest.json      # Metadata obbligatorio
-    ├── README.md          # Documentazione gioco
-    ├── architecture.svg   # Diagramma architettura
+    ├── manifest.json      # Required metadata
+    ├── README.md          # Game documentation
+    ├── architecture.svg   # Architecture diagram
     ├── notebooks/
     │   ├── 01_setup.py
     │   ├── 02_main.py
     │   └── 03_analysis.py
-    ├── definitions/       # Fabric item definitions (opzionale)
+    ├── definitions/       # Fabric item definitions (optional)
     │   ├── eventhouse.json
     │   └── eventstream.json
     ├── data/
@@ -52,7 +52,7 @@ catalog/
         └── game_icon.png
 ```
 
-### Step 4: Crea il manifest.json
+### Step 4: Create the manifest.json
 
 ```json
 {
@@ -103,51 +103,51 @@ catalog/
 }
 ```
 
-### Step 5: Scrivi la Documentazione
+### Step 5: Write the Documentation
 
-Il README.md deve includere:
+The README.md must include:
 
-1. **Titolo e Badge** - Nome, difficoltà, durata, workload
-2. **Storia/Briefing** - Il contesto narrativo
-3. **Learning Objectives** - Cosa impareranno
-4. **Prerequisites** - Requisiti tecnici
-5. **Quick Start** - Come installare e avviare
-6. **Capitoli Dettagliati** - Guide step-by-step con codice
-7. **Achievement** - Badge guadagnabili
-8. **Architettura** - Diagramma ASCII o SVG
-9. **Risorse** - Link a documentazione Fabric
+1. **Title and Badges** - Name, difficulty, duration, workload
+2. **Story/Briefing** - The narrative context
+3. **Learning Objectives** - What they will learn
+4. **Prerequisites** - Technical requirements
+5. **Quick Start** - How to install and launch
+6. **Detailed Chapters** - Step-by-step guides with code
+7. **Achievements** - Earnable badges
+8. **Architecture** - ASCII or SVG diagram
+9. **Resources** - Links to Fabric documentation
 
-### Step 6: Crea i Notebook
+### Step 6: Create the Notebooks
 
-Linee guida per i notebook:
-- Usa celle magic `%md` per spiegazioni
-- Includi output di esempio dove possibile
-- Aggiungi emoji per rendere visivamente accattivante
-- Testa su Fabric prima di committare
+Guidelines for notebooks:
+- Use magic cells `%md` for explanations
+- Include sample output where possible
+- Add emojis to make it visually appealing
+- Test on Fabric before committing
 
-## 📋 Checklist Pre-Submit
+## 📋 Pre-Submit Checklist
 
-- [ ] manifest.json valido
-- [ ] README.md completo
-- [ ] Tutti i notebook testati su Fabric
-- [ ] Nessuna credenziale hardcoded
-- [ ] Achievement definiti
-- [ ] Diagramma architettura incluso
+- [ ] Valid manifest.json
+- [ ] Complete README.md
+- [ ] All notebooks tested on Fabric
+- [ ] No hardcoded credentials
+- [ ] Achievements defined
+- [ ] Architecture diagram included
 
 ## 🔍 Code Review
 
-Il tuo PR sarà revisionato per:
-- Correttezza tecnica
-- Qualità della narrazione
-- Completezza della documentazione
-- Test funzionali
+Your PR will be reviewed for:
+- Technical correctness
+- Narrative quality
+- Documentation completeness
+- Functional tests
 
-## 📜 Licenza
+## 📜 License
 
-Contribuendo accetti che il tuo codice sia rilasciato sotto licenza MIT.
+By contributing you agree that your code will be released under the MIT license.
 
 ---
 
-**Domande?** Apri una Issue o contattaci su Discord!
+**Questions?** Open an Issue or contact us on Discord!
 
 *"Every game makes Fabric more fun to learn!"* 🎮

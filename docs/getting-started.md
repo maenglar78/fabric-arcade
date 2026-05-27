@@ -195,28 +195,28 @@ Some advanced games require F4+ capacity. Check the game requirements in the cat
 
 *Happy Learning! 🎮*
 
-### Per Intermedi (15-30 min)
-| Gioco | Impari |
-|-------|--------|
-| 🏎️ Race Analytics | RTI completo + Power BI |
+### For Intermediate (15-30 min)
+| Game | You'll Learn |
+|------|-------------|
+| 🏎️ Race Analytics | Complete RTI + Power BI |
 | ⚽ Sports Tracker | RTI + Data Science/ML |
 | 🧙 Wizard's Workshop | Data Science patterns |
 | 🚂 Train Dispatch | Streaming optimization |
 
-### Per Avanzati (30-60 min)
-| Gioco | Impari |
-|-------|--------|
-| 🚀 Mission Artemis | RTI completo + anomaly detection |
+### For Advanced (30-60 min)
+| Game | You'll Learn |
+|------|-------------|
+| 🚀 Mission Artemis | Complete RTI + anomaly detection |
 | 🏰 Quest Pipeline | Medallion architecture |
 | 🏙️ City Builder | Data Warehouse star schema |
-| 🌊 Ocean Explorer | RTI + ML avanzato |
+| 🌊 Ocean Explorer | Advanced RTI + ML |
 
-## 🏆 Sistema Achievement
+## 🏆 Achievement System
 
-Ogni gioco ha achievement che puoi sbloccare:
+Each game has achievements you can unlock:
 
 ```python
-# Vedi i tuoi achievement
+# See your achievements
 arcade.achievements()
 
 # Output:
@@ -231,32 +231,32 @@ arcade.achievements()
 
 ## ❓ FAQ
 
-### Il gioco non si installa
-Verifica di essere autenticato con Azure:
+### The game won't install
+Verify you're authenticated with Azure:
 ```bash
 az account show
 ```
 
-Se non sei autenticato:
+If you're not authenticated:
 ```bash
 az login
 ```
 
-### Non ho abbastanza capacità
-Alcuni giochi richiedono F4+ per Spark. Prova prima i giochi con tag `RTI` o `PBI` che funzionano con F2.
+### I don't have enough capacity
+Some games require F4+ for Spark. First try games with `RTI` or `PBI` tags that work with F2.
 
-### Posso modificare i giochi?
-Assolutamente! Dopo l'installazione, tutti gli item sono nel tuo workspace. Modifica, sperimenta, impara!
+### Can I modify the games?
+Absolutely! After installation, all items are in your workspace. Modify, experiment, learn!
 
-### Come contribuisco un nuovo gioco?
-Vedi [CONTRIBUTING.md](CONTRIBUTING.md) per le linee guida.
+### How do I contribute a new game?
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## 🔗 Risorse
+## 🔗 Resources
 
-- [Documentazione Fabric](https://learn.microsoft.com/fabric/)
+- [Fabric Documentation](https://learn.microsoft.com/fabric/)
 - [GitHub Repository](https://github.com/fabricarcade/fabric-arcade)
 - [Discord Community](https://discord.gg/fabricarcade)
 
 ---
 
-**Pronto a giocare?** Inizia con `arcade.list()` e scegli la tua avventura! 🎮
+**Ready to play?** Start with `arcade.list()` and choose your adventure! 🎮

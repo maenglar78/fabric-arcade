@@ -164,7 +164,7 @@ PLAYER_NAME = "Red Racer"
 PLAYER_COLOR = "#FF0000"
 SAS_URL = "<eventstream-custom-endpoint-sas>"
 
-# Il gioco HTML5 embedded
+# The embedded HTML5 game
 game_html = f"""
 <canvas id="raceCanvas" width="800" height="600"></canvas>
 <script>
