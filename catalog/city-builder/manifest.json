@@ -1,0 +1,118 @@
+{
+    "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
+    "id": "city-builder",
+    "name": "City Builder - Datapolis Star Schema",
+    "version": "0.1.0-scaffold",
+    "description": "🏙️ Become the Mayor of Datapolis! Design Fabric Warehouse tables and a Power BI semantic model district by district. Master star schema, surrogate keys, SCD, and galaxy schema to graduate as Chief Data Architect.",
+    "type": "mission",
+    "workloads": ["DataWarehouse", "PowerBI"],
+    "difficulty": 3,
+    "duration_minutes": 90,
+    "icon": "🏙️",
+    "tags": ["star-schema", "warehouse", "power-bi", "dax", "semantic-model", "scd", "galaxy-schema"],
+    "author": {
+        "name": "Fabric Gaming Community"
+    },
+    "status": "scaffold",
+    "prerequisites": {
+        "fabric_capacity": "F2",
+        "python_packages": [],
+        "skills": ["Basic T-SQL", "Basic DAX", "Power BI modeling UI"]
+    },
+    "learning_objectives": [
+        "Identify facts vs dimensions and choose the right grain",
+        "Design surrogate keys and conformed dimensions",
+        "Apply SCD Type 1 and Type 2 patterns",
+        "Build star vs snowflake vs galaxy schemas",
+        "Author DAX measures on a Direct Lake / Import semantic model",
+        "Inspect schema correctness via INFORMATION_SCHEMA"
+    ],
+    "items": [
+        {
+            "type": "Lakehouse",
+            "name": "Datapolis_LH",
+            "description": "Raw 'dirty' datasets per district + expected oracle results for validation"
+        },
+        {
+            "type": "Warehouse",
+            "name": "Datapolis_DW",
+            "description": "Empty warehouse — player creates Fact* and Dim* tables here via T-SQL"
+        },
+        {
+            "type": "SemanticModel",
+            "name": "Datapolis_Model",
+            "description": "Direct Lake semantic model bound to Datapolis_DW — player adds relationships + DAX measures in Fabric UI"
+        },
+        {
+            "type": "Eventhouse",
+            "name": "Datapolis_EH",
+            "description": "Mayor's telemetry: districts built, measures validated, reputation"
+        },
+        {
+            "type": "KQLDatabase",
+            "name": "CityData",
+            "parent": "Datapolis_EH",
+            "description": "Database with CityEvents table"
+        },
+        {
+            "type": "Notebook",
+            "name": "CityBuilder_Seed",
+            "file": "notebooks/city_builder_seed.ipynb",
+            "description": "Generates 8 raw + expected datasets in Datapolis_LH (run once)"
+        },
+        {
+            "type": "Notebook",
+            "name": "CityBuilder_Mayor",
+            "file": "notebooks/city_builder_mayor.ipynb",
+            "description": "Briefings + mayor.inspect_district(name) validator (INFORMATION_SCHEMA + DAX via XMLA)"
+        },
+        {
+            "type": "Notebook",
+            "name": "CityBuilder_Dashboard",
+            "file": "notebooks/city_builder_dashboard.ipynb",
+            "description": "City map + reputation + DAX measure scoreboard"
+        }
+    ],
+    "tables": [
+        {
+            "name": "CityEvents",
+            "database": "CityData",
+            "schema": "schemas/CityEvents.kql",
+            "columns": [
+                "EventId", "Timestamp", "SessionId", "PlayerId", "EventType",
+                "District", "Concept", "Reputation", "RowsValidated",
+                "MeasureName", "ExpectedValue", "ActualValue", "ValidationResult"
+            ]
+        }
+    ],
+    "eventTypes": [
+        { "name": "MayorElected", "description": "Player starts City Builder" },
+        { "name": "DistrictAttempt", "description": "Player runs mayor.inspect_district(name)" },
+        { "name": "DistrictBuilt", "description": "Schema + measures validated" },
+        { "name": "DistrictRejected", "description": "Validation failed — try again" },
+        { "name": "CityCertified", "description": "Galaxy boss completed — Chief Data Architect" }
+    ],
+    "districts": [
+        { "n": 1, "name": "Town Hall",        "icon": "🏛️", "concept": "Fact vs Dimension identification",                  "raw_dataset": "town_hall_census_raw" },
+        { "n": 2, "name": "Residential",      "icon": "🏘️", "concept": "Surrogate keys + SCD Type 1",                       "raw_dataset": "residents_raw" },
+        { "n": 3, "name": "Taxi District",    "icon": "🚕", "concept": "Additive fact + conformed dimensions (DimDate, DimGeo)", "raw_dataset": "taxi_trips_raw" },
+        { "n": 4, "name": "Energy Grid",      "icon": "⚡", "concept": "Semi-additive fact (snapshot meter readings)",       "raw_dataset": "energy_meters_raw" },
+        { "n": 5, "name": "Retail Plaza",     "icon": "🛒", "concept": "Role-playing dimensions (OrderDate vs ShipDate)",   "raw_dataset": "retail_pos_raw" },
+        { "n": 6, "name": "Hospital",         "icon": "🏥", "concept": "Junk + degenerate dimensions (TicketNumber)",       "raw_dataset": "hospital_admissions_raw" },
+        { "n": 7, "name": "Industrial Park",  "icon": "🏭", "concept": "SCD Type 2 (supplier history)",                     "raw_dataset": "suppliers_raw" },
+        { "n": 8, "name": "City-wide BI",     "icon": "🌃", "concept": "BOSS: Galaxy schema with 3 facts sharing conformed dims + perf tuning", "raw_dataset": "all_districts" }
+    ],
+    "validation_strategy": {
+        "schema_check": "Query INFORMATION_SCHEMA.TABLES / COLUMNS / KEY_COLUMN_USAGE on Datapolis_DW",
+        "measure_check": "Connect via XMLA endpoint to Datapolis_Model, execute EVALUATE, compare to expected oracle values",
+        "telemetry": "Emit DistrictBuilt / DistrictRejected events to CityEvents"
+    },
+    "post_deploy_steps": [
+        "Run CityBuilder_Seed notebook once to populate raw + expected datasets in Datapolis_LH",
+        "Open CityBuilder_Mayor notebook and read the District 1 briefing",
+        "Open Datapolis_DW in Fabric and CREATE the tables required by the briefing",
+        "Open Datapolis_Model in Fabric, add relationships, write DAX measures",
+        "Run mayor.inspect_district('town-hall') — validation + reputation update",
+        "Advance through 8 districts, ending with the City-wide BI boss (galaxy schema)"
+    ]
+}

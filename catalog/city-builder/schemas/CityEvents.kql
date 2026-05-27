@@ -1,0 +1,18 @@
+// CityEvents — KQL schema for City Builder mayor telemetry
+.create-merge table CityEvents (
+    EventId: string,
+    Timestamp: datetime,
+    SessionId: string,
+    PlayerId: string,
+    EventType: string,        // MayorElected | DistrictAttempt | DistrictBuilt | DistrictRejected | CityCertified
+    District: string,         // town-hall | residential | taxi | energy | retail | hospital | industrial | citywide
+    Concept: string,          // surrogate-key | scd1 | scd2 | conformed-dim | galaxy | ...
+    Reputation: long,
+    RowsValidated: long,
+    MeasureName: string,
+    ExpectedValue: real,
+    ActualValue: real,
+    ValidationResult: string  // PASS | FAIL | PARTIAL
+)
+
+.alter-merge table CityEvents policy retention softdelete = 90d

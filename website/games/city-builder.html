@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Builder - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .district-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin: 20px 0;
+        }
+        .district-card {
+            background: linear-gradient(135deg, #1f2d3d 0%, #1a1a2e 100%);
+            border: 2px solid #3498db;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+        .district-card:hover { transform: translateY(-4px); border-color: #00d2ff; }
+        .district-card.boss { border-color: #ffd700; background: linear-gradient(135deg, #3d2f1f 0%, #2a1a0e 100%); }
+        .district-icon { font-size: 42px; }
+        .district-name { color: #00d2ff; font-size: 18px; font-weight: bold; margin: 8px 0; }
+        .district-card.boss .district-name { color: #ffd700; }
+        .district-concept { color: #ccc; font-size: 14px; }
+        .district-level { color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#games" class="back-link">← Back to Catalog</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">🏙️</div>
+            <div class="game-title-section">
+                <span class="game-badge mission">MISSION</span>
+                <h1>City Builder</h1>
+                <p class="game-tagline">Become the Mayor of Datapolis — design Warehouse star schemas and a Power BI semantic model, one district at a time!</p>
+            </div>
+        </header>
+
+        <div class="game-meta-bar">
+            <div class="meta-item">
+                <span class="meta-label">Difficulty</span>
+                <span class="meta-value">⭐⭐⭐ Advanced</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Deploy Time</span>
+                <span class="meta-value">~5 min</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Complete Time</span>
+                <span class="meta-value">~90 min</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Status</span>
+                <span class="meta-value status-coming">🔜 Coming Soon</span>
+            </div>
+        </div>
+
+        <!-- OVERVIEW -->
+        <section class="game-section">
+            <h2>📋 Overview</h2>
+            <p>
+                Welcome, <strong>Mayor of Datapolis</strong>! Your city is growing fast and the Council needs answers.
+                Build a real <strong>Fabric Warehouse</strong> and a <strong>Power BI semantic model</strong> to
+                serve the citizens, district by district.
+            </p>
+            <p>
+                Each district teaches a core <strong>dimensional modeling concept</strong> — surrogate keys, conformed dimensions,
+                semi-additive facts, SCD Type 2 — and ends with a <strong>boss-level galaxy schema</strong> uniting
+                all 3 main facts of your city.
+            </p>
+        </section>
+
+        <!-- QUICK START -->
+        <section class="game-section quickstart">
+            <h2>🚀 Quick Start</h2>
+            <p>Coming soon! This game is currently in development.</p>
+            <div class="code-block">
+                <pre><code><span class="comment"># Coming soon</span>
+<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+
+arcade.install(<span class="string">"city-builder"</span>)</code></pre>
+            </div>
+            <p style="margin-top: 15px;">
+                <strong>Want to be notified?</strong>
+                <a href="https://github.com/maenglar78/fabric-arcade" style="color: #00b894;">⭐ Star the repo</a>
+                to get updates!
+            </p>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="game-section">
+            <h2>🧩 How You Play (Real Fabric, Not a Simulation)</h2>
+            <p>City Builder is a <strong>learning quest</strong>: you model <strong>real Fabric Warehouse tables</strong> and a <strong>Power BI semantic model</strong>. Every district follows the same loop:</p>
+            <ol style="line-height: 2; color: #ccc;">
+                <li>📖 Read the <strong>briefing</strong> in the <code>CityBuilder_Mayor</code> notebook (e.g. <em>"Datapolis launched a taxi service — build <code>FactTaxiTrip</code> + <code>DimDate</code>, <code>DimDriver</code>, <code>DimZone</code>, <code>DimVehicle</code>"</em>).</li>
+                <li>💼 Open the <strong>empty Warehouse</strong> <code>Datapolis_DW</code> in Fabric and write T-SQL to <code>CREATE</code> the tables and load them from the raw data in <code>Datapolis_LH</code>.</li>
+                <li>🔗 Open the <strong>Semantic Model</strong> <code>Datapolis_Model</code> in Fabric, add the required <strong>relationships</strong>, and author the <strong>DAX measures</strong> listed in the briefing.</li>
+                <li>⚖️ Back in the notebook, run <code>mayor.inspect_district("taxi")</code> — the Mayor validates your schema via <code>INFORMATION_SCHEMA</code>, runs your DAX measures via the <strong>XMLA endpoint</strong>, and compares to the expected oracle. Telemetry goes to the Eventhouse.</li>
+                <li>📊 The <code>CityBuilder_Dashboard</code> updates live with the city map, your Mayor reputation, and the DAX scoreboard.</li>
+            </ol>
+        </section>
+
+        <!-- ITEMS INSTALLED -->
+        <section class="game-section">
+            <h2>📦 What Gets Installed in Your Workspace</h2>
+            <p><code>arcade.install("city-builder")</code> deploys:</p>
+            <ul style="line-height: 2; color: #ccc;">
+                <li>🏠 <strong>1 Lakehouse</strong> <code>Datapolis_LH</code> — 8 raw datasets (one per district) + 8 expected oracle datasets used for validation.</li>
+                <li>🏛️ <strong>1 Warehouse</strong> <code>Datapolis_DW</code> — <em>pre-created empty</em>. You add <code>Fact*</code> and <code>Dim*</code> tables yourself via T-SQL.</li>
+                <li>📐 <strong>1 Semantic Model</strong> <code>Datapolis_Model</code> — <em>pre-created empty</em>, bound to the Warehouse. You add relationships and DAX measures in the Fabric UI.</li>
+                <li>⚡ <strong>1 Eventhouse</strong> <code>Datapolis_EH</code> with KQL Database <code>CityData</code> and table <code>CityEvents</code> — Mayor's telemetry for every inspection.</li>
+                <li>📓 <strong>3 Notebooks</strong>:
+                    <ul>
+                        <li><code>CityBuilder_Seed</code> — generates raw + expected datasets (run once).</li>
+                        <li><code>CityBuilder_Mayor</code> — district briefings + <code>inspect_district(name)</code> validator.</li>
+                        <li><code>CityBuilder_Dashboard</code> — live city map + reputation + DAX scoreboard.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <!-- DISTRICTS -->
+        <section class="game-section">
+            <h2>🗺️ The 8 Districts of Datapolis</h2>
+            <p>Each district teaches one star-schema concept:</p>
+            <div class="district-grid">
+                <div class="district-card">
+                    <div class="district-icon">🏛️</div>
+                    <div class="district-level">District 1</div>
+                    <div class="district-name">Town Hall</div>
+                    <div class="district-concept">Identify facts vs dimensions, choose the right grain</div>
+                </div>
+                <div class="district-card">
+                    <div class="district-icon">🏘️</div>
+                    <div class="district-level">District 2</div>
+                    <div class="district-name">Residential</div>
+                    <div class="district-concept">Surrogate keys + SCD Type 1 (overwrite)</div>
+                </div>
+                <div class="district-card">
+                    <div class="district-icon">🚕</div>
+                    <div class="district-level">District 3</div>
+                    <div class="district-name">Taxi District</div>
+                    <div class="district-concept">Additive fact + conformed dimensions (DimDate, DimGeo)</div>
+                </div>
+                <div class="district-card">
+                    <div class="district-icon">⚡</div>
+                    <div class="district-level">District 4</div>
+                    <div class="district-name">Energy Grid</div>
+                    <div class="district-concept">Semi-additive fact (snapshot meter readings)</div>
+                </div>
+                <div class="district-card">
+                    <div class="district-icon">🛒</div>
+                    <div class="district-level">District 5</div>
+                    <div class="district-name">Retail Plaza</div>
+                    <div class="district-concept">Role-playing dimensions (OrderDate vs ShipDate)</div>
+                </div>
+                <div class="district-card">
+                    <div class="district-icon">🏥</div>
+                    <div class="district-level">District 6</div>
+                    <div class="district-name">Hospital</div>
+                    <div class="district-concept">Junk + degenerate dimensions (TicketNumber)</div>
+                </div>
+                <div class="district-card">
+                    <div class="district-icon">🏭</div>
+                    <div class="district-level">District 7</div>
+                    <div class="district-name">Industrial Park</div>
+                    <div class="district-concept">SCD Type 2 (supplier history)</div>
+                </div>
+                <div class="district-card boss">
+                    <div class="district-icon">🌃</div>
+                    <div class="district-level">District 8 — BOSS</div>
+                    <div class="district-name">City-wide BI</div>
+                    <div class="district-concept">Galaxy schema: 3 facts sharing conformed dimensions + perf tuning</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAYOR JUDGE -->
+        <section class="game-section">
+            <h2>🤖 What the Mayor (Judge) Checks</h2>
+            <ul style="line-height: 2; color: #ccc;">
+                <li>✅ <strong>Grain</strong> — fact row count matches raw event count</li>
+                <li>✅ <strong>Keys</strong> — surrogate <code>INT IDENTITY</code>, no NULL foreign keys</li>
+                <li>✅ <strong>Relationships</strong> — many-to-one, single direction (no rogue bidirectional)</li>
+                <li>✅ <strong>Star vs Snowflake</strong> — penalty if you snowflake without reason</li>
+                <li>✅ <strong>DAX measure values</strong> — executed via XMLA <code>EVALUATE</code>, compared to oracle</li>
+                <li>✅ <strong>Performance</strong> — query time under threshold</li>
+            </ul>
+        </section>
+
+        <!-- TELEMETRY -->
+        <section class="game-section">
+            <h2>📊 Telemetry Events → Eventhouse</h2>
+            <p>Every Mayor's inspection generates real-time events for analytics:</p>
+            <div class="telemetry-events">
+                <span class="telemetry-event">MayorElected</span>
+                <span class="telemetry-event">DistrictAttempt</span>
+                <span class="telemetry-event">DistrictBuilt</span>
+                <span class="telemetry-event">DistrictRejected</span>
+                <span class="telemetry-event">CityCertified</span>
+            </div>
+        </section>
+
+        <!-- WORKLOADS -->
+        <section class="game-section">
+            <h2>🔧 Workloads</h2>
+            <div class="workload-tags">
+                <span class="workload-tag dw">Data Warehouse</span>
+                <span class="workload-tag pbi">Power BI</span>
+                <span class="workload-tag rti">Real-Time Intelligence</span>
+            </div>
+        </section>
+
+        <!-- WHAT YOU LEARN -->
+        <section class="game-section">
+            <h2>🎓 What You'll Learn</h2>
+            <div class="levels-table">
+                <table>
+                    <tr><th>Skill</th><th>Fabric / Modeling Feature</th><th>Level</th></tr>
+                    <tr><td>Identify facts vs dimensions</td><td>Dimensional modeling</td><td>⭐</td></tr>
+                    <tr><td>Surrogate keys</td><td>T-SQL <code>IDENTITY</code></td><td>⭐</td></tr>
+                    <tr><td>Conformed dimensions</td><td>Star schema basics</td><td>⭐⭐</td></tr>
+                    <tr><td>Semi-additive facts</td><td>Snapshot patterns</td><td>⭐⭐</td></tr>
+                    <tr><td>Role-playing dimensions</td><td>DAX <code>USERELATIONSHIP</code></td><td>⭐⭐</td></tr>
+                    <tr><td>Junk + degenerate dims</td><td>Kimball patterns</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>SCD Type 1 &amp; Type 2</td><td>Slowly Changing Dimensions</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Galaxy schema</td><td>Multi-fact conformed modeling</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>DAX measures via XMLA</td><td>Semantic model authoring</td><td>⭐⭐⭐</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <p style="text-align: center; color: #888; margin: 40px 0;">
+            Made with 🎮 by the Fabric Community<br>
+            <small>Not affiliated with Microsoft</small>
+        </p>
+    </main>
+</body>
+</html>
