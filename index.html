@@ -45,11 +45,11 @@
 <span class="code">&gt;&gt;&gt;</span> arcade.list()
 
 <span class="output">🎮 Available Games:</span>
-<span class="output">  🏎️ Fabric Racing Game   ⭐⭐    RTI        30 min  ✅</span>
-<span class="output">  🚀 Mission Artemis 2    ⭐⭐⭐  RTI + DE   45 min  ✅</span>
-<span class="output">  ⚽ Sports Tracker       ⭐⭐    RTI + DS   25 min  🔜</span>
-<span class="output">  🏰 Quest Pipeline       ⭐⭐⭐  DE         40 min  🔜</span>
-<span class="output">  🏙️ City Builder         ⭐⭐⭐  DW + PBI   45 min</span>
+<span class="output">  🏎️ Fabric Racing Game   ⭐⭐    Real-Time Intelligence  30 min  ✅</span>
+<span class="output">  🚀 Mission Artemis 2    ⭐⭐⭐  Real-Time + Data Eng.   45 min  ✅</span>
+<span class="output">  ⚽ Sports Tracker       ⭐⭐    Real-Time + Data Sci.   25 min  🔜</span>
+<span class="output">  🏰 Quest Pipeline       ⭐⭐⭐  Data Engineering        40 min  🔜</span>
+<span class="output">  🏙️ City Builder         ⭐⭐⭐  Warehouse + Power BI    45 min</span>
 
 <span class="code">&gt;&gt;&gt;</span> arcade.install(<span class="string">"fabric-racing-game"</span>)
 <span class="success">✅ Game deployed to your Fabric workspace!</span>
@@ -78,7 +78,7 @@
         
         <div class="games-grid">
             <!-- Mission Artemis 2 -->
-            <div class="game-card" data-workloads="RTI DE">
+            <a href="games/mission-artemis-2.html" class="game-card" data-workloads="RTI DE">
                 <div class="game-icon">🚀</div>
                 <div class="game-badge mission">MISSION</div>
                 <h3>Mission Artemis 2</h3>
@@ -88,30 +88,30 @@
                     <span class="duration">⏱️ 45 min</span>
                 </div>
                 <div class="game-workloads">
-                    <span class="workload rti">RTI</span>
-                    <span class="workload de">DE</span>
+                    <span class="workload rti">Real-Time Intelligence</span>
+                    <span class="workload de">Data Engineering</span>
                 </div>
-                <a href="games/mission-artemis-2.html" class="btn-play">PLAY →</a>
-            </div>
+                <span class="btn-play">PLAY →</span>
+            </a>
             
             <!-- Fabric Racing Game -->
-            <div class="game-card" data-workloads="RTI">
+            <a href="games/fabric-racing-game.html" class="game-card" data-workloads="RTI">
                 <div class="game-icon">🏎️</div>
                 <div class="game-badge mission">MISSION</div>
                 <h3>Fabric Racing Game</h3>
-                <p>HTML5 multiplayer game for 4 drivers with real-time telemetry.</p>
+                <p>10 Fabric-themed tracks. Collect ⭐ data points, avoid 🐛 bugs!</p>
                 <div class="game-meta">
                     <span class="difficulty">⭐⭐</span>
                     <span class="duration">⏱️ 30 min</span>
                 </div>
                 <div class="game-workloads">
-                    <span class="workload rti">RTI</span>
+                    <span class="workload rti">Real-Time Intelligence</span>
                 </div>
-                <a href="games/fabric-racing-game.html" class="btn-play">PLAY →</a>
-            </div>
+                <span class="btn-play">PLAY →</span>
+            </a>
             
             <!-- Sports Tracker -->
-            <div class="game-card" data-workloads="RTI DS">
+            <a href="games/coming-soon.html" class="game-card coming-soon" data-workloads="RTI DS">
                 <div class="game-icon">⚽</div>
                 <div class="game-badge challenge">CHALLENGE</div>
                 <h3>Sports Tracker</h3>
@@ -121,14 +121,14 @@
                     <span class="duration">⏱️ 25 min</span>
                 </div>
                 <div class="game-workloads">
-                    <span class="workload rti">RTI</span>
-                    <span class="workload ds">DS</span>
+                    <span class="workload rti">Real-Time Intelligence</span>
+                    <span class="workload ds">Data Science</span>
                 </div>
-                <a href="games/coming-soon.html" class="btn-play">SOON →</a>
-            </div>
+                <span class="btn-play btn-soon">SOON →</span>
+            </a>
             
             <!-- Quest Pipeline -->
-            <div class="game-card" data-workloads="DE">
+            <a href="games/coming-soon.html" class="game-card coming-soon" data-workloads="DE">
                 <div class="game-icon">🏰</div>
                 <div class="game-badge mission">MISSION</div>
                 <h3>Quest Data Pipeline</h3>
@@ -138,13 +138,13 @@
                     <span class="duration">⏱️ 40 min</span>
                 </div>
                 <div class="game-workloads">
-                    <span class="workload de">DE</span>
+                    <span class="workload de">Data Engineering</span>
                 </div>
-                <a href="games/coming-soon.html" class="btn-play">SOON →</a>
-            </div>
+                <span class="btn-play btn-soon">SOON →</span>
+            </a>
             
             <!-- City Builder -->
-            <div class="game-card" data-workloads="DW PBI">
+            <a href="games/coming-soon.html" class="game-card coming-soon" data-workloads="DW PBI">
                 <div class="game-icon">🏙️</div>
                 <div class="game-badge mission">MISSION</div>
                 <h3>City Builder</h3>
@@ -154,14 +154,14 @@
                     <span class="duration">⏱️ 45 min</span>
                 </div>
                 <div class="game-workloads">
-                    <span class="workload dw">DW</span>
-                    <span class="workload pbi">PBI</span>
+                    <span class="workload dw">Data Warehouse</span>
+                    <span class="workload pbi">Power BI</span>
                 </div>
-                <a href="games/coming-soon.html" class="btn-play">SOON →</a>
-            </div>
+                <span class="btn-play btn-soon">SOON →</span>
+            </a>
             
             <!-- Retro Arcade -->
-            <div class="game-card" data-workloads="PBI">
+            <a href="games/coming-soon.html" class="game-card coming-soon" data-workloads="PBI">
                 <div class="game-icon">🎰</div>
                 <div class="game-badge arcade">ARCADE</div>
                 <h3>Retro Arcade</h3>
@@ -171,10 +171,10 @@
                     <span class="duration">⏱️ 15 min</span>
                 </div>
                 <div class="game-workloads">
-                    <span class="workload pbi">PBI</span>
+                    <span class="workload pbi">Power BI</span>
                 </div>
-                <a href="games/coming-soon.html" class="btn-play">SOON →</a>
-            </div>
+                <span class="btn-play btn-soon">SOON →</span>
+            </a>
         </div>
     </section>
 
@@ -198,7 +198,7 @@
             <div class="feature-card">
                 <div class="feature-icon">📊</div>
                 <h3>Real Workloads</h3>
-                <p>RTI, Spark, Warehouse, Power BI - all Fabric workloads in gaming format.</p>
+                <p>Real-Time Intelligence, Spark, Warehouse, Power BI - all Fabric workloads in gaming format.</p>
             </div>
             
             <div class="feature-card">
@@ -229,33 +229,34 @@
             <div class="step">
                 <div class="step-number">1</div>
                 <h3>Install</h3>
-                <code>%pip install -q fabric-arcade</code>
+                <code>%pip install fabric-arcade</code>
             </div>
             
             <div class="step">
                 <div class="step-number">2</div>
-                <h3>Import</h3>
-                <code>from fabric_arcade import arcade</code>
-            </div>
-            
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Browse</h3>
+                <h3>Choose</h3>
                 <code>arcade.list()</code>
             </div>
             
             <div class="step">
-                <div class="step-number">4</div>
-                <h3>Deploy!</h3>
+                <div class="step-number">3</div>
+                <h3>Deploy</h3>
                 <code>arcade.install("fabric-racing-game")</code>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Play!</h3>
+                <code>arcade.run("fabric-racing-game")</code>
             </div>
         </div>
         
         <div class="requirements">
             <h3>📋 Requirements</h3>
             <ul>
-                <li>Microsoft Fabric workspace (F2+ capacity or Trial)</li>
-                <li>Contributor permissions on the workspace</li>
+                <li>Python 3.9+</li>
+                <li>Microsoft Fabric workspace (F2+ capacity)</li>
+                <li>Azure CLI logged in (<code>az login</code>)</li>
             </ul>
         </div>
     </section>
@@ -269,7 +270,7 @@
             <div class="footer-links">
                 <a href="https://github.com/maenglar78/fabric-arcade">GitHub</a>
                 <a href="https://pypi.org/project/fabric-arcade/">PyPI</a>
-                <a href="docs/getting-started.md">Documentation</a>
+                <a href="docs/">Documentation</a>
                 <a href="https://learn.microsoft.com/fabric/">Microsoft Fabric</a>
             </div>
             

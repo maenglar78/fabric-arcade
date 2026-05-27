@@ -448,6 +448,84 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
+/* Challenge Section */
+.challenge-section {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(249, 115, 22, 0.15));
+    padding: 30px;
+    border-radius: 12px;
+    border: 2px solid rgba(251, 191, 36, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.challenge-section::before {
+    content: "🏆";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 6rem;
+    opacity: 0.1;
+}
+
+.challenge-section h2 {
+    color: #fbbf24 !important;
+}
+
+.challenge-box {
+    position: relative;
+    z-index: 1;
+}
+
+.challenge-intro {
+    font-size: 1.15rem;
+    margin-bottom: 15px;
+    color: #fef3c7;
+}
+
+.challenge-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.challenge-list li {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border-left: 4px solid #fbbf24;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.challenge-hint {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+}
+
+/* Scoring Grid */
+.scoring-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.scoring-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.scoring-icon {
+    font-size: 1.5rem;
+}
+
 .levels-table td:first-child {
     color: var(--accent);
     font-weight: bold;
