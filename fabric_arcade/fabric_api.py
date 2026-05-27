@@ -540,9 +540,9 @@ Follow the instructions in the game notebook.'''
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    f"# 📖 {game_name} - Guida Post-Deploy\n",
+                    f"# 📖 {game_name} - Post-Deploy Guide\n",
                     "\n",
-                    f"Benvenuto in **{game_name}**! Questa guida ti aiuterà a configurare e avviare il gioco.\n",
+                    f"Welcome to **{game_name}**! This guide will help you configure and start the game.\n",
                     "\n",
                     "---"
                 ]
@@ -551,9 +551,9 @@ Follow the instructions in the game notebook.'''
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    "## ✅ Items Creati\n",
+                    "## ✅ Items Created\n",
                     "\n",
-                    "I seguenti items sono stati creati nel tuo workspace:\n",
+                    "The following items have been created in your workspace:\n",
                     "\n",
                     items_list
                 ]
@@ -567,25 +567,25 @@ Follow the instructions in the game notebook.'''
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    "## 🔍 Query KQL di Esempio\n",
+                    "## 🔍 Sample KQL Queries\n",
                     "\n",
-                    "Ecco alcune query KQL utili per esplorare i dati:"
+                    "Here are some useful KQL queries to explore the data:"
                 ]
             },
             {
                 "cell_type": "code",
                 "metadata": {},
                 "source": [
-                    "# Query KQL - Eseguile nel KQL Queryset o dal notebook\n",
+                    "# KQL Queries - Run them in KQL Queryset or from a notebook\n",
                     "\n",
-                    "# Ultimi 10 record\n",
-                    "# Telemetry | take 10\n",
+                    "# Last 10 records\n",
+                    "# GameEvents | take 10\n",
                     "\n",
-                    "# Aggregazione per driver/astronauta\n",
-                    "# Telemetry | summarize count() by DriverId\n",
+                    "# Aggregation by driver/player\n",
+                    "# GameEvents | summarize count() by PlayerId\n",
                     "\n",
-                    "# Serie temporale\n",
-                    "# Telemetry | summarize avg(Speed) by bin(Timestamp, 1s) | render timechart"
+                    "# Time series\n",
+                    "# GameEvents | summarize avg(Score) by bin(Timestamp, 1s) | render timechart"
                 ],
                 "execution_count": None,
                 "outputs": []
@@ -596,27 +596,27 @@ Follow the instructions in the game notebook.'''
                 "source": [
                     "## 🆘 Troubleshooting\n",
                     "\n",
-                    "### L'Eventstream non riceve dati\n",
-                    "- Verifica che l'Eventstream sia in stato **Running**\n",
-                    "- Controlla che l'URL del Custom Endpoint sia corretto\n",
-                    "- Assicurati che il mapping Source → Destination sia configurato\n",
+                    "### Eventstream is not receiving data\n",
+                    "- Verify that the Eventstream is in **Running** state\n",
+                    "- Check that the Custom Endpoint URL is correct\n",
+                    "- Make sure the Source → Destination mapping is configured\n",
                     "\n",
-                    "### Le tabelle KQL sono vuote\n",
-                    "- Attendi qualche secondo dopo l'invio dei primi dati\n",
-                    "- Verifica la connessione Eventstream → KQL Database\n",
-                    "- Controlla i log dell'Eventstream per errori\n",
+                    "### KQL tables are empty\n",
+                    "- Wait a few seconds after sending the first data\n",
+                    "- Verify the Eventstream → KQL Database connection\n",
+                    "- Check the Eventstream logs for errors\n",
                     "\n",
-                    "### Il notebook non si connette\n",
-                    "- Verifica che il Lakehouse sia collegato al notebook\n",
-                    "- Riavvia il kernel se necessario\n",
+                    "### Notebook won't connect\n",
+                    "- Verify that the Lakehouse is attached to the notebook\n",
+                    "- Restart the kernel if necessary\n",
                     "\n",
                     "---\n",
                     "\n",
-                    "## 🎮 Buon Divertimento!\n",
+                    "## 🎮 Have Fun!\n",
                     "\n",
-                    "Per supporto: [GitHub Issues](https://github.com/maenglar78/fabric-arcade/issues)\n",
+                    "For support: [GitHub Issues](https://github.com/maenglar78/fabric-arcade/issues)\n",
                     "\n",
-                    "Per altri giochi: `from fabric_arcade import arcade; arcade.list()`"
+                    "For more games: `from fabric_arcade import arcade; arcade.list()`"
                 ]
             }
         ],
