@@ -102,15 +102,28 @@ This creates in your Fabric workspace:
 
 ---
 
-### Step 2: Get Connection String
+### Step 2: Get the 4 SAS Credentials
 
-1. Click on **TelemetryInput** node
+1. In Eventstream canvas, click on **TelemetryInput** (Custom Endpoint)
 
-2. In Details panel → **SAS Key Authentication**
+2. In the side panel, open the **Keys** tab (SAS Key Authentication)
 
-3. Click 👁️ on **Connection string-primary key**
+3. Click 👁️ on **Connection string-primary key** to reveal it. You'll see something like:
 
-4. Copy the full string
+```
+Endpoint=sb://esXXXX.servicebus.windows.net/;SharedAccessKeyName=key_abc123;SharedAccessKey=AbCdEf...XyZ=;EntityPath=esXXXX_eh
+```
+
+4. **Map the connection string to 4 variables:**
+
+| Notebook Variable | Where to find it | Example |
+|-------------------|------------------|---------|
+| `EH_NS` | Part after `sb://` and before `/` | `esXXXX.servicebus.windows.net` |
+| `EH_NAME` | Value of `EntityPath=` | `esXXXX_eh` |
+| `EH_KEY_NAME` | Value of `SharedAccessKeyName=` | `key_abc123` |
+| `EH_KEY` | Value of `SharedAccessKey=` (long base64 string) | `AbCdEf...XyZ=` |
+
+> 💡 **Tip:** `EH_NS` does **NOT** include `sb://` or the trailing `/`. Just the host name ending in `.servicebus.windows.net`.
 
 ---
 
@@ -118,14 +131,18 @@ This creates in your Fabric workspace:
 
 1. Open **Racing_Championship** notebook
 
-2. In Cell 1, paste:
+2. In Cell 1, paste your 4 values:
 
 ```python
-CONNECTION_STRING = "Endpoint=sb://your...;SharedAccessKeyName=...;SharedAccessKey=...;EntityPath=..."
+EH_NS       = "esXXXX.servicebus.windows.net"   # from sb://...
+EH_NAME     = "esXXXX_eh"                       # from EntityPath=
+EH_KEY_NAME = "key_abc123"                      # from SharedAccessKeyName=
+EH_KEY      = "AbCdEf...XyZ="                   # from SharedAccessKey=
+
 PLAYER_NAME = "YourName"
 ```
 
-3. Run all cells
+3. Run all cells (the SAS token is auto-generated and valid for 4 hours)
 
 ---
 
