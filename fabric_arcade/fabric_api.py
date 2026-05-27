@@ -445,49 +445,100 @@ def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, create
     if game_id == "fabric-racing-game":
         game_instructions = '''## 🏎️ How to Play
 
+---
+
 ### Step 1: Configure the Eventstream
+
 1. Open **RacingEventstream** in your workspace
+
 2. Click **Edit** to enter edit mode
+
 3. Add a **Custom Endpoint** source:
    - Name: `TelemetryInput`
-   - This will create an HTTP endpoint to receive data
+
 4. Add an **Eventhouse** destination:
    - Data ingestion mode: **Event processing before ingestion**
-   - Workspace: **Your workspace**
    - Eventhouse: **RacingEventhouse**
    - KQL Database: **RaceData**
    - KQL Destination table: **GameEvents**
    - Input data format: **Json**
-5. Connect Source → Destination and click **Publish**
 
-### Step 2: Get the URIs from RaceData Database
-Open **RacingEventhouse** → Click **RaceData** database → Look at **Database details** panel on the right.
+5. Connect Source → Destination
 
-You need **TWO different URIs**:
+6. Click **Publish**
 
-| URI | Where to find | What it's for |
-|-----|---------------|---------------|
-| **Ingestion URI** | Database details → "Ingestion URI" | For the **Game** (sending telemetry) |
-| **Query URI** | Database details → "Query URI" | For the **Dashboard** (reading data) |
+---
 
-> ⚠️ **Important**: The Ingestion URI starts with `ingest-...`, the Query URI does NOT.
+### Step 2: Get the Connection String
+
+1. In the Eventstream editor, click on **TelemetryInput** (Custom Endpoint)
+
+2. In the **Details** panel, click **SAS Key Authentication**
+
+3. Click the **eye icon** next to **Connection string-primary key**
+
+4. Click the **copy icon** to copy the full connection string
+
+The connection string looks like:
+```
+Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx;EntityPath=xxx
+```
+
+---
 
 ### Step 3: Start the Game
+
 1. Open the **Racing_Championship** notebook
-2. Paste the **Ingestion URI** in the configuration cell
-3. Run all cells
-4. The HTML5 game will open in your browser!
 
-### Step 4: View the Dashboard (Optional)
-1. Open the **Race_Dashboard** notebook
-2. Paste the **Query URI** in the `KUSTO_CLUSTER` configuration
-3. Run all cells to see real-time analytics!
+2. In the **Configuration cell**, paste:
+   - `CONNECTION_STRING` = your copied connection string
+   - `PLAYER_NAME` = your name
 
-### Step 5: Play! 🎮
-- **Arrow Keys**: Steer left/right
-- **Collect ⭐** data points for bonus score
-- **Avoid 🐛** bugs or lose points
-- Reach the FINISH line with enough points to advance!'''
+3. Run **Cell 1** (Configuration)
+
+4. Run **Cell 2** (SAS Token Generator) - you should see ✅ messages
+
+5. Run **Cell 3** (Game) - the game will appear!
+
+---
+
+### Step 4: Play! 🎮
+
+- **Arrow Keys** or **A/D**: Steer left/right
+
+- **Collect ⭐**: +50 points × multiplier
+
+- **Avoid 🐛**: -30 points
+
+- **❤️ Lives**: 3 lives, lose 1 if you fail a level
+
+- **📡 Telemetry**: Watch the counter in bottom-right corner
+
+---
+
+### Step 5: View Analytics (Optional)
+
+Run KQL queries in **RaceData** database:
+
+```kql
+GameEvents
+| where Timestamp > ago(1h)
+| summarize count() by EventType
+| render piechart
+```
+
+---
+
+### 🔧 Troubleshooting
+
+**No telemetry (📡 stays at 0)?**
+- Verify the connection string is correct
+- Check that Eventstream is Published and Running
+- Look for errors in browser console (F12)
+
+**Eventstream not receiving data?**
+- Make sure Source → Destination arrow is connected
+- Verify the Custom Endpoint is Active (green)'''
 
     elif game_id == "mission-artemis-2":
         game_instructions = '''## 🚀 How to Start the Mission
