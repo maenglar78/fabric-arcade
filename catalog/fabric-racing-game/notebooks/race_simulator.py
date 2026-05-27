@@ -2,25 +2,25 @@
 # MAGIC %md
 # MAGIC # 🏎️ Fabric Racing Game - Deploy Notebook
 # MAGIC 
-# MAGIC Questo notebook crea automaticamente tutto il workspace FabricRacingGame:
-# MAGIC - Workspace con capacity assegnata
+# MAGIC This notebook automatically creates the entire FabricRacingGame workspace:
+# MAGIC - Workspace with assigned capacity
 # MAGIC - Eventhouse + KQL Database
-# MAGIC - Tabella GameEvents + JSON mapping
+# MAGIC - GameEvents table + JSON mapping
 # MAGIC - Eventstream (Custom Endpoint → Eventhouse)
-# MAGIC - 4 Notebook giocatore con gioco HTML5
+# MAGIC - 4 Player notebooks with HTML5 game
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## ⚙️ Configurazione
+# MAGIC ## ⚙️ Configuration
 
 # COMMAND ----------
 
-# PARAMETRI DA COMPILARE
-CAPACITY_ID = "<YOUR_CAPACITY_ID>"  # es: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+# PARAMETERS TO FILL IN
+CAPACITY_ID = "<YOUR_CAPACITY_ID>"  # e.g.: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 WORKSPACE_NAME = "FabricRacingGame"
 
-# Configurazione piloti
+# Driver configuration
 PLAYERS = [
     {"id": "P1", "name": "Red Racer", "color": "#FF0000", "emoji": "🔴"},
     {"id": "P2", "name": "Blue Bolt", "color": "#0000FF", "emoji": "🔵"},
@@ -31,7 +31,7 @@ PLAYERS = [
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 📦 Step 1: Crea Workspace
+# MAGIC ## 📦 Step 1: Create Workspace
 
 # COMMAND ----------
 
@@ -47,7 +47,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-# Crea workspace
+# Create workspace
 ws_payload = {
     "displayName": WORKSPACE_NAME,
     "capacityId": CAPACITY_ID
@@ -62,19 +62,19 @@ response = requests.post(
 if response.status_code in [200, 201]:
     workspace = response.json()
     WORKSPACE_ID = workspace["id"]
-    print(f"✅ Workspace creato: {WORKSPACE_NAME}")
+    print(f"✅ Workspace created: {WORKSPACE_NAME}")
     print(f"   ID: {WORKSPACE_ID}")
 else:
-    print(f"❌ Errore: {response.status_code} - {response.text}")
+    print(f"❌ Error: {response.status_code} - {response.text}")
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 📊 Step 2: Crea Eventhouse + KQL Database
+# MAGIC ## 📊 Step 2: Create Eventhouse + KQL Database
 
 # COMMAND ----------
 
-# Crea Eventhouse
+# Create Eventhouse
 eh_payload = {
     "displayName": "racing-events",
     "type": "Eventhouse"
@@ -87,7 +87,7 @@ response = requests.post(
 )
 
 if response.status_code in [200, 201, 202]:
-    # Polling per completamento
+    # Polling for completion
     if response.status_code == 202:
         location = response.headers.get("Location")
         while True:
@@ -100,13 +100,13 @@ if response.status_code in [200, 201, 202]:
         eventhouse = response.json()
     
     EVENTHOUSE_ID = eventhouse["id"]
-    print(f"✅ Eventhouse creato: racing-events")
+    print(f"✅ Eventhouse created: racing-events")
     print(f"   ID: {EVENTHOUSE_ID}")
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 📋 Step 3: Crea Tabella GameEvents + Mapping
+# MAGIC ## 📋 Step 3: Create GameEvents Table + Mapping
 
 # COMMAND ----------
 
@@ -142,17 +142,17 @@ CREATE_TABLE_KQL = """
 ']'
 """
 
-print("📋 Esegui questi comandi KQL nel database:")
+print("📋 Execute these KQL commands in the database:")
 print(CREATE_TABLE_KQL)
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 🌊 Step 4: Crea Eventstream
+# MAGIC ## 🌊 Step 4: Create Eventstream
 
 # COMMAND ----------
 
-# Crea Eventstream
+# Create Eventstream
 es_payload = {
     "displayName": "racing-stream",
     "type": "Eventstream"
@@ -177,20 +177,20 @@ if response.status_code in [200, 201, 202]:
         eventstream = response.json()
     
     EVENTSTREAM_ID = eventstream["id"]
-    print(f"✅ Eventstream creato: racing-stream")
+    print(f"✅ Eventstream created: racing-stream")
     print(f"   ID: {EVENTSTREAM_ID}")
     print("")
-    print("⚠️ AZIONE MANUALE RICHIESTA:")
-    print("   1. Apri l'Eventstream nel portale Fabric")
-    print("   2. Aggiungi 'Custom Endpoint' come source")
-    print("   3. Aggiungi 'Eventhouse' (racing-events) come destination")
-    print("   4. Pubblica l'Eventstream")
-    print("   5. Copia il SAS URL del Custom Endpoint")
+    print("⚠️ MANUAL ACTION REQUIRED:")
+    print("   1. Open the Eventstream in Fabric portal")
+    print("   2. Add 'Custom Endpoint' as source")
+    print("   3. Add 'Eventhouse' (racing-events) as destination")
+    print("   4. Publish the Eventstream")
+    print("   5. Copy the Custom Endpoint SAS URL")
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 🎮 Step 5: Crea Notebook Giocatori
+# MAGIC ## 🎮 Step 5: Create Player Notebooks
 
 # COMMAND ----------
 
@@ -200,7 +200,7 @@ HTML5_GAME_TEMPLATE = '''
 
 from IPython.display import HTML
 
-# ⚠️ CONFIGURA QUESTI PARAMETRI
+# ⚠️ CONFIGURE THESE PARAMETERS
 SAS_URL = "<EVENTSTREAM_CUSTOM_ENDPOINT_SAS>"
 CLUSTER_URI = "<EVENTHOUSE_CLUSTER_URI>"
 
@@ -219,7 +219,7 @@ game_html = f"""
 </head>
 <body>
     <div class="controls">
-        🎮 Controlli: ⬆️ Accelera | ⬇️ Frena | ⬅️➡️ Sterza
+        🎮 Controls: ⬆️ Accelerate | ⬇️ Brake | ⬅️➡️ Steer
     </div>
     <canvas id="raceCanvas" width="800" height="600"></canvas>
     <div id="telemetry" style="color:#0f0; font-family:monospace;"></div>
@@ -333,7 +333,7 @@ game_html = f"""
 HTML(game_html)
 '''
 
-# Crea i 4 notebook giocatore
+# Create the 4 player notebooks
 for player in PLAYERS:
     notebook_content = HTML5_GAME_TEMPLATE.format(
         player_id=player["id"],
@@ -353,27 +353,27 @@ for player in PLAYERS:
     )
     
     if response.status_code in [200, 201, 202]:
-        print(f"✅ Notebook creato: Race_{player['id']} {player['emoji']}")
+        print(f"✅ Notebook created: Race_{player['id']} {player['emoji']}")
     else:
-        print(f"⚠️ Notebook Race_{player['id']}: da creare manualmente")
+        print(f"⚠️ Notebook Race_{player['id']}: create manually")
 
 print("")
-print(f"🎮 Copia il codice HTML5 in ogni notebook")
+print(f"🎮 Copy the HTML5 code into each notebook")
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## ✅ Deploy Completato!
+# MAGIC ## ✅ Deploy Complete!
 # MAGIC 
-# MAGIC ### Passi manuali rimanenti:
+# MAGIC ### Remaining manual steps:
 # MAGIC 
-# MAGIC 1. **Eventstream**: Apri, configura Custom Endpoint → Eventhouse, Pubblica
-# MAGIC 2. **KQL Database**: Esegui i comandi per creare GameEvents + mapping
-# MAGIC 3. **Notebooks**: Aggiorna SAS_URL e CLUSTER_URI in tutti e 4
-# MAGIC 4. **Test**: Lancia una gara e verifica i dati in KQL
+# MAGIC 1. **Eventstream**: Open, configure Custom Endpoint → Eventhouse, Publish
+# MAGIC 2. **KQL Database**: Run the commands to create GameEvents + mapping
+# MAGIC 3. **Notebooks**: Update SAS_URL and CLUSTER_URI in all 4
+# MAGIC 4. **Test**: Start a race and verify data in KQL
 # MAGIC 
 # MAGIC ```kql
-# MAGIC // Query test
+# MAGIC // Test query
 # MAGIC GameEvents
 # MAGIC | where Timestamp > ago(5m)
 # MAGIC | summarize count() by PlayerId, EventType
@@ -381,7 +381,7 @@ print(f"🎮 Copia il codice HTML5 in ogni notebook")
 
 # COMMAND ----------
 
-# Riepilogo risorse create
+# Resources summary
 print("=" * 50)
 print("🏁 FABRIC RACING GAME - DEPLOY SUMMARY")
 print("=" * 50)
@@ -389,7 +389,7 @@ print(f"Workspace:   {WORKSPACE_NAME}")
 print(f"Eventhouse:  racing-events")
 print(f"Eventstream: racing-stream")
 print(f"Database:    race-data")
-print(f"Tabella:     GameEvents (11 colonne)")
+print(f"Table:       GameEvents (11 columns)")
 print(f"Notebooks:   Race_P1, Race_P2, Race_P3, Race_P4")
 print("=" * 50)
 print("🎮 Ready to race!")
