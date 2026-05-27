@@ -54,6 +54,22 @@
             <p>Experience a realistic lunar mission! Monitor 4 astronauts' vital signs while streaming vehicle telemetry, environmental data, and mission events. A 4-minute mission video is synchronized with the real-time data for an immersive learning experience.</p>
         </section>
 
+        <section class="game-section quickstart">
+            <h2>🚀 Quick Start</h2>
+            <p>Open a Fabric Notebook and run:</p>
+            <div class="code-block">
+                <pre><code><span class="comment"># Cell 1 - Install</span>
+%pip install -q fabric-arcade</code></pre>
+            </div>
+            <div class="code-block">
+                <pre><code><span class="comment"># Cell 2 - Deploy</span>
+<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+
+arcade.install(<span class="string">"mission-artemis-2"</span>)</code></pre>
+            </div>
+            <p>A README notebook with complete instructions will be created automatically!</p>
+        </section>
+
         <section class="game-section">
             <h2>🔧 Workloads</h2>
             <div class="workload-tags">
@@ -116,22 +132,6 @@
                 <span class="scenario-tag">Video Sync</span>
                 <span class="scenario-tag">Monitoring</span>
             </div>
-        </section>
-
-        <section class="game-section quickstart">
-            <h2>🚀 Quick Start</h2>
-            <p>Open a Fabric Notebook and run:</p>
-            <div class="code-block">
-                <pre><code><span class="comment"># Cell 1 - Install</span>
-%pip install -q fabric-arcade</code></pre>
-            </div>
-            <div class="code-block">
-                <pre><code><span class="comment"># Cell 2 - Deploy</span>
-<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
-
-arcade.install(<span class="string">"mission-artemis-2"</span>)</code></pre>
-            </div>
-            <p>A README notebook with complete instructions will be created automatically!</p>
         </section>
 
         <section class="game-section post-deploy">
