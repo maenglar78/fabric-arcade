@@ -460,19 +460,30 @@ def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, create
    - Input data format: **Json**
 5. Connect Source → Destination and click **Publish**
 
-### Step 2: Get the Ingestion URI
-1. Open **RacingEventhouse** in your workspace
-2. Click on **RaceData** database (in the left panel under "KQL databases")
-3. In the **Database details** panel on the right, find **Ingestion URI**
-4. Click **Copy URI**
+### Step 2: Get the URIs from RaceData Database
+Open **RacingEventhouse** → Click **RaceData** database → Look at **Database details** panel on the right.
+
+You need **TWO different URIs**:
+
+| URI | Where to find | What it's for |
+|-----|---------------|---------------|
+| **Ingestion URI** | Database details → "Ingestion URI" | For the **Game** (sending telemetry) |
+| **Query URI** | Database details → "Query URI" | For the **Dashboard** (reading data) |
+
+> ⚠️ **Important**: The Ingestion URI starts with `ingest-...`, the Query URI does NOT.
 
 ### Step 3: Start the Game
 1. Open the **Racing_Championship** notebook
-2. Paste the Ingestion URI in the configuration cell
+2. Paste the **Ingestion URI** in the configuration cell
 3. Run all cells
 4. The HTML5 game will open in your browser!
 
-### Step 4: Play! 🎮
+### Step 4: View the Dashboard (Optional)
+1. Open the **Race_Dashboard** notebook
+2. Paste the **Query URI** in the `KUSTO_CLUSTER` configuration
+3. Run all cells to see real-time analytics!
+
+### Step 5: Play! 🎮
 - **Arrow Keys**: Steer left/right
 - **Collect ⭐** data points for bonus score
 - **Avoid 🐛** bugs or lose points
