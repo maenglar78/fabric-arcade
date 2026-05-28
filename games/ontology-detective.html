@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ontology Detective - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Special+Elite&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
+        .case-card { background: linear-gradient(135deg, #1a1a1a 0%, #2a1f1a 100%); border: 1px solid #555; border-left: 5px solid #c0392b; border-radius: 6px; padding: 18px; font-family: 'Special Elite', 'Courier New', monospace; }
+        .case-card.boss { border-left-color: #ffd700; background: linear-gradient(135deg, #1a1a1a 0%, #3d2f1f 100%); }
+        .case-num { color: #888; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+        .case-title { color: #f0e6d2; font-size: 17px; margin: 6px 0; font-weight: bold; }
+        .case-card.boss .case-title { color: #ffd700; }
+        .case-concept { color: #aaa; font-size: 13px; }
+        .noir-quote { font-family: 'Special Elite', 'Courier New', monospace; color: #ccc; font-style: italic; background: rgba(0,0,0,0.4); border-left: 3px solid #c0392b; padding: 15px 20px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#games" class="back-link">← Back to Catalog</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">🕵️</div>
+            <div class="game-title-section">
+                <span class="game-badge mission">MYSTERY</span>
+                <h1>Ontology Detective</h1>
+                <p class="game-tagline">Datapolis P.I. — model real Fabric Ontologies, ingest evidence, write KQL queries, catch the culprit.</p>
+            </div>
+        </header>
+
+        <div class="game-meta-bar">
+            <div class="meta-item"><span class="meta-label">Difficulty</span><span class="meta-value">⭐⭐⭐ Advanced</span></div>
+            <div class="meta-item"><span class="meta-label">Deploy Time</span><span class="meta-value">~5 min</span></div>
+            <div class="meta-item"><span class="meta-label">Complete Time</span><span class="meta-value">~120 min</span></div>
+            <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value status-coming">🔜 Coming Soon</span></div>
+        </div>
+
+        <!-- NOIR OPENING -->
+        <div class="noir-quote">
+            "The rain hasn't stopped in Datapolis for three days. My coffee's cold, the phone won't shut up, and another case just landed on my desk. The kind of case you don't solve with a hunch — you solve it with a <strong>knowledge graph</strong>."
+        </div>
+
+        <!-- OVERVIEW -->
+        <section class="game-section">
+            <h2>📋 Overview</h2>
+            <p>
+                You are <strong>Detective Sherlock Graph</strong> at <strong>Datapolis P.I.</strong>, the city's last honest investigation agency.
+                Ten cases. Ten mysteries. Each one is solved by <strong>modeling the right ontology</strong>, ingesting evidence, and writing
+                a <strong>KQL semantic query</strong> that converges on the one — and only one — suspect.
+            </p>
+            <p>
+                A great detective doesn't fabricate evidence. The judge rewards <strong>ontology minimalism</strong>: every entity type you create
+                must earn its place in your solving query.
+            </p>
+        </section>
+
+        <!-- QUICK START -->
+        <section class="game-section quickstart">
+            <h2>🚀 Quick Start</h2>
+            <p>Coming soon! This game is currently in development.</p>
+            <div class="code-block">
+                <pre><code><span class="comment"># Coming soon</span>
+<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+
+arcade.install(<span class="string">"ontology-detective"</span>)</code></pre>
+            </div>
+            <p style="margin-top: 15px;">
+                <strong>Want to be notified?</strong>
+                <a href="https://github.com/maenglar78/fabric-arcade" style="color: #00b894;">⭐ Star the repo</a>
+                to get updates!
+            </p>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="game-section">
+            <h2>🧩 How You Play (Real Fabric, Not a Simulation)</h2>
+            <p>Each case follows the same investigative loop:</p>
+            <ol style="line-height: 2; color: #ccc;">
+                <li>📖 Read the <strong>noir briefing</strong> in the <code>OntologyDetective_CaseFile</code> notebook — victim, time window, evidence available, suspect list.</li>
+                <li>🏛️ Open <strong>DetectiveOntology</strong> in the Fabric <strong>Digital Twin Builder</strong> UI and add the entity types + relationships you'll need (e.g. <code>Person</code>, <code>Location</code>, <code>PhoneCall</code>, <code>wasAt</code>, <code>called</code>).</li>
+                <li>📥 Run the <strong>"Ingest Evidence"</strong> ready-cell — it will fail loudly if your ontology is missing required types (your first clue).</li>
+                <li>🔍 Write a <strong>KQL query</strong> over the ontology event store that returns exactly one <code>Person</code> — the culprit. Save it to the <code>SOLUTION_QUERY</code> variable.</li>
+                <li>⚖️ Call <code>detective.accuse("Mr. Pythagoras")</code> — the judge <strong>decrypts the solution</strong> (AES-encrypted per player/case), re-executes your query to confirm it actually returns the accused, and scores your ontology <strong>minimalism</strong>.</li>
+                <li>📊 The <code>OntologyDetective_Dashboard</code> updates with cases solved, accuracy, and Detective Rank.</li>
+            </ol>
+        </section>
+
+        <!-- ITEMS INSTALLED -->
+        <section class="game-section">
+            <h2>📦 What Gets Installed in Your Workspace</h2>
+            <p><code>arcade.install("ontology-detective")</code> deploys:</p>
+            <ul style="line-height: 2; color: #ccc;">
+                <li>🏠 <strong>1 Lakehouse</strong> <code>Datapolis_DetectiveLH</code> — 10 case folders with witness CSVs, camera logs, phone records, and <code>solution.json.enc</code> (AES-encrypted).</li>
+                <li>🌐 <strong>1 Ontology</strong> <code>DetectiveOntology</code> — <em>pre-created empty</em> in Digital Twin Builder. You build it case by case.</li>
+                <li>⚡ <strong>1 Eventhouse</strong> <code>Datapolis_DetectiveEH</code> with KQL Database <code>DetectiveData</code> and table <code>DetectiveEvents</code> — telemetry of cases, accusations, rank.</li>
+                <li>📓 <strong>3 Notebooks</strong>:
+                    <ul>
+                        <li><code>OntologyDetective_Seed</code> — generates the 10 case bundles (run once).</li>
+                        <li><code>OntologyDetective_CaseFile</code> — noir briefings + ready ingestion cells + <code>detective.accuse(name)</code> judge.</li>
+                        <li><code>OntologyDetective_Dashboard</code> — live cases / accuracy / minimalism / rank.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <!-- CASES -->
+        <section class="game-section">
+            <h2>📂 The 10 Case Files of Datapolis P.I.</h2>
+            <p>Ten unsolved mysteries. Ten ontology concepts to master:</p>
+            <div class="case-grid">
+                <div class="case-card"><div class="case-num">Case 01 — 🧁</div><div class="case-title">The Stolen Pie</div><div class="case-concept">Entity types + properties (tutorial)</div></div>
+                <div class="case-card"><div class="case-num">Case 02 — 🏛️</div><div class="case-title">Disappearance at the Museum</div><div class="case-concept">1-N relationship (<code>Suspect wasAt Location</code>)</div></div>
+                <div class="case-card"><div class="case-num">Case 03 — 🔪</div><div class="case-title">Murder in the Library</div><div class="case-concept">Temporal event filtering + alibis</div></div>
+                <div class="case-card"><div class="case-num">Case 04 — 💎</div><div class="case-title">The Datapolis Diamond Heist</div><div class="case-concept">Inheritance (Guard → Employee → Person)</div></div>
+                <div class="case-card"><div class="case-num">Case 05 — 📞</div><div class="case-title">The Mysterious Phone Call</div><div class="case-concept">N-N relationship (<code>Person called Person</code>)</div></div>
+                <div class="case-card"><div class="case-num">Case 06 — 🚗</div><div class="case-title">Hit & Run on Vector Avenue</div><div class="case-concept">Multi-source events on one Vehicle</div></div>
+                <div class="case-card"><div class="case-num">Case 07 — 💌</div><div class="case-title">The Anonymous Blackmail</div><div class="case-concept">Reasoning via transitive relations</div></div>
+                <div class="case-card"><div class="case-num">Case 08 — 🎭</div><div class="case-title">Stolen Identity</div><div class="case-concept">Aliases / <code>sameAs</code> links</div></div>
+                <div class="case-card"><div class="case-num">Case 09 — 🏦</div><div class="case-title">Conspiracy at the Senate</div><div class="case-concept">Cycle detection (<code>bribes</code> loop)</div></div>
+                <div class="case-card boss"><div class="case-num">Case 10 — 🌃 BOSS</div><div class="case-title">The Final Heist</div><div class="case-concept">Multi-domain in a single ontology with 3 sub-namespaces (Bank, Police, Telecom)</div></div>
+            </div>
+        </section>
+
+        <!-- JUDGE -->
+        <section class="game-section">
+            <h2>⚖️ What the Judge Checks</h2>
+            <ul style="line-height: 2; color: #ccc;">
+                <li>✅ <strong>Correct culprit</strong> — decrypts <code>solution.json.enc</code> with key <code>SHA256(player_id || case_id || workspace_id)</code></li>
+                <li>✅ <strong>Supporting query</strong> — re-runs your saved <code>SOLUTION_QUERY</code> to confirm it actually returns the accused</li>
+                <li>✅ <strong>Ontology minimalism</strong> — <code>entity_types_used_in_query / entity_types_created</code> close to <code>1.0</code></li>
+                <li>✅ <strong>Accuracy tracking</strong> — prior wrong accusations count against you</li>
+                <li>🏆 <strong>Rank promotion</strong> — Rookie → Inspector → Commissioner</li>
+            </ul>
+        </section>
+
+        <!-- TELEMETRY -->
+        <section class="game-section">
+            <h2>📊 Telemetry Events → Eventhouse</h2>
+            <p>Every move you make in the agency goes on record:</p>
+            <div class="telemetry-events">
+                <span class="telemetry-event">DetectiveOnDuty</span>
+                <span class="telemetry-event">CaseOpened</span>
+                <span class="telemetry-event">OntologyExtended</span>
+                <span class="telemetry-event">EvidenceIngested</span>
+                <span class="telemetry-event">AccusationMade</span>
+                <span class="telemetry-event">CaseSolved</span>
+                <span class="telemetry-event">WrongAccusation</span>
+                <span class="telemetry-event">RankPromoted</span>
+            </div>
+        </section>
+
+        <!-- WORKLOADS -->
+        <section class="game-section">
+            <h2>🔧 Workloads</h2>
+            <div class="workload-tags">
+                <span class="workload-tag rti">Real-Time Intelligence</span>
+                <span class="workload-tag rti">Digital Twin Builder</span>
+            </div>
+        </section>
+
+        <!-- WHAT YOU LEARN -->
+        <section class="game-section">
+            <h2>🎓 What You'll Learn</h2>
+            <div class="levels-table">
+                <table>
+                    <tr><th>Skill</th><th>Fabric / Modeling Feature</th><th>Level</th></tr>
+                    <tr><td>Model entity types &amp; properties</td><td>Fabric Ontology</td><td>⭐</td></tr>
+                    <tr><td>Design relationships (1-N, N-N)</td><td>Ontology relations</td><td>⭐⭐</td></tr>
+                    <tr><td>Temporal reasoning</td><td>KQL <code>between</code>, <code>summarize</code></td><td>⭐⭐</td></tr>
+                    <tr><td>Inheritance hierarchies</td><td>Subclass modeling</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Transitive reasoning</td><td>Multi-hop joins</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Aliases &amp; <code>sameAs</code></td><td>Entity resolution</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Cycle detection</td><td>KQL graph patterns</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Multi-namespace federation</td><td>Ontology design</td><td>⭐⭐⭐</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <p style="text-align: center; color: #888; margin: 40px 0;">
+            Made with 🎮 by the Fabric Community<br>
+            <small>Not affiliated with Microsoft</small>
+        </p>
+    </main>
+</body>
+</html>

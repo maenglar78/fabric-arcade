@@ -1,0 +1,122 @@
+{
+    "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
+    "id": "ontology-detective",
+    "name": "Ontology Detective - Datapolis P.I.",
+    "version": "0.1.0-scaffold",
+    "description": "🕵️ You are Detective Sherlock Graph at Datapolis P.I. Model real Fabric Ontologies, ingest case-file evidence, write KQL semantic queries to identify the culprit. 10 cases, noir tone, encrypted solutions.",
+    "type": "mystery",
+    "workloads": ["DigitalTwinBuilder", "RTI"],
+    "difficulty": 3,
+    "duration_minutes": 120,
+    "icon": "🕵️",
+    "tags": ["ontology", "digital-twin", "kql", "knowledge-graph", "mystery", "noir", "rti"],
+    "author": {
+        "name": "Fabric Gaming Community"
+    },
+    "status": "scaffold",
+    "prerequisites": {
+        "fabric_capacity": "F2",
+        "python_packages": [],
+        "skills": ["Basic KQL", "Familiar with the concept of a knowledge graph"]
+    },
+    "learning_objectives": [
+        "Model entity types, properties and relationships in Fabric Ontology",
+        "Distinguish facts from observations / temporal events",
+        "Write KQL semantic queries over an ontology event store",
+        "Use inheritance, role-playing relationships, and sameAs aliases",
+        "Detect cycles and reason about indirect relations",
+        "Apply ontology minimalism (no superfluous classes)"
+    ],
+    "items": [
+        {
+            "type": "Lakehouse",
+            "name": "Datapolis_DetectiveLH",
+            "description": "10 case folders (case01/ .. case10/) with witness CSVs, camera logs, phone records + encrypted solution.json.enc"
+        },
+        {
+            "type": "Eventhouse",
+            "name": "Datapolis_DetectiveEH",
+            "description": "Telemetry of cases attempted, accusations made, detective rank"
+        },
+        {
+            "type": "KQLDatabase",
+            "name": "DetectiveData",
+            "parent": "Datapolis_DetectiveEH",
+            "description": "Database with DetectiveEvents table"
+        },
+        {
+            "type": "Ontology",
+            "name": "DetectiveOntology",
+            "description": "Empty Digital Twin Builder ontology — player adds entity types, properties, and relationships case by case (single ontology, single namespace by design)"
+        },
+        {
+            "type": "Notebook",
+            "name": "OntologyDetective_Seed",
+            "file": "notebooks/ontology_detective_seed.ipynb",
+            "description": "Generates 10 synthetic noir case files (CSVs) + encrypted solution.json.enc in Datapolis_DetectiveLH (run once)"
+        },
+        {
+            "type": "Notebook",
+            "name": "OntologyDetective_CaseFile",
+            "file": "notebooks/ontology_detective_casefile.ipynb",
+            "description": "Per-case noir briefings + ready-to-run ingestion cells + detective.accuse(name) judge"
+        },
+        {
+            "type": "Notebook",
+            "name": "OntologyDetective_Dashboard",
+            "file": "notebooks/ontology_detective_dashboard.ipynb",
+            "description": "Cases solved, Detective Rank, accuracy, ontology minimalism scoreboard"
+        }
+    ],
+    "tables": [
+        {
+            "name": "DetectiveEvents",
+            "database": "DetectiveData",
+            "schema": "schemas/DetectiveEvents.kql",
+            "columns": [
+                "EventId", "Timestamp", "SessionId", "PlayerId", "EventType",
+                "CaseId", "AccusedPerson", "EntityTypesCreated", "EntityTypesUsed",
+                "QuerySaved", "ValidationResult", "DurationSeconds", "Rank"
+            ]
+        }
+    ],
+    "eventTypes": [
+        { "name": "DetectiveOnDuty", "description": "Player starts Ontology Detective" },
+        { "name": "CaseOpened", "description": "Player opens a case briefing" },
+        { "name": "OntologyExtended", "description": "Player added entity types / properties / relationships for this case" },
+        { "name": "EvidenceIngested", "description": "Ready-cell loaded case CSVs into ontology instances" },
+        { "name": "AccusationMade", "description": "Player called detective.accuse(name)" },
+        { "name": "CaseSolved", "description": "Correct accusation + valid supporting KQL query" },
+        { "name": "WrongAccusation", "description": "Innocent accused — affects accuracy + rank" },
+        { "name": "RankPromoted", "description": "Rookie → Inspector → Commissioner" }
+    ],
+    "cases": [
+        { "n": 1,  "icon": "🧁", "name": "The Stolen Pie",                "concept": "Entity types + properties + one instance per type (tutorial)" },
+        { "n": 2,  "icon": "🏛️", "name": "Disappearance at the Museum",   "concept": "1-N relationship (Suspect wasAt Location)" },
+        { "n": 3,  "icon": "🔪", "name": "Murder in the Library",         "concept": "Temporal event filtering + alibis" },
+        { "n": 4,  "icon": "💎", "name": "The Datapolis Diamond Heist",   "concept": "Inheritance (Guard extends Employee extends Person)" },
+        { "n": 5,  "icon": "📞", "name": "The Mysterious Phone Call",     "concept": "N-N relationship (Person called Person)" },
+        { "n": 6,  "icon": "🚗", "name": "Hit & Run on Vector Avenue",    "concept": "Multi-source events converging on one Vehicle entity" },
+        { "n": 7,  "icon": "💌", "name": "The Anonymous Blackmail",       "concept": "Reasoning: deduce missing property via transitive relations" },
+        { "n": 8,  "icon": "🎭", "name": "Stolen Identity",                "concept": "Aliases / sameAs links between instances" },
+        { "n": 9,  "icon": "🏦", "name": "Conspiracy at the Senate",       "concept": "Cycle detection in the graph (bribes loop)" },
+        { "n": 10, "icon": "🌃", "name": "The Final Heist (BOSS)",         "concept": "Complex multi-domain case in a SINGLE ontology with 3 sub-namespaces (Bank, Police, Telecom) — must reason across all of them" }
+    ],
+    "validation_strategy": {
+        "encrypted_solutions": "solution.json.enc per case, key = SHA256(player_id || case_id || workspace_id) — only the judge can decrypt after accusation",
+        "ingestion_gate": "Ready ingestion cell verifies entity types/properties exist before loading instances (forces ontology design first)",
+        "query_check": "Player saves their KQL query into a tagged variable; judge re-executes it to confirm the accused person is indeed returned by their query",
+        "minimalism_score": "ratio = len(entity_types_referenced_in_query) / len(entity_types_created); 1.0 = perfect minimalism",
+        "ranks": ["Rookie", "Inspector", "Commissioner"]
+    },
+    "tone": "noir — gritty Datapolis P.I. agency, rainy streets, hard-boiled monologues; each briefing in pulp detective style",
+    "post_deploy_steps": [
+        "Run OntologyDetective_Seed notebook once to generate the 10 case files in Datapolis_DetectiveLH",
+        "Open OntologyDetective_CaseFile notebook and read Case 1 briefing (The Stolen Pie tutorial)",
+        "Open DetectiveOntology in Fabric Digital Twin Builder UI and add the entity types + relationships required by the briefing",
+        "Run the 'Ingest Evidence' ready-cell — it loads case CSVs into your ontology instances",
+        "Write a KQL query on the ontology event store to identify the culprit, save it to the SOLUTION_QUERY variable",
+        "Call detective.accuse('<Person Name>') — judge validates and emits CaseSolved or WrongAccusation",
+        "Solve all 10 cases to be promoted to Commissioner"
+    ]
+}

@@ -1,0 +1,18 @@
+// DetectiveEvents — KQL schema for Ontology Detective telemetry
+.create-merge table DetectiveEvents (
+    EventId: string,
+    Timestamp: datetime,
+    SessionId: string,
+    PlayerId: string,
+    EventType: string,         // DetectiveOnDuty | CaseOpened | OntologyExtended | EvidenceIngested | AccusationMade | CaseSolved | WrongAccusation | RankPromoted
+    CaseId: int,
+    AccusedPerson: string,
+    EntityTypesCreated: int,   // total entity types the player has created in the ontology so far
+    EntityTypesUsed: int,      // entity types referenced by the player's solving KQL query
+    QuerySaved: string,        // the player's saved KQL query (truncated)
+    ValidationResult: string,  // PASS | FAIL | NOT_MINIMAL | WRONG_PERSON
+    DurationSeconds: long,
+    Rank: string               // Rookie | Inspector | Commissioner
+)
+
+.alter-merge table DetectiveEvents policy retention softdelete = 90d
