@@ -1,0 +1,22 @@
+// CathedralEvents - telemetry for Calc Groups Cathedral game
+// Ingested via REST streaming endpoint, same pattern as racing game.
+
+.create-merge table CathedralEvents (
+    EventId: guid,
+    Timestamp: datetime,
+    SessionId: string,
+    PlayerId: string,
+    EventType: string,
+    PillarId: int,
+    PillarKey: string,
+    SubmittedValue: real,
+    ExpectedValue: real,
+    PassFail: string,
+    MeasureCount: int,
+    CalcGroupCount: int,
+    EleganceScore: real,
+    Rank: string,
+    DurationSeconds: real
+)
+
+.alter-merge table CathedralEvents policy retention softdelete = 90d
