@@ -484,6 +484,22 @@ body {
     cursor: pointer;
 }
 
+.feature-card,
+.feature-card:link,
+.feature-card:visited,
+.feature-card:hover,
+.feature-card:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.feature-card * {
+    text-decoration: none;
+}
+
+.feature-card h3 { color: var(--text); }
+.feature-card p { color: var(--text-muted); }
+
 .feature-card:hover {
     border-color: var(--secondary);
     transform: translateY(-4px);
