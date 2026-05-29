@@ -1145,7 +1145,7 @@ CHECK_CELLS = [
     # ============================================================
     # Cathedral — Badge issuance
     # ------------------------------------------------------------
-    # Generates a HMAC-signed URL for fabric-arcade.netlify.app/badge.html
+    # Generates a HMAC-signed URL for maenglar78.github.io/fabric-arcade/badge.html
     # so anyone who opens the link sees the signed badge and can verify it.
     # The page builds the medal SVG dynamically from the token payload.
     # ============================================================
@@ -1157,7 +1157,7 @@ CHECK_CELLS = [
 
     # Keep in sync with fabric_arcade/badge.py and website/badge.html
     _BADGE_SECRET = b"fabric-arcade-badge-v1-7K9mP3xQ"
-    _BASE_URL     = "https://fabric-arcade.netlify.app"
+    _BASE_URL     = "https://maenglar78.github.io/fabric-arcade"
     _GAME_ID      = "calc-groups-cathedral"
 
     def _b64u(b: bytes) -> str:

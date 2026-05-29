@@ -24,7 +24,7 @@ from dataclasses import dataclass
 # Keep in sync with website/badge.html (window.FA_BADGE_SECRET).
 BADGE_SECRET = b"fabric-arcade-badge-v1-7K9mP3xQ"
 BADGE_VERSION = 1
-DEFAULT_BASE_URL = "https://fabric-arcade.netlify.app"
+DEFAULT_BASE_URL = "https://maenglar78.github.io/fabric-arcade"
 
 
 def _b64u(data: bytes) -> str:
