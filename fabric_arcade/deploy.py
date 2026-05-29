@@ -83,6 +83,14 @@ def _get_game_items(game_id: str) -> List[Dict[str, str]]:
             {"type": "Notebook", "name": "Race_P3"},
             {"type": "Notebook", "name": "Race_P4"},
         ],
+        "calc-groups-cathedral": [
+            {"type": "Lakehouse", "name": "Cathedral_LH"},
+            {"type": "Eventhouse", "name": "Cathedral_EH"},
+            {"type": "Notebook", "name": "01_Setup"},
+            {"type": "Notebook", "name": "02_Quest"},
+            {"type": "Notebook", "name": "03_Check"},
+            {"type": "Notebook", "name": "04_Dashboard"},
+        ],
         "sports-tracker": [
             {"type": "Eventhouse", "name": "sports-events"},
             {"type": "Eventstream", "name": "match-stream"},

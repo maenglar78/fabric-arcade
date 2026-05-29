@@ -131,6 +131,15 @@ def _get_catalog() -> List[dict]:
             "icon": "🏎️"
         },
         {
+            "id": "calc-groups-cathedral",
+            "name": "Calc Groups Cathedral",
+            "description": "🏛️ Replace 12 redundant DAX measures with one elegant Calculation Group on a Direct Lake semantic model",
+            "workloads": ["PBI"],
+            "difficulty": 3,
+            "duration_minutes": 60,
+            "icon": "🏛️"
+        },
+        {
             "id": "mission-artemis-2",
             "name": "Mission Artemis 2",
             "description": "🚀 Lunar mission with 4 astronauts and real-time telemetry",
@@ -539,6 +548,28 @@ GameEvents
 **Eventstream not receiving data?**
 - Make sure Source → Destination arrow is connected
 - Verify the Custom Endpoint is Active (green)'''
+
+    elif game_id == "calc-groups-cathedral":
+        game_instructions = '''## 🏛️ How to Play
+
+### Step 1: Run the Setup
+1. Open the **01_Setup** notebook
+2. Attach it to the **Cathedral_LH** lakehouse
+3. Run all cells: it generates synthetic Sales/Date/Customer/Budget tables (3 years), builds the Direct Lake **Cathedral_Model** semantic model and seeds the first measure.
+
+### Step 2: Read the Quest
+1. Open **02_Quest** — read the brief: 12 KPI pillars and the Final Challenge (1 Calculation Group with 11 items).
+
+### Step 3: Build & Check
+1. Edit **Cathedral_Model** in Power BI: add your measures and the **Time Intelligence** calc group.
+2. Open **03_Check** and run it to validate the 12 pillars across 3 contexts.
+3. It scores elegance, assigns your rank (Stonemason → Cathedral Builder) and ships telemetry to **Cathedral_EH**.
+
+### Step 4: Track Progress
+1. Open **04_Dashboard** for the live Plotly dashboard: state, timeline, measures vs calc group, session recap.
+
+### 🏆 Earn Your Badge
+Reach the **Cathedral Builder** rank to unlock a signed, shareable achievement badge.'''
 
     elif game_id == "mission-artemis-2":
         game_instructions = '''## 🚀 How to Start the Mission
