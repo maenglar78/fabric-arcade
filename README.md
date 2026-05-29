@@ -89,7 +89,7 @@ arcade.install("fabric-racing-game", workspace_id="your-workspace-guid")
 | Game | Type | Difficulty | Duration | Status |
 |------|------|------------|----------|--------|
 | 🏎️ Fabric Racing Game | Mission | ⭐⭐ | 30 min | ✅ Available |
-| 🚀 Mission Artemis 2 | Mission | ⭐⭐⭐ | 45 min | ✅ Available |
+| 🚀 Mission Artemis 2 | Mission | ⭐⭐⭐ | 45 min | 🚧 In Development |
 | ⚽ Sports Tracker | Challenge | ⭐⭐ | 25 min | 🔜 Coming Soon |
 | 🏰 Quest Data Pipeline | Mission | ⭐⭐⭐ | 40 min | 🔜 Coming Soon |
 | 🎯 Target Practice | Challenge | ⭐ | 15 min | 🔜 Coming Soon |

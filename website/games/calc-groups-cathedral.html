@@ -11,11 +11,14 @@
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 20px 0; }
         .kpi-card { background: linear-gradient(135deg, #1a1a2e 0%, #2d1b3d 100%); border: 1px solid #6c5ce7; border-radius: 6px; padding: 16px; font-family: 'Cinzel', serif; }
         .kpi-card.boss { border-color: #ffd700; background: linear-gradient(135deg, #1a1a2e 0%, #3d2f1f 100%); }
+        .kpi-card.standalone { border-color: #00b894; }
         .kpi-num { color: #a29bfe; font-size: 12px; letter-spacing: 2px; }
         .kpi-title { color: #f0e6ff; font-size: 16px; margin: 6px 0; font-weight: bold; }
         .kpi-card.boss .kpi-title { color: #ffd700; }
+        .kpi-card.standalone .kpi-title { color: #55efc4; }
         .kpi-test { color: #aaa; font-size: 12px; font-family: 'Inter', sans-serif; }
         .cathedral-quote { font-family: 'Cinzel', serif; color: #d4c5f9; font-style: italic; background: rgba(108,92,231,0.1); border-left: 4px solid #6c5ce7; padding: 18px 22px; margin: 20px 0; font-size: 15px; }
+        .rank-table td:first-child { font-family: 'Cinzel', serif; color: #ffd700; }
     </style>
 </head>
 <body>
@@ -32,19 +35,19 @@
         <a href="../#games" class="back-link">← Back to Catalog</a>
 
         <header class="game-header">
-            <div class="game-icon-large">🧮</div>
+            <div class="game-icon-large">🏛️</div>
             <div class="game-title-section">
                 <span class="game-badge quest">PUZZLE</span>
                 <h1>Calc Groups Cathedral</h1>
-                <p class="game-tagline">Build a cathedral of Calculation Groups on a real Fabric Semantic Model. 12 KPI variations, minimum base measures, judge runs DAX over XMLA.</p>
+                <p class="game-tagline">Replace 12 redundant time-intelligence measures with one elegant <strong>Calculation Group</strong> on a real Direct Lake semantic model. Earn the rank of Cathedral Builder.</p>
             </div>
         </header>
 
         <div class="game-meta-bar">
             <div class="meta-item"><span class="meta-label">Difficulty</span><span class="meta-value">⭐⭐⭐ Advanced</span></div>
-            <div class="meta-item"><span class="meta-label">Deploy Time</span><span class="meta-value">~5 min</span></div>
+            <div class="meta-item"><span class="meta-label">Deploy Time</span><span class="meta-value">~3 min</span></div>
             <div class="meta-item"><span class="meta-label">Complete Time</span><span class="meta-value">~60 min</span></div>
-            <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value status-coming">🚧 In Development</span></div>
+            <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value status-ready">✅ Ready · v1.0.0</span></div>
         </div>
 
         <div class="cathedral-quote">
@@ -55,117 +58,138 @@
         <section class="game-section">
             <h2>📋 Overview</h2>
             <p>
-                You are the <strong>Chief Architect of the Vertipaq Cathedral</strong>. Twelve KPI variations need to be exposed on a real
-                Fabric Semantic Model: <code>Current</code>, <code>LY</code>, <code>YoY</code>, <code>YoY%</code>, <code>YTD</code>,
-                <code>MTD</code>, <code>QTD</code>, <code>Rolling12</code>, <code>vs Budget</code>, <code>vs Budget %</code>,
-                <code>Best Month</code>, <code>% of Total</code>.
+                You are the <strong>Chief Architect of the Vertipaq Cathedral</strong>. Twelve KPI pillars need to live on a real
+                Direct Lake semantic model: <code>Current</code>, <code>LastYear</code>, <code>YoY</code>, <code>YoY%</code>, <code>YTD</code>,
+                <code>MTD</code>, <code>QTD</code>, <code>Rolling12</code>, <code>BestMonth</code>, <code>%OfYear</code>,
+                <code>AvgDailySales</code>, <code>DistinctCustomers</code>.
             </p>
             <p>
-                The lazy way: 12 base measures × 3 KPIs = <strong>36 measures</strong>. The architect's way:
-                <strong>3 base measures + 1 Calculation Group with 12 calc items</strong>. The judge will test every combination
-                via XMLA, and your score is <strong>elegance = 1 - (measures_you_wrote / 36)</strong>.
+                The apprentice's way: 12 measures, each one re-typing the same <code>SUM(Sales[Amount])</code>.
+                The architect's way: <strong>1 base measure + 1 Calculation Group with 11 items</strong>
+                (DistinctCustomers stays standalone — it changes the aggregation, not the time context).
+                Every submission is graded for <strong>correctness on 3 contexts</strong> and rewarded with an <strong>elegance score</strong>
+                that penalizes long DAX, redundant <code>CALCULATE</code>, and unnecessary <code>FILTER</code> / <code>SUMX</code>.
             </p>
         </section>
 
         <!-- QUICK START -->
         <section class="game-section quickstart">
             <h2>🚀 Quick Start</h2>
-            <p><strong>In active development.</strong> When released, the loop will be:</p>
             <div class="code-block">
-                <pre><code><span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+                <pre><code><span class="comment"># In any Fabric notebook</span>
+<span class="prompt">%pip</span> install -q fabric-arcade
 
-arcade.install(<span class="string">"calc-groups-cathedral"</span>)
-<span class="comment"># Deploys: Lakehouse with Sales/Date/Customer/Budget, empty Semantic Model,
-#          Eventhouse telemetry, 3 notebooks. Open CalcGroups_Cathedral.</span></code></pre>
+<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+arcade.install(<span class="string">"calc-groups-cathedral"</span>, workspace=<span class="string">"My Workspace"</span>)
+<span class="comment"># Provisions: Cathedral_LH (Lakehouse), Cathedral_EH (Eventhouse + CathedralEvents table),
+#             01_Setup, 02_Quest, 03_Check, 04_Dashboard notebooks.</span></code></pre>
             </div>
+            <p style="margin-top: 14px;">Then in the new workspace: open <code>01_Setup</code> and run it once
+                (synthetic data → Lakehouse → Direct Lake <code>Cathedral_Model</code> with the seed measure).
+                Open <code>02_Quest</code>, build your pillars on <code>Cathedral_Model</code>, then run <code>03_Check</code> to submit.
+                Track progress in <code>04_Dashboard</code>.</p>
         </section>
 
         <!-- HOW IT WORKS -->
         <section class="game-section">
-            <h2>🧩 How You Play (Real Semantic Model, Real DAX)</h2>
+            <h2>🧩 How You Play</h2>
             <ol style="line-height: 2; color: #ccc;">
-                <li>📖 Open <code>CalcGroups_Cathedral</code> notebook — read the 12 KPI specs with expected values for test dates.</li>
-                <li>🏛️ Open <code>Cathedral_Model</code> Semantic Model in the Fabric Web UI. Tables are already there (<code>Sales</code>, <code>Date</code>, <code>Customer</code>, <code>Budget</code>) with relationships.</li>
-                <li>✍️ Write your <strong>base measures</strong> (e.g. <code>Sales Amount</code>, <code>Budget Amount</code>) — start with the absolute minimum.</li>
-                <li>🧮 Create one or more <strong>Calculation Groups</strong> (e.g. <code>Time Intelligence</code>, <code>Comparison</code>) with calc items that wrap the base measures.</li>
-                <li>⚖️ Run <code>judge.submit_all()</code> — it executes 12 DAX queries via XMLA, one per KPI variation, on locked test dates. Returns pass/fail per KPI + elegance score.</li>
-                <li>📊 <code>CalcGroups_Dashboard</code> shows your progress, KPIs unlocked, measure count, elegance %, and the Architect Rank board.</li>
+                <li>📖 <code>01_Setup</code> generates 3 years of synthetic Sales/Date/Customer/Budget and builds <code>Cathedral_Model</code> with the seed measure <code>[Sales Amount Seed] = SUM(Sales[Amount])</code>.</li>
+                <li>📜 <code>02_Quest</code> shows the 12 pillar specs and the Final Challenge brief.</li>
+                <li>✍️ Open <code>Cathedral_Model</code> in the Fabric web UI (or use sempy-labs from any notebook) and author measures <code>M_01_Current</code> … <code>M_12_DistinctCustomers</code>.</li>
+                <li>🏛️ Build the calculation group <code>'Time Intelligence'[Calc]</code> with 11 items wrapping <code>SELECTEDMEASURE()</code>.</li>
+                <li>⚖️ Run <code>03_Check</code> — it evaluates each pillar via DAX on 3 contexts, scores elegance, assigns rank, and ships <code>PillarPassed</code> / <code>PillarFailed</code> / <code>RankPromoted</code> events to KQL.</li>
+                <li>📊 <code>04_Dashboard</code> renders a live Plotly view of your run: state, timeline, measures vs calc group, session recap.</li>
             </ol>
-        </section>
-
-        <!-- WHY IMPLEMENTABLE -->
-        <section class="game-section">
-            <h2>✅ Why This Game Is Truly Implementable</h2>
-            <p>Unlike Preview games, every building block here is <strong>verified to work</strong> with current Fabric APIs and MCP servers:</p>
-            <ul style="line-height: 2; color: #ccc;">
-                <li>✅ <strong>Semantic Model creation</strong> via Fabric REST <code>items</code> POST with inline TMDL — already used by Racing.</li>
-                <li>✅ <strong>Calculation Groups in TMDL</strong> — stable, public syntax.</li>
-                <li>✅ <strong>DAX execution via XMLA</strong> — MCP <code>powerbi-model</code> <code>dax_query_operations</code> is configured and tested.</li>
-                <li>✅ <strong>Measure count from TOM</strong> — <code>measure_operations</code> lists all measures live.</li>
-                <li>✅ <strong>Telemetry → Eventhouse</strong> — same proven pattern as Racing.</li>
-                <li>✅ <strong>Zero exotic dependencies</strong> — no crypto, no Spark, no Digital Twin, no ML.</li>
-            </ul>
         </section>
 
         <!-- ITEMS INSTALLED -->
         <section class="game-section">
             <h2>📦 What Gets Installed</h2>
             <ul style="line-height: 2; color: #ccc;">
-                <li>🏠 <strong>Lakehouse</strong> <code>Cathedral_LH</code> — Sales / Date / Customer / Budget tables, 3 years of synthetic data.</li>
-                <li>⭐ <strong>Semantic Model</strong> <code>Cathedral_Model</code> — relationships and one trivial seed measure. Calc groups: zero. You build them.</li>
-                <li>⚡ <strong>Eventhouse</strong> <code>Cathedral_EH</code> + KQL DB + table <code>CathedralEvents</code> — telemetry of submissions, pass/fail, elegance.</li>
-                <li>📓 <strong>3 Notebooks</strong>:
-                    <ul>
-                        <li><code>CalcGroups_Seed</code> — generates Sales/Budget synthetic data (run once).</li>
-                        <li><code>CalcGroups_Cathedral</code> — 12 KPI briefings + <code>judge.submit_all()</code>.</li>
-                        <li><code>CalcGroups_Dashboard</code> — KQL + Plotly: KPIs passed, measures count, elegance %, rank board.</li>
-                    </ul>
-                </li>
+                <li>🏠 <strong>Lakehouse</strong> <code>Cathedral_LH</code> — populated at runtime with Sales / Date / Customer / Budget Delta tables (3 years).</li>
+                <li>⚡ <strong>Eventhouse</strong> <code>Cathedral_EH</code> + table <code>CathedralEvents</code> (15 columns, PascalCase, 90d retention).</li>
+                <li>📓 <strong>4 Notebooks</strong>: <code>01_Setup</code>, <code>02_Quest</code>, <code>03_Check</code>, <code>04_Dashboard</code>.</li>
             </ul>
+            <p>The semantic model <code>Cathedral_Model</code> is <strong>built at runtime by 01_Setup</strong> (via sempy-labs / TOM), so it does not appear in the install plan — but it is created in the same workspace as part of the first run.</p>
         </section>
 
-        <!-- 12 KPIs -->
+        <!-- 12 PILLARS -->
         <section class="game-section">
-            <h2>📐 The 12 KPI Pillars</h2>
+            <h2>📐 The 12 Pillars</h2>
             <div class="kpi-grid">
-                <div class="kpi-card"><div class="kpi-num">Pillar 01</div><div class="kpi-title">Current</div><div class="kpi-test">Sales for selected period</div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 02</div><div class="kpi-title">Last Year</div><div class="kpi-test"><code>SAMEPERIODLASTYEAR</code></div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 03</div><div class="kpi-title">YoY Δ</div><div class="kpi-test">Current − LY</div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 04</div><div class="kpi-title">YoY %</div><div class="kpi-test">(Current − LY) / LY</div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 05</div><div class="kpi-title">YTD</div><div class="kpi-test"><code>DATESYTD</code></div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 06</div><div class="kpi-title">MTD</div><div class="kpi-test"><code>DATESMTD</code></div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 07</div><div class="kpi-title">QTD</div><div class="kpi-test"><code>DATESQTD</code></div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 08</div><div class="kpi-title">Rolling 12 M</div><div class="kpi-test"><code>DATESINPERIOD</code></div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 09</div><div class="kpi-title">vs Budget Δ</div><div class="kpi-test">Sales − Budget</div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 10</div><div class="kpi-title">vs Budget %</div><div class="kpi-test">Sales / Budget − 1</div></div>
-                <div class="kpi-card"><div class="kpi-num">Pillar 11</div><div class="kpi-title">Best Month</div><div class="kpi-test"><code>TOPN</code> over months</div></div>
-                <div class="kpi-card boss"><div class="kpi-num">Pillar 12 — KEYSTONE</div><div class="kpi-title">% of Total</div><div class="kpi-test"><code>ALLSELECTED</code> ratio — the keystone holding the cathedral together</div></div>
+                <div class="kpi-card"><div class="kpi-num">M_01</div><div class="kpi-title">Current</div><div class="kpi-test">Base measure: <code>SUM</code></div></div>
+                <div class="kpi-card"><div class="kpi-num">M_02</div><div class="kpi-title">LastYear</div><div class="kpi-test"><code>SAMEPERIODLASTYEAR</code></div></div>
+                <div class="kpi-card"><div class="kpi-num">M_03</div><div class="kpi-title">YoY</div><div class="kpi-test">Current − LY</div></div>
+                <div class="kpi-card"><div class="kpi-num">M_04</div><div class="kpi-title">YoY %</div><div class="kpi-test"><code>DIVIDE(YoY, LY)</code></div></div>
+                <div class="kpi-card"><div class="kpi-num">M_05</div><div class="kpi-title">YTD</div><div class="kpi-test"><code>DATESYTD</code></div></div>
+                <div class="kpi-card"><div class="kpi-num">M_06</div><div class="kpi-title">MTD</div><div class="kpi-test"><code>DATESMTD</code></div></div>
+                <div class="kpi-card"><div class="kpi-num">M_07</div><div class="kpi-title">QTD</div><div class="kpi-test"><code>DATESQTD</code></div></div>
+                <div class="kpi-card"><div class="kpi-num">M_08</div><div class="kpi-title">Rolling 12</div><div class="kpi-test"><code>DATESINPERIOD -12 months</code></div></div>
+                <div class="kpi-card"><div class="kpi-num">M_09</div><div class="kpi-title">Best Month</div><div class="kpi-test"><code>MAXX</code> over months</div></div>
+                <div class="kpi-card"><div class="kpi-num">M_10</div><div class="kpi-title">% of Year</div><div class="kpi-test"><code>ALL</code> ratio</div></div>
+                <div class="kpi-card"><div class="kpi-num">M_11</div><div class="kpi-title">Avg Daily Sales</div><div class="kpi-test"><code>AVERAGEX</code> over dates</div></div>
+                <div class="kpi-card standalone"><div class="kpi-num">M_12 — STANDALONE</div><div class="kpi-title">Distinct Customers</div><div class="kpi-test"><code>DISTINCTCOUNT</code> — different aggregation, stays outside the calc group</div></div>
             </div>
         </section>
 
-        <!-- JUDGE -->
+        <!-- FINAL CHALLENGE -->
         <section class="game-section">
-            <h2>⚖️ What the Judge Checks</h2>
-            <ul style="line-height: 2; color: #ccc;">
-                <li>✅ <strong>Correctness</strong> — runs each of the 12 KPI variations via XMLA on locked test dates, compares to expected values (tolerance 0.01).</li>
-                <li>✅ <strong>Calc Group usage</strong> — verifies you actually used calculation groups (not 36 hardcoded measures).</li>
-                <li>✅ <strong>Elegance score</strong> — <code>1 − (your_measure_count / 36)</code>. Lower measure count = higher score.</li>
-                <li>✅ <strong>No cheating</strong> — pre-existing seed measure is excluded from your count; calc items are counted as 1 group, not N.</li>
-                <li>🏆 <strong>Architect Rank</strong> — Mason → Sculptor → Architect → Grandmaster.</li>
-            </ul>
+            <h2>🏛️ The Final Challenge — One Calc Group, 11 Items</h2>
+            <p>Collapse pillars 1 through 11 into a single <strong>Calculation Group</strong>:</p>
+            <div class="code-block">
+                <pre><code><span class="comment">// table 'Time Intelligence', column [Calc], 11 calc items</span>
+<span class="comment">// Each item wraps SELECTEDMEASURE() — applies to any base measure</span>
+Current     = SELECTEDMEASURE()
+LastYear    = CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR('Date'[Date]))
+YoY         = SELECTEDMEASURE() - CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR('Date'[Date]))
+YoYPct      = DIVIDE(<span class="comment">/* YoY */</span>, <span class="comment">/* LY */</span>)
+YTD         = CALCULATE(SELECTEDMEASURE(), DATESYTD('Date'[Date]))
+MTD         = CALCULATE(SELECTEDMEASURE(), DATESMTD('Date'[Date]))
+QTD         = CALCULATE(SELECTEDMEASURE(), DATESQTD('Date'[Date]))
+Rolling12   = CALCULATE(SELECTEDMEASURE(), DATESINPERIOD('Date'[Date], MAX('Date'[Date]), -12, MONTH))
+BestMonth   = MAXX(VALUES('Date'[MonthNum]), SELECTEDMEASURE())
+PctOfYear   = DIVIDE(SELECTEDMEASURE(), CALCULATE(SELECTEDMEASURE(), ALL('Date'[MonthNum], 'Date'[Quarter])))
+AvgDaily    = AVERAGEX(VALUES('Date'[Date]), SELECTEDMEASURE())</code></pre>
+            </div>
+            <p><strong>Why 11, not 12?</strong> <code>DistinctCustomers</code> swaps the aggregation entirely (DISTINCTCOUNT vs SUM) — it isn't a time-context shift, so it belongs outside the group.</p>
+        </section>
+
+        <!-- SCORING -->
+        <section class="game-section">
+            <h2>⚖️ Scoring &amp; Ranks</h2>
+            <div class="code-block">
+                <pre><code>elegance = max(0, 100
+                  − max(0, len(dax) − 60) * 0.4
+                  − max(0, count(CALCULATE) − 1) * 8
+                  − count(FILTER) * 6
+                  − count(SUMX)   * 4)
+
+score    = 50 + elegance * 0.5    <span class="comment"># only if all 3 contexts pass</span></code></pre>
+            </div>
+            <div class="levels-table">
+                <table class="rank-table">
+                    <tr><th>Min Score</th><th>Rank</th></tr>
+                    <tr><td>0</td><td>Stonemason</td></tr>
+                    <tr><td>300</td><td>Apprentice</td></tr>
+                    <tr><td>700</td><td>Journeyman</td></tr>
+                    <tr><td>1100</td><td>Architect</td></tr>
+                    <tr><td>1500</td><td>Master Architect</td></tr>
+                    <tr><td>1800</td><td>🏆 Cathedral Builder</td></tr>
+                </table>
+            </div>
         </section>
 
         <!-- TELEMETRY -->
         <section class="game-section">
-            <h2>📊 Telemetry Events → Eventhouse</h2>
+            <h2>📊 Telemetry → CathedralEvents</h2>
             <div class="telemetry-events">
-                <span class="telemetry-event">CathedralOpened</span>
-                <span class="telemetry-event">BaseMeasureAdded</span>
-                <span class="telemetry-event">CalcGroupCreated</span>
-                <span class="telemetry-event">CalcItemAdded</span>
                 <span class="telemetry-event">PillarSubmitted</span>
                 <span class="telemetry-event">PillarPassed</span>
                 <span class="telemetry-event">PillarFailed</span>
+                <span class="telemetry-event">CalcGroupSubmitted</span>
+                <span class="telemetry-event">CalcGroupPassed</span>
+                <span class="telemetry-event">CalcGroupFailed</span>
                 <span class="telemetry-event">CathedralComplete</span>
                 <span class="telemetry-event">RankPromoted</span>
             </div>
@@ -176,9 +200,10 @@ arcade.install(<span class="string">"calc-groups-cathedral"</span>)
             <h2>🔧 Workloads</h2>
             <div class="workload-tags">
                 <span class="workload-tag pbi">Power BI</span>
-                <span class="workload-tag pbi">Semantic Model</span>
+                <span class="workload-tag pbi">Semantic Model (Direct Lake)</span>
                 <span class="workload-tag pbi">DAX</span>
-                <span class="workload-tag pbi">TMDL</span>
+                <span class="workload-tag de">Lakehouse</span>
+                <span class="workload-tag rti">Eventhouse / KQL</span>
             </div>
         </section>
 
@@ -188,12 +213,12 @@ arcade.install(<span class="string">"calc-groups-cathedral"</span>)
             <div class="levels-table">
                 <table>
                     <tr><th>Skill</th><th>Power BI Feature</th><th>Level</th></tr>
-                    <tr><td>Calculation Groups</td><td>TMDL <code>calculationGroup</code></td><td>⭐⭐⭐</td></tr>
-                    <tr><td>Calc Items vs Measures</td><td>TOM modeling</td><td>⭐⭐</td></tr>
+                    <tr><td>Calculation Groups</td><td>TMDL <code>calculationGroup</code> + <code>SELECTEDMEASURE()</code></td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Calc items vs measures</td><td>TOM modeling</td><td>⭐⭐</td></tr>
                     <tr><td>Time Intelligence</td><td><code>DATESYTD</code>, <code>SAMEPERIODLASTYEAR</code>…</td><td>⭐⭐</td></tr>
-                    <tr><td>Measure reuse via <code>SELECTEDMEASURE()</code></td><td>Calc item formulas</td><td>⭐⭐⭐</td></tr>
-                    <tr><td>Format strings per calc item</td><td>Dynamic formatting</td><td>⭐⭐</td></tr>
-                    <tr><td>Filter context inside CG</td><td><code>ALLSELECTED</code> + ratios</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Programmatic modeling</td><td><code>sempy-labs</code> TOM</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Direct Lake semantic models</td><td>Lakehouse-backed Tabular</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Real-time telemetry</td><td>Eventhouse streaming ingest</td><td>⭐⭐</td></tr>
                     <tr><td>Model minimalism</td><td>Maintainable PBI design</td><td>⭐⭐⭐</td></tr>
                 </table>
             </div>

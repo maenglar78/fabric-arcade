@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Badge Preview — All Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { background:#0a0a14; color:#e8e8f0; font-family:'Rajdhani',sans-serif; margin:0; padding:32px; }
+  h1 { font-family:'Orbitron',monospace; color:#a29bfe; letter-spacing:3px; text-align:center; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(360px,1fr)); gap:32px; max-width:1500px; margin:24px auto; }
+  .card { background:#14142a; padding:18px; border-radius:14px; text-align:center; }
+  .card h3 { font-family:'Orbitron',monospace; color:#a29bfe; font-size:14px; letter-spacing:2px; margin:0 0 14px; }
+  .pair { display:flex; gap:8px; justify-content:center; }
+  .pair div { flex:1; }
+  .pair small { display:block; color:#7a7aa0; font-family:'Orbitron',monospace; font-size:10px; letter-spacing:2px; margin-bottom:6px; }
+  svg { width:100%; height:auto; max-width:340px; }
+</style>
+</head>
+<body>
+<h1>BADGE ICON COMPARISON</h1>
+<div class="grid" id="grid"></div>
+<script>
+const GAMES = [
+  { id:"calc-groups-cathedral", name:"Calc Groups Cathedral", old:"\ud83e\uddee", neu:"\u26ea",          accent:"#a29bfe", deep:"#6c5ce7" },
+  { id:"fabric-racing-game",    name:"Fabric Racing Game",    old:"\ud83c\udfce\ufe0f", neu:"\ud83c\udfc1", accent:"#ff7675", deep:"#d63031" },
+  { id:"mission-artemis-2",     name:"Mission Artemis 2",     old:"\ud83d\ude80", neu:"\ud83c\udf19",      accent:"#74b9ff", deep:"#0984e3" },
+  { id:"monster-breach",        name:"Monster Breach",        old:"\ud83e\uddd9\u200d\u2642\ufe0f", neu:"\ud83d\udc09", accent:"#fdcb6e", deep:"#e17055" },
+  { id:"ontology-detective",    name:"Ontology Detective",    old:"\ud83d\udd75\ufe0f", neu:"\ud83d\udd0d", accent:"#55efc4", deep:"#00b894" },
+  { id:"city-builder",          name:"City Builder",          old:"\ud83c\udfd9\ufe0f", neu:"\ud83c\udfd7\ufe0f", accent:"#81ecec", deep:"#00cec9" },
+  { id:"quest-pipeline",        name:"Quest Data Pipeline",   old:"\ud83c\udff0", neu:"\u2694\ufe0f",      accent:"#dfe6e9", deep:"#b2bec3" },
+  { id:"sports-tracker",        name:"Sports Tracker",        old:"\u26bd", neu:"\ud83c\udfc6",            accent:"#55efc4", deep:"#00b894" },
+  { id:"retro-arcade",          name:"Retro Arcade",          old:"\ud83c\udfb0", neu:"\ud83d\udc7e",      accent:"#fab1a0", deep:"#e17055" },
+  { id:"ocean-explorer",        name:"Ocean Explorer",        old:"\ud83c\udf0a", neu:"\ud83d\udc19",      accent:"#74b9ff", deep:"#0984e3" },
+  { id:"target-practice",       name:"Target Practice",       old:"\ud83c\udfaf", neu:"\ud83c\udfaf",      accent:"#ffeaa7", deep:"#fdcb6e" },
+];
+
+function svg(g, icon) {
+  const W=600,H=600;
+  const gname = g.name.toUpperCase();
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">
+    <defs>
+      <linearGradient id="bg-${g.id}-${icon}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#14142a"/><stop offset="100%" stop-color="#1c1438"/>
+      </linearGradient>
+      <radialGradient id="medal-${g.id}-${icon}" cx="50%" cy="42%" r="55%">
+        <stop offset="0%" stop-color="${g.accent}"/>
+        <stop offset="60%" stop-color="${g.deep}"/>
+        <stop offset="100%" stop-color="#2d1b3d"/>
+      </radialGradient>
+      <linearGradient id="ribbon-${g.id}-${icon}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${g.deep}"/><stop offset="100%" stop-color="${g.accent}"/>
+      </linearGradient>
+      <filter id="glow-${g.id}-${icon}" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="6" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <rect width="${W}" height="${H}" rx="28" fill="url(#bg-${g.id}-${icon})"/>
+    <text x="${W/2}" y="58" text-anchor="middle" font-family="Orbitron,monospace" font-size="18" font-weight="900" fill="${g.accent}" letter-spacing="6">FABRIC ARCADE</text>
+    <text x="${W/2}" y="88" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="14" font-weight="500" fill="#7a7aa0" letter-spacing="5">ACHIEVEMENT BADGE</text>
+    <polygon points="${W/2-70},120 ${W/2+70},120 ${W/2+90},220 ${W/2},190 ${W/2-90},220" fill="url(#ribbon-${g.id}-${icon})" opacity="0.85"/>
+    <circle cx="${W/2}" cy="290" r="135" fill="url(#medal-${g.id}-${icon})" stroke="${g.accent}" stroke-width="4" filter="url(#glow-${g.id}-${icon})"/>
+    <circle cx="${W/2}" cy="290" r="110" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <text x="${W/2}" y="320" text-anchor="middle" font-size="110" font-family="Segoe UI Emoji,Apple Color Emoji,Noto Color Emoji,sans-serif">${icon}</text>
+    <text x="${W/2}" y="465" text-anchor="middle" font-family="Orbitron,monospace" font-size="22" font-weight="700" fill="#f0e6ff" letter-spacing="3">${gname}</text>
+    <text x="${W/2}" y="500" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="24" font-weight="600" fill="${g.accent}" letter-spacing="2">Champion</text>
+    <text x="${W/2}" y="540" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="18" font-weight="500" fill="#e8e8f0" letter-spacing="1">awarded to Mauro</text>
+    <text x="${W/2}" y="574" text-anchor="middle" font-family="Orbitron,monospace" font-size="12" font-weight="500" fill="#7a7aa0" letter-spacing="3">SCORE 1,850  \u00b7  MAY 2026</text>
+  </svg>`;
+}
+
+const grid = document.getElementById("grid");
+for (const g of GAMES) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `<h3>${g.name}</h3>
+    <div class="pair">
+      <div><small>OLD ${g.old}</small>${svg(g, g.old)}</div>
+      <div><small>NEW ${g.neu}</small>${svg(g, g.neu)}</div>
+    </div>`;
+  grid.appendChild(card);
+}
+</script>
+</body>
+</html>

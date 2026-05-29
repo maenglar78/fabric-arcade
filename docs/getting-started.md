@@ -91,7 +91,7 @@ Output:
 🎮 Fabric Arcade - Available Games
 ──────────────────────────────────
 🏎️ Fabric Racing Game  ⭐⭐   RTI  30 min  ✅ Available
-🚀 Mission Artemis 2   ⭐⭐⭐  RTI  45 min  ✅ Available
+🚀 Mission Artemis 2   ⭐⭐⭐  RTI  45 min  🚧 In Development
 ⚽ Sports Tracker      ⭐⭐   RTI  25 min  🔜 Coming Soon
 ```
 

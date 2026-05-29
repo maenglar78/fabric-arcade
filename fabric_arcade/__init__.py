@@ -20,6 +20,7 @@ __author__ = "Fabric Gaming Community"
 
 from .catalog import get_catalog, get_game, search_games
 from .engine import install, uninstall, FabricClient, GameDeployer
+from .badge import issue_badge, verify_token, Badge
 
 # Fabric-native API (for use inside Fabric notebooks)
 from .fabric_api import arcade, Arcade
@@ -37,6 +38,10 @@ __all__ = [
     "uninstall",
     "FabricClient",
     "GameDeployer",
+    # Badge issuance
+    "issue_badge",
+    "verify_token",
+    "Badge",
 ]
 
 

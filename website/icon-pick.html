@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Icon Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { background:#0a0a14; color:#e8e8f0; font-family:'Rajdhani',sans-serif; margin:0; padding:24px; }
+  h1 { font-family:'Orbitron',monospace; color:#a29bfe; letter-spacing:3px; text-align:center; font-size:18px; }
+  h2 { font-family:'Orbitron',monospace; color:#f0e6ff; letter-spacing:2px; text-align:center; font-size:24px; margin-top:0; }
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; max-width:1600px; margin:24px auto; }
+  .card { background:#14142a; padding:14px; border-radius:14px; text-align:center; }
+  .card label { display:block; font-family:'Orbitron',monospace; color:#a29bfe; font-size:13px; letter-spacing:2px; margin-bottom:8px; }
+  svg { width:100%; height:auto; }
+</style>
+</head>
+<body>
+<h1>CHOOSE ICON</h1>
+<h2 id="gname"></h2>
+<div class="grid" id="grid"></div>
+<script>
+const GAME = { id:"retro-arcade", name:"Retro Arcade", accent:"#fab1a0", deep:"#e17055" };
+const OPTIONS = [
+  { label:"A · Slot machine", icon:"\ud83c\udfb0" },
+  { label:"B · Space invader", icon:"\ud83d\udc7e" },
+  { label:"C · Joystick",     icon:"\ud83d\udd79\ufe0f" },
+  { label:"D · Game pad",     icon:"\ud83c\udfae" },
+];
+document.getElementById("gname").textContent = GAME.name.toUpperCase();
+
+function svg(g, icon, key) {
+  const W=600,H=600, gname=g.name.toUpperCase();
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">
+    <defs>
+      <linearGradient id="bg-${key}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#14142a"/><stop offset="100%" stop-color="#1c1438"/></linearGradient>
+      <radialGradient id="medal-${key}" cx="50%" cy="42%" r="55%"><stop offset="0%" stop-color="${g.accent}"/><stop offset="60%" stop-color="${g.deep}"/><stop offset="100%" stop-color="#2d1b3d"/></radialGradient>
+      <linearGradient id="ribbon-${key}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${g.deep}"/><stop offset="100%" stop-color="${g.accent}"/></linearGradient>
+      <filter id="glow-${key}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <rect width="${W}" height="${H}" rx="28" fill="url(#bg-${key})"/>
+    <text x="${W/2}" y="58" text-anchor="middle" font-family="Orbitron,monospace" font-size="18" font-weight="900" fill="${g.accent}" letter-spacing="6">FABRIC ARCADE</text>
+    <text x="${W/2}" y="88" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="14" font-weight="500" fill="#7a7aa0" letter-spacing="5">ACHIEVEMENT BADGE</text>
+    <polygon points="${W/2-70},120 ${W/2+70},120 ${W/2+90},220 ${W/2},190 ${W/2-90},220" fill="url(#ribbon-${key})" opacity="0.85"/>
+    <circle cx="${W/2}" cy="290" r="135" fill="url(#medal-${key})" stroke="${g.accent}" stroke-width="4" filter="url(#glow-${key})"/>
+    <circle cx="${W/2}" cy="290" r="110" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <text x="${W/2}" y="320" text-anchor="middle" font-size="110" font-family="Segoe UI Emoji,Apple Color Emoji,Noto Color Emoji,sans-serif">${icon}</text>
+    <text x="${W/2}" y="465" text-anchor="middle" font-family="Orbitron,monospace" font-size="22" font-weight="700" fill="#f0e6ff" letter-spacing="3">${gname}</text>
+    <text x="${W/2}" y="500" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="24" font-weight="600" fill="${g.accent}" letter-spacing="2">Cathedral Builder</text>
+    <text x="${W/2}" y="540" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="18" font-weight="500" fill="#e8e8f0" letter-spacing="1">awarded to Mauro</text>
+    <text x="${W/2}" y="574" text-anchor="middle" font-family="Orbitron,monospace" font-size="12" font-weight="500" fill="#7a7aa0" letter-spacing="3">SCORE 1,850  \u00b7  MAY 2026</text>
+  </svg>`;
+}
+
+const grid = document.getElementById("grid");
+OPTIONS.forEach((o,i) => {
+  const c = document.createElement("div");
+  c.className = "card";
+  c.innerHTML = `<label>${o.label}</label>${svg(GAME, o.icon, i)}`;
+  grid.appendChild(c);
+});
+</script>
+</body>
+</html>

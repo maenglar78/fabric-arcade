@@ -34,6 +34,18 @@ CATALOG_DATA = [
         "achievements": ["first-start", "full-grid", "champion"]
     },
     {
+        "id": "calc-groups-cathedral",
+        "name": "Calc Groups Cathedral",
+        "description": "Replace 12 redundant time-intelligence measures with one elegant Calculation Group on a real Direct Lake semantic model. Earn the rank of Cathedral Builder.",
+        "type": "puzzle",
+        "workloads": ["PBI"],
+        "difficulty": 3,
+        "duration_minutes": 60,
+        "icon": "🏛️",
+        "tags": ["dax", "calc-groups", "semantic-model", "direct-lake", "puzzle"],
+        "achievements": ["stonemason", "architect", "cathedral-builder"]
+    },
+    {
         "id": "sports-tracker",
         "name": "Sports Tracker",
         "description": "Track live sports statistics from matches. Analyze player performance, team stats, and predict outcomes using ML models on streaming data.",

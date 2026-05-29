@@ -1,84 +1,113 @@
 {
+  "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
   "id": "calc-groups-cathedral",
   "name": "Calc Groups Cathedral",
-  "version": "0.1.0-dev",
-  "status": "in-development",
+  "version": "1.0.0",
+  "status": "ready",
   "type": "puzzle",
-  "tagline": "Build a cathedral of Calculation Groups on a real Fabric Semantic Model. 12 KPI variations, minimum base measures.",
-  "workloads": ["PowerBI", "SemanticModel", "DAX"],
+  "icon": "🏛️",
+  "tagline": "Build a cathedral of Calculation Groups on a real Direct Lake Semantic Model. 12 KPI variations, minimum base measures.",
+  "description": "Master Calculation Groups by replacing 12 redundant DAX measures with a single elegant calc group. Build a Direct Lake Cathedral_Model from a synthetic Sales lakehouse, then craft Time Intelligence pillars (Current, LY, YoY, YTD, MTD, Rolling12...) with surgical DAX. Every submission is graded on 3 contexts and rewarded with an elegance score. Earn ranks from Stonemason to Cathedral Builder.",
+  "workloads": ["PowerBI", "SemanticModel", "DAX", "Lakehouse", "RTI"],
   "difficulty": 3,
-  "estimated_minutes": 60,
+  "duration_minutes": 60,
+  "tags": ["dax", "calc-groups", "semantic-model", "direct-lake", "time-intelligence", "puzzle"],
+  "author": { "name": "Fabric Arcade" },
+  "prerequisites": {
+    "fabric_capacity": "F2",
+    "python_packages": ["sempy-labs"],
+    "skills": ["DAX basics", "Power BI modeling"]
+  },
+  "learning_objectives": [
+    "Understand Calculation Groups in Direct Lake semantic models",
+    "Replace N redundant time-intelligence measures with 1 calc group",
+    "Apply SELECTEDMEASURE() and CALCULATE patterns",
+    "Build and validate measures programmatically with sempy-labs",
+    "Stream telemetry to Eventhouse and visualize a player dashboard"
+  ],
   "items": [
     {
-      "kind": "Lakehouse",
+      "type": "Lakehouse",
       "name": "Cathedral_LH",
-      "purpose": "Synthetic Sales / Date / Customer / Budget tables (3 years)."
+      "description": "Holds synthetic Sales / Date / Customer / Budget Delta tables (3 years), populated by 01_Setup."
     },
     {
-      "kind": "SemanticModel",
-      "name": "Cathedral_Model",
-      "purpose": "Empty model with tables, relationships, ONE trivial seed measure. No calc groups (player builds them)."
-    },
-    {
-      "kind": "Eventhouse",
+      "type": "Eventhouse",
       "name": "Cathedral_EH",
-      "kql_database": "CathedralData",
-      "purpose": "Telemetry of submissions, pass/fail, elegance score."
+      "description": "Telemetry of submissions, pass/fail, elegance, rank promotions. Default KQL DB (same name) is auto-provisioned and hosts CathedralEvents."
     },
     {
-      "kind": "Notebook",
-      "name": "CalcGroups_Seed",
-      "purpose": "Run once: generate synthetic Sales/Budget data and load to Lakehouse."
+      "type": "Notebook",
+      "name": "01_Setup",
+      "file": "notebooks/01_Setup.ipynb",
+      "description": "Run once: generate synthetic Sales/Date/Customer/Budget, load to Cathedral_LH, build Direct Lake Cathedral_Model with the seed measure."
     },
     {
-      "kind": "Notebook",
-      "name": "CalcGroups_Cathedral",
-      "purpose": "12 KPI briefings + judge.submit_all()."
+      "type": "Notebook",
+      "name": "02_Quest",
+      "file": "notebooks/02_Quest.ipynb",
+      "description": "Quest brief: the 12 pillars and the Final Challenge (1 calc group with 11 items)."
     },
     {
-      "kind": "Notebook",
-      "name": "CalcGroups_Dashboard",
-      "purpose": "Live progress, elegance %, Architect Rank."
+      "type": "Notebook",
+      "name": "03_Check",
+      "file": "notebooks/03_Check.ipynb",
+      "description": "Validates the 12 measures + calc group, scores elegance, assigns rank, ships telemetry."
+    },
+    {
+      "type": "Notebook",
+      "name": "04_Dashboard",
+      "file": "notebooks/04_Dashboard.ipynb",
+      "description": "Live progress dashboard (Plotly): state, timeline, measures vs calc group, session recap."
     }
   ],
+  "tables": [
+    {
+      "name": "CathedralEvents",
+      "database": "Cathedral_EH",
+      "schema": "schemas/CathedralEvents.kql",
+      "description": "All quest telemetry (15 columns, PascalCase)."
+    }
+  ],
+  "pillars": [
+    { "id": 1,  "key": "Current",          "concept": "base measure: SUM" },
+    { "id": 2,  "key": "LastYear",         "concept": "SAMEPERIODLASTYEAR" },
+    { "id": 3,  "key": "YoY",              "concept": "Current - LY" },
+    { "id": 4,  "key": "YoYPct",           "concept": "(Current - LY) / LY" },
+    { "id": 5,  "key": "YTD",              "concept": "DATESYTD" },
+    { "id": 6,  "key": "MTD",              "concept": "DATESMTD" },
+    { "id": 7,  "key": "QTD",              "concept": "DATESQTD" },
+    { "id": 8,  "key": "Rolling12",        "concept": "DATESINPERIOD -12 months" },
+    { "id": 9,  "key": "BestMonth",        "concept": "MAXX over months" },
+    { "id": 10, "key": "PctOfYear",        "concept": "ALL ratio" },
+    { "id": 11, "key": "AvgDailySales",    "concept": "AVERAGEX over dates" },
+    { "id": 12, "key": "DistinctCustomers","concept": "DISTINCTCOUNT (standalone)" }
+  ],
+  "calc_group": {
+    "table": "Time Intelligence",
+    "column": "Calc",
+    "items": 11,
+    "excludes": ["DistinctCustomers"],
+    "note": "DistinctCustomers stays a standalone measure because it changes the aggregation, not the time context."
+  },
+  "scoring": {
+    "elegance_formula": "max(0, 100 - max(0,len-60)*0.4 - max(0,calculate_count-1)*8 - filter_count*6 - sumx_count*4)",
+    "pillar_score": "50 + elegance*0.5 (if all 3 contexts pass, else 0)",
+    "ranks": [
+      { "min": 0,    "name": "Stonemason" },
+      { "min": 300,  "name": "Apprentice" },
+      { "min": 700,  "name": "Journeyman" },
+      { "min": 1100, "name": "Architect" },
+      { "min": 1500, "name": "Master Architect" },
+      { "min": 1800, "name": "Cathedral Builder" }
+    ]
+  },
   "telemetry": {
     "table": "CathedralEvents",
     "event_types": [
-      "CathedralOpened",
-      "BaseMeasureAdded",
-      "CalcGroupCreated",
-      "CalcItemAdded",
-      "PillarSubmitted",
-      "PillarPassed",
-      "PillarFailed",
-      "CathedralComplete",
-      "RankPromoted"
+      "PillarSubmitted", "PillarPassed", "PillarFailed",
+      "CalcGroupSubmitted", "CalcGroupPassed", "CalcGroupFailed",
+      "CathedralComplete", "RankPromoted"
     ]
-  },
-  "pillars": [
-    { "id": 1, "key": "Current", "concept": "base measure" },
-    { "id": 2, "key": "LY", "concept": "SAMEPERIODLASTYEAR" },
-    { "id": 3, "key": "YoY", "concept": "Current - LY" },
-    { "id": 4, "key": "YoYPct", "concept": "(Current - LY) / LY" },
-    { "id": 5, "key": "YTD", "concept": "DATESYTD" },
-    { "id": 6, "key": "MTD", "concept": "DATESMTD" },
-    { "id": 7, "key": "QTD", "concept": "DATESQTD" },
-    { "id": 8, "key": "Rolling12", "concept": "DATESINPERIOD -12 months" },
-    { "id": 9, "key": "VsBudget", "concept": "Sales - Budget" },
-    { "id": 10, "key": "VsBudgetPct", "concept": "Sales / Budget - 1" },
-    { "id": 11, "key": "BestMonth", "concept": "TOPN over months" },
-    { "id": 12, "key": "PctOfTotal", "concept": "ALLSELECTED ratio (keystone)", "boss": true }
-  ],
-  "validation_strategy": {
-    "approach": "Run 12 fixed DAX queries via XMLA against Cathedral_Model on locked test dates, compare to expected values (tolerance 0.01).",
-    "elegance_score": "1 - (player_measure_count / 36); excludes the seed measure; calc items count as 0 (only the group counts).",
-    "ranks": ["Mason", "Sculptor", "Architect", "Grandmaster"]
-  },
-  "implementability_notes": {
-    "create_semantic_model": "Fabric REST items POST with inline TMDL - proven by Racing game.",
-    "execute_dax": "MCP powerbi-model dax_query_operations - configured and tested.",
-    "count_measures": "MCP powerbi-model measure_operations list.",
-    "telemetry": "Same pattern as Racing -> Eventhouse via REST ingestion.",
-    "exotic_deps": "None."
   }
 }

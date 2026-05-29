@@ -120,6 +120,15 @@ class FabricClient:
             display_name=name,
             description=f"Fabric Arcade - {name}"
         )
+
+    def create_lakehouse(self, workspace_id: str, name: str) -> Dict:
+        """Create a Lakehouse (no schemas)."""
+        return self.create_item(
+            workspace_id=workspace_id,
+            item_type="Lakehouse",
+            display_name=name,
+            description=f"Fabric Arcade - {name}"
+        )
     
     def create_kql_database(self, workspace_id: str, eventhouse_id: str, 
                             name: str) -> Dict:
@@ -391,7 +400,16 @@ class GameDeployer:
     def _deploy_items(self, ctx: DeploymentContext, manifest: Dict, 
                       prefix: str) -> None:
         """Deploy all items defined in manifest"""
-        
+
+        # 0. Create Lakehouse(s) first — notebooks may bind to them at runtime.
+        for item in manifest.get("items", []):
+            if item["type"] == "Lakehouse":
+                name = f"{prefix}{item['name']}" if prefix else item["name"]
+                print(f"  Creating Lakehouse: {name}...")
+                result = self.client.create_lakehouse(ctx.workspace_id, name)
+                ctx.created_items[item["name"]] = result["id"]
+                print(f"    ✓ Created: {result['id']}")
+
         # 1. Create Eventhouse(s)
         for item in manifest.get("items", []):
             if item["type"] == "Eventhouse":
@@ -400,6 +418,23 @@ class GameDeployer:
                 result = self.client.create_eventhouse(ctx.workspace_id, name)
                 ctx.created_items[item["name"]] = result["id"]
                 print(f"    ✓ Created: {result['id']}")
+
+                # Auto-register the default KQL DB (same displayName as the EH)
+                # under key "<eh_name>/db" so tables can reference it without
+                # an explicit KQLDatabase manifest entry.
+                default_db = None
+                for _ in range(20):
+                    for db in self.client.list_items(ctx.workspace_id, "KQLDatabase"):
+                        if db.get("displayName") == name:
+                            default_db = db
+                            break
+                    if default_db:
+                        break
+                    time.sleep(2)
+                if default_db:
+                    ctx.created_items[f"{item['name']}/db"] = default_db["id"]
+                    ctx.created_items[f"{item['name']}/db_eventhouse"] = result["id"]
+                    print(f"    ✓ Default KQL DB bound: {default_db['id']}")
         
         # 2. Create KQL Database(s)
         for item in manifest.get("items", []):
@@ -410,7 +445,27 @@ class GameDeployer:
                 
                 if not parent_id:
                     raise ValueError(f"Parent Eventhouse '{parent_name}' not found")
-                
+
+                # If parent and child share the display name, bind to the
+                # auto-provisioned default DB instead of creating a duplicate.
+                if name == parent_name:
+                    print(f"  Binding to default KQL DB inside {parent_name}...")
+                    default_db = None
+                    for _ in range(20):
+                        for db in self.client.list_items(ctx.workspace_id, "KQLDatabase"):
+                            if db.get("displayName") == name:
+                                default_db = db
+                                break
+                        if default_db:
+                            break
+                        time.sleep(2)
+                    if not default_db:
+                        raise RuntimeError(f"Default KQL DB '{name}' not found after Eventhouse creation")
+                    ctx.created_items[item["name"]] = default_db["id"]
+                    ctx.created_items[f"{item['name']}_eventhouse"] = parent_id
+                    print(f"    ✓ Bound: {default_db['id']}")
+                    continue
+
                 print(f"  Creating KQL Database: {name}...")
                 result = self.client.create_kql_database(
                     ctx.workspace_id, parent_id, name
@@ -427,9 +482,13 @@ class GameDeployer:
             
         for table in manifest.get("tables", []):
             db_name = table.get("database")
-            db_id = ctx.created_items.get(db_name)
-            eventhouse_id = ctx.created_items.get(f"{db_name}_eventhouse")
-            
+            db_id = ctx.created_items.get(f"{db_name}/db") or ctx.created_items.get(db_name)
+            eventhouse_id = (
+                ctx.created_items.get(f"{db_name}_eventhouse")
+                or ctx.created_items.get(f"{db_name}/db_eventhouse")
+                or ctx.created_items.get(db_name)
+            )
+
             if not db_id:
                 raise ValueError(f"Database '{db_name}' not found")
             

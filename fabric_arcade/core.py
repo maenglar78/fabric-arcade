@@ -12,6 +12,7 @@ class GameType(Enum):
     MISSION = "mission"      # Full end-to-end projects (30-60 min)
     CHALLENGE = "challenge"  # Single workload focus (15-30 min)
     ARCADE = "arcade"        # Quick demos (5-15 min)
+    PUZZLE = "puzzle"        # Constraint-based authoring challenges
 
 class Difficulty(Enum):
     BEGINNER = 1
