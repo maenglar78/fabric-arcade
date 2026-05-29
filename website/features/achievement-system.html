@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievement System - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+    <style>
+        .badge-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; margin: 22px 0; }
+        .mini-badge { background: linear-gradient(135deg, #1a1a2e 0%, #2d1b3d 100%); border: 1px solid rgba(108,92,231,0.5); border-radius: 12px; padding: 18px 14px; text-align: center; }
+        .mini-badge .ic { font-size: 2.6rem; line-height: 1; margin-bottom: 8px; }
+        .mini-badge .nm { font-weight: 700; color: #f0e6ff; font-size: 0.95rem; margin-bottom: 4px; }
+        .mini-badge .gm { color: #a29bfe; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+        .mini-badge.soon { opacity: 0.45; }
+        .rank-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+        .rank-pill { background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.35); color: #ffd700; padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
+        .note { color: var(--text-muted); font-size: 0.85rem; font-style: italic; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#features">Features</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#features" class="back-link">← Back to Features</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">🏆</div>
+            <div class="game-title-section">
+                <span class="game-badge quest">FEATURE</span>
+                <h1>Achievement System</h1>
+                <p class="game-tagline">Every game ships with a <strong>cryptographically-signed badge</strong> you can earn, download as PNG/SVG and share on LinkedIn. No "Verified by trust me bro" — the signature is HMAC-SHA256 and can be checked by anyone.</p>
+            </div>
+        </header>
+
+        <section class="game-section">
+            <h2>🎖️ How it works</h2>
+            <p>When you complete a game's challenge, the validation notebook computes your score and rank, then builds a payload:</p>
+            <div class="code-block"><pre><code>{ "g": "calc-groups-cathedral", "p": "Mauro", "r": "Cathedral Builder",
+  "s": 1850, "t": 1780058205, "v": 1 }</code></pre></div>
+            <p>The payload is signed with a shared HMAC key. The badge page (<code>/badge.html?t=…</code>) re-runs the same HMAC with the Web Crypto API and shows ✓ <em>Signature verified</em> before rendering. Anyone receiving your link can verify it without contacting any server.</p>
+        </section>
+
+        <section class="game-section">
+            <h2>🏅 Badges in the catalog</h2>
+            <p class="note">Just for show — these are the icons you can earn from each game. Greyed-out ones belong to games still in Preview Design.</p>
+            <div class="badge-strip">
+                <div class="mini-badge"><div class="ic">🏎️</div><div class="nm">Fabric Racing</div><div class="gm">Speed Demon</div></div>
+                <div class="mini-badge"><div class="ic">🏛️</div><div class="nm">Cathedral</div><div class="gm">Cathedral Builder</div></div>
+                <div class="mini-badge soon"><div class="ic">🚀</div><div class="nm">Mission Artemis 2</div><div class="gm">Lunar Commander</div></div>
+                <div class="mini-badge soon"><div class="ic">🧙‍♂️</div><div class="nm">Monster Breach</div><div class="gm">Archmage</div></div>
+                <div class="mini-badge soon"><div class="ic">🏙️</div><div class="nm">City Builder</div><div class="gm">Data Urbanist</div></div>
+                <div class="mini-badge soon"><div class="ic">🕵️</div><div class="nm">Ontology Detective</div><div class="gm">Lead Investigator</div></div>
+                <div class="mini-badge soon"><div class="ic">🕹️</div><div class="nm">Retro Arcade</div><div class="gm">High Score</div></div>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>📈 Ranks (example: Calc Groups Cathedral)</h2>
+            <p>Each game can define its own progression. Cathedral uses five masonry-themed ranks based on your elegance score:</p>
+            <div class="rank-list">
+                <span class="rank-pill">🪨 Stonemason · 0+</span>
+                <span class="rank-pill">🔨 Apprentice · 300+</span>
+                <span class="rank-pill">⚒️ Journeyman · 700+</span>
+                <span class="rank-pill">📐 Architect · 1100+</span>
+                <span class="rank-pill">🏛️ Cathedral Builder · 1500+</span>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>📤 Sharing</h2>
+            <p>Once your badge URL is generated, the badge page provides:</p>
+            <ul class="learn-list">
+                <li>⬇️ Download as <strong>PNG</strong> (LinkedIn-ready) or <strong>SVG</strong> (vector)</li>
+                <li>🔗 Direct <strong>Share on LinkedIn / X</strong> buttons</li>
+                <li>📋 Copy link with the signed token embedded</li>
+                <li>✓ Anyone visiting the link sees the same "Signature verified" check</li>
+            </ul>
+        </section>
+
+        <a href="../#games" class="back-link">→ Earn your first badge</a>
+    </main>
+</body>
+</html>

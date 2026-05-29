@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn by Doing - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#features">Features</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#features" class="back-link">← Back to Features</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">🎯</div>
+            <div class="game-title-section">
+                <span class="game-badge mission">FEATURE</span>
+                <h1>Learn by Doing</h1>
+                <p class="game-tagline">Forget tutorial videos. Every Fabric Arcade game spins up <strong>real Fabric items</strong> in your own workspace, so you learn by clicking <em>Run</em>, not by watching someone else.</p>
+            </div>
+        </header>
+
+        <section class="game-section">
+            <h2>📋 What it means in practice</h2>
+            <p>When you <code>arcade.install("fabric-racing-game")</code>, the library uses the Fabric REST APIs to create the same items a Solutions Architect would build by hand: Lakehouses, Eventhouses, Eventstreams, Semantic Models, Notebooks. They live in your workspace, they consume your capacity, and they are yours to keep, modify and break.</p>
+            <p>That is the trick: instead of reading <em>"this is how Direct Lake works"</em>, you end up looking at a real Direct Lake semantic model, opening its TMDL, editing a measure and re-running a validation notebook to see your score change.</p>
+        </section>
+
+        <section class="game-section">
+            <h2>🧱 What gets created for you</h2>
+            <div class="items-grid">
+                <div class="item-card">
+                    <div class="item-icon">🏠</div>
+                    <div class="item-name">Lakehouses</div>
+                    <div class="item-detail">Synthetic but realistic Delta tables (Sales, Date, Customers...) so the games behave like a production model.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">⚡</div>
+                    <div class="item-name">Eventhouses + KQL DB</div>
+                    <div class="item-detail">For Real-Time games: telemetry ingestion, KQL tables and queryable history of every move you make.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🔀</div>
+                    <div class="item-name">Eventstreams</div>
+                    <div class="item-detail">Pre-wired Custom Endpoint → KQL DB routes. You just publish and start streaming.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">📓</div>
+                    <div class="item-name">Notebooks</div>
+                    <div class="item-detail">Setup, Quest, Check and Dashboard notebooks. Real PySpark / Python code you can edit and reuse.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">📊</div>
+                    <div class="item-name">Semantic Models</div>
+                    <div class="item-detail">Direct Lake models with seed measures and a Time Intelligence calculation group skeleton.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">📜</div>
+                    <div class="item-name">README notebook</div>
+                    <div class="item-detail">Auto-generated post-deploy guide with the exact next steps for the game you installed.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>🛠️ Side-effect: you also learn the platform</h2>
+            <p>Because everything is built via the Fabric REST API, the install script doubles as a worked example: workspace lookup, item creation, KQL schema management, notebook upload via <code>InlineBase64</code>. Read the source on GitHub to see how to do all of this in your own pipelines.</p>
+        </section>
+
+        <a href="../#games" class="back-link">→ Pick a game and start building</a>
+    </main>
+</body>
+</html>

@@ -478,10 +478,15 @@ body {
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .feature-card:hover {
     border-color: var(--secondary);
+    transform: translateY(-4px);
 }
 
 .feature-icon {

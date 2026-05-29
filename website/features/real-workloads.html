@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Workloads - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#features">Features</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#features" class="back-link">← Back to Features</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">📊</div>
+            <div class="game-title-section">
+                <span class="game-badge mission">FEATURE</span>
+                <h1>Real Workloads</h1>
+                <p class="game-tagline">Every Fabric workload, wrapped in a game. No toy SDKs, no in-browser sandbox: the same items a customer would deploy in production.</p>
+            </div>
+        </header>
+
+        <section class="game-section">
+            <h2>🧩 Workload coverage</h2>
+            <div class="items-grid">
+                <div class="item-card">
+                    <div class="item-icon">⚡</div>
+                    <div class="item-name">Real-Time Intelligence</div>
+                    <div class="item-detail">Eventhouse, KQL Database, Eventstream, Custom Endpoints, KQL queries. Used by Fabric Racing and Mission Artemis 2.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🏠</div>
+                    <div class="item-name">Lakehouse + Spark</div>
+                    <div class="item-detail">PySpark notebooks generate synthetic Delta tables and run validation jobs. Used by Cathedral and the upcoming Monster Breach.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">📊</div>
+                    <div class="item-name">Power BI · Semantic Model</div>
+                    <div class="item-detail">Direct Lake models, DAX measures, Calculation Groups — the actual TMDL is yours to edit. Cathedral lives here.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🏗️</div>
+                    <div class="item-name">Data Warehouse</div>
+                    <div class="item-detail">T-SQL endpoint and warehouse items for Star Schema games (City Builder, Preview Design).</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🔀</div>
+                    <div class="item-name">Data Pipelines</div>
+                    <div class="item-detail">Orchestration of notebooks and copy activities for medallion-style games (Monster Breach).</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🕸️</div>
+                    <div class="item-name">Digital Twin Builder</div>
+                    <div class="item-detail">Ontologies and relationships for the Ontology Detective game (Preview Design).</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>🎯 Why "real" matters</h2>
+            <p>You can learn KQL from slides. You can learn DAX from blog posts. But until you have actually:</p>
+            <ul class="learn-list">
+                <li>Hit a Direct Lake fallback because a calc group was wrong</li>
+                <li>Forgotten to publish an Eventstream and wondered why no data flows</li>
+                <li>Watched a Custom Endpoint dropping events because the JSON mapping was off by one field</li>
+            </ul>
+            <p>…you do not really know the platform. Fabric Arcade makes those mistakes <em>cheap</em> and <em>fun</em>.</p>
+        </section>
+
+        <section class="game-section">
+            <h2>💰 Capacity footprint</h2>
+            <p>All games are designed to run on an <strong>F2</strong> capacity. Eventhouses and KQL DBs are the most expensive piece, so you can pause or delete them when you are done. The <code>arcade.uninstall()</code> command will clean up everything the game created.</p>
+        </section>
+
+        <a href="../#games" class="back-link">→ Browse games by workload</a>
+    </main>
+</body>
+</html>

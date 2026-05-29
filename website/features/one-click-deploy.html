@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One-Click Deploy - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#features">Features</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#features" class="back-link">← Back to Features</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">⚡</div>
+            <div class="game-title-section">
+                <span class="game-badge mission">FEATURE</span>
+                <h1>One-Click Deploy</h1>
+                <p class="game-tagline">From <em>"I want to play"</em> to <em>"the game is running in my workspace"</em> in a single <code>arcade.install()</code> call.</p>
+            </div>
+        </header>
+
+        <section class="game-section">
+            <h2>🚀 The whole thing</h2>
+            <div class="code-block"><pre><code><span class="comment"># In a Fabric Notebook (or local Python with az login):</span>
+<span class="keyword">%pip</span> install -q fabric-arcade
+
+<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+arcade.list()
+arcade.install(<span class="string">"calc-groups-cathedral"</span>)</code></pre></div>
+            <p>That is it. Behind the scenes the library logs in via <code>az</code> credentials, resolves your current workspace and provisions every required item for that game.</p>
+        </section>
+
+        <section class="game-section">
+            <h2>⚙️ What happens under the hood</h2>
+            <ul class="learn-list">
+                <li>📥 Fetches the game manifest and assets from the public GitHub catalog</li>
+                <li>🏠 Creates Lakehouses, Eventhouses, Eventstreams, Notebooks via Fabric REST APIs</li>
+                <li>🗄️ Runs the KQL schema scripts against the new KQL Database to create tables and policies</li>
+                <li>📓 Uploads each notebook (<code>InlineBase64</code>) into the workspace</li>
+                <li>📜 Generates a per-game README notebook with the exact next steps</li>
+                <li>✅ Returns the list of created item IDs so you can script further</li>
+            </ul>
+        </section>
+
+        <section class="game-section">
+            <h2>🧹 Equally easy to remove</h2>
+            <div class="code-block"><pre><code>arcade.uninstall(<span class="string">"calc-groups-cathedral"</span>)</code></pre></div>
+            <p>Deletes the items created by the install. Useful when demoing on a shared capacity.</p>
+        </section>
+
+        <section class="game-section">
+            <h2>🛡️ Idempotent &amp; transparent</h2>
+            <p>If an item with the same name already exists, the install is non-destructive: it will surface the conflict instead of overwriting. Every REST call is logged so you can copy the pattern for your own deployment scripts.</p>
+        </section>
+
+        <a href="../#start" class="back-link">→ See the full install flow</a>
+    </main>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Source - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#features">Features</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#features" class="back-link">← Back to Features</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">🌐</div>
+            <div class="game-title-section">
+                <span class="game-badge mission">FEATURE</span>
+                <h1>Open Source</h1>
+                <p class="game-tagline">Everything you see — the Python library, the catalog, every game's notebooks and KQL schemas, this very website — is on GitHub. Fork it, break it, ship a PR.</p>
+            </div>
+        </header>
+
+        <section class="game-section">
+            <h2>📦 What's in the repo</h2>
+            <div class="items-grid">
+                <div class="item-card">
+                    <div class="item-icon">🐍</div>
+                    <div class="item-name">fabric_arcade/</div>
+                    <div class="item-detail">The Python package: catalog, REST client, install/uninstall, badge signing.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🎮</div>
+                    <div class="item-name">catalog/</div>
+                    <div class="item-detail">One folder per game: <code>manifest.json</code>, KQL schemas, notebooks, README.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🌐</div>
+                    <div class="item-name">website/</div>
+                    <div class="item-detail">This site. Plain HTML + CSS, served by GitHub Pages from <code>main</code>.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🛠️</div>
+                    <div class="item-name">dev/</div>
+                    <div class="item-detail">Build &amp; upload scripts used while authoring new games (Cathedral notebooks, etc.).</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">📚</div>
+                    <div class="item-name">docs/</div>
+                    <div class="item-detail">Getting-started, design notes, and contributor guidelines.</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-icon">🧪</div>
+                    <div class="item-name">tests/</div>
+                    <div class="item-detail">Unit tests for catalog parsing, badge signing and REST helpers.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>➕ Add your own game</h2>
+            <p>A game is just a folder in <code>catalog/</code> with a <code>manifest.json</code> that lists items, notebooks and tables. The library reads it dynamically — no Python changes required for new content.</p>
+            <ul class="learn-list">
+                <li>Define your items (Lakehouse / Eventhouse / Notebook / ...)</li>
+                <li>Drop your <code>.kql</code> schemas and <code>.ipynb</code> notebooks alongside</li>
+                <li>Add an entry to <code>catalog_index.json</code></li>
+                <li>(Optional) Add a card to the website's index and a detail page</li>
+                <li>Open a PR — that's it</li>
+            </ul>
+        </section>
+
+        <section class="game-section">
+            <h2>📜 License</h2>
+            <p>MIT. Use it at customers, fork it for internal training, strip the branding and rebadge it — all fair game. Just keep the LICENSE file and play nice.</p>
+        </section>
+
+        <section class="game-section">
+            <h2>🔗 Quick links</h2>
+            <ul class="learn-list">
+                <li>⭐ <a href="https://github.com/maenglar78/fabric-arcade">GitHub repository</a></li>
+                <li>🐛 <a href="https://github.com/maenglar78/fabric-arcade/issues">Issue tracker</a></li>
+                <li>🤝 <a href="https://github.com/maenglar78/fabric-arcade/blob/main/CONTRIBUTING.md">Contributing guide</a></li>
+            </ul>
+        </section>
+
+        <a href="https://github.com/maenglar78/fabric-arcade" class="back-link">→ Open the repository</a>
+    </main>
+</body>
+</html>

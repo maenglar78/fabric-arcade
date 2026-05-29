@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterative Learning - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+    <style>
+        .tier { background: var(--surface); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 18px 20px; margin: 14px 0; }
+        .tier h3 { margin: 0 0 4px 0; }
+        .tier .dur { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        .tier.arcade { border-left: 4px solid #ff7675; }
+        .tier.challenge { border-left: 4px solid #74b9ff; }
+        .tier.mission { border-left: 4px solid #a29bfe; }
+        .tier.quest { border-left: 4px solid #ffd700; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#features">Features</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#features" class="back-link">← Back to Features</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">🔄</div>
+            <div class="game-title-section">
+                <span class="game-badge quest">FEATURE</span>
+                <h1>Iterative Learning</h1>
+                <p class="game-tagline">Four tiers of games, calibrated by complexity and time. Start with a 5-minute Arcade, end with a full Mission. Grow at your own pace.</p>
+            </div>
+        </header>
+
+        <section class="game-section">
+            <h2>🎚️ The four tiers</h2>
+
+            <div class="tier arcade">
+                <div class="dur">~5–15 min · ⭐</div>
+                <h3>Arcade</h3>
+                <p>Bite-sized, single-concept games. Goal: get one Fabric primitive (a KQL table, a measure, a pipeline step) to work end-to-end. Perfect for a coffee break or a workshop warm-up.</p>
+            </div>
+
+            <div class="tier challenge">
+                <div class="dur">~15–30 min · ⭐⭐</div>
+                <h3>Challenge</h3>
+                <p>Mini-projects with two or three moving parts. You connect a stream to a destination, or you build a small star schema. Comes with a scored validation notebook.</p>
+            </div>
+
+            <div class="tier quest">
+                <div class="dur">~30–60 min · ⭐⭐⭐</div>
+                <h3>Puzzle / Quest</h3>
+                <p>Open-ended design puzzles with multiple valid solutions and an <em>elegance</em> score. Calc Groups Cathedral lives here: 12 KPIs, find the most elegant DAX to express them all.</p>
+            </div>
+
+            <div class="tier mission">
+                <div class="dur">~45–120 min · ⭐⭐⭐</div>
+                <h3>Mission</h3>
+                <p>Full end-to-end scenarios. Multiple workloads, multiple notebooks, a story to follow. Mission Artemis 2 and Ontology Detective are missions.</p>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2>📈 Suggested path</h2>
+            <p>Most learners go from one tier to the next by topic, not all at once. A typical path for Real-Time Intelligence:</p>
+            <ul class="learn-list">
+                <li>🎯 <strong>Arcade</strong>: Target Practice (Eventstream → Eventhouse, 15 min)</li>
+                <li>🏎️ <strong>Mission</strong>: Fabric Racing Game (live telemetry, JSON mapping, KQL dashboard, 30 min)</li>
+                <li>🚀 <strong>Mission</strong>: Mission Artemis 2 (multi-source streaming, video sync, 45 min)</li>
+                <li>🕵️ <strong>Mission</strong>: Ontology Detective (Digital Twin + KQL investigation, 2 hours)</li>
+            </ul>
+            <p>For Power BI / DAX: jump straight to <strong>Calc Groups Cathedral</strong> — it is the most concentrated DAX lesson in the catalog.</p>
+        </section>
+
+        <section class="game-section">
+            <h2>🔁 Why "iterative"</h2>
+            <p>Every game ends with a scored validation notebook. That score is not a grade — it is a hint. <em>"You passed, but your DAX has three nested CALCULATE calls. Can you do it in one?"</em> Re-run, refactor, learn. The check notebook accepts unlimited attempts and your best run wins the badge.</p>
+        </section>
+
+        <a href="../#games" class="back-link">→ Pick your first tier</a>
+    </main>
+</body>
+</html>
