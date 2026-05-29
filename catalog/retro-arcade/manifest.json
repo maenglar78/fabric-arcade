@@ -1,0 +1,72 @@
+{
+  "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
+  "id": "retro-arcade",
+  "name": "Retro Arcade",
+  "version": "1.0.0",
+  "status": "ready",
+  "type": "arcade",
+  "icon": "🕹️",
+  "tagline": "Build a Power BI report on a pre-made arcade-themed semantic model, level by level.",
+  "description": "Insert the coin. You get a Direct Lake semantic model packed with decades of 80s arcade high-scores (Pac-Man, Galaga, Donkey Kong & friends). Your job: build a Power BI report that climbs 5 levels — Foundation, Visuals, Interactivity, Storytelling, Polish. The Check notebook reads your PBIR definition with sempy, grades each level, and mints a signed badge from Newbie all the way to Kill Screen Survivor.",
+  "workloads": ["PowerBI", "SemanticModel", "Lakehouse"],
+  "difficulty": 2,
+  "duration_minutes": 45,
+  "tags": ["powerbi", "report-building", "pbir", "sempy", "direct-lake", "arcade"],
+  "author": { "name": "Fabric Arcade" },
+  "prerequisites": {
+    "fabric_capacity": "F2",
+    "python_packages": ["sempy-labs"],
+    "skills": ["Power BI basics", "Drag-and-drop report editing"]
+  },
+  "learning_objectives": [
+    "Connect a Power BI report to a published Direct Lake semantic model",
+    "Use a variety of visual types (cards, slicers, matrix, charts)",
+    "Configure sync slicers, edit-interactions, and cross-page filters",
+    "Add bookmarks, tooltip pages, and drill-through pages",
+    "Apply custom themes, conditional formatting and mobile layouts",
+    "Inspect a report's PBIR definition programmatically with sempy"
+  ],
+  "items": [
+    {
+      "type": "Lakehouse",
+      "name": "Arcade_LH",
+      "description": "Holds synthetic arcade Delta tables: Scores (~80k), Games (12), Players (40), Cabinets (8), Date (3 years)."
+    },
+    {
+      "type": "Notebook",
+      "name": "01_Setup",
+      "file": "notebooks/01_Setup.ipynb",
+      "description": "Run once: generates seed data, builds ArcadeHall_Model Direct Lake semantic model with relationships and base measures."
+    },
+    {
+      "type": "Notebook",
+      "name": "02_Quest",
+      "file": "notebooks/02_Quest.ipynb",
+      "description": "The 5 levels brief. Read this before building the report."
+    },
+    {
+      "type": "Notebook",
+      "name": "03_Check",
+      "file": "notebooks/03_Check.ipynb",
+      "description": "Reads your Arcade_Hall_Report via sempy, grades each level (20 pts max), assigns rank, mints signed badge."
+    }
+  ],
+  "levels": [
+    { "id": 1, "name": "Foundation",     "icon": "🟢", "max_points": 20, "concept": "pages, titles, backgrounds" },
+    { "id": 2, "name": "Visuals",        "icon": "🟡", "max_points": 20, "concept": ">=5 unique visual types" },
+    { "id": 3, "name": "Interactivity",  "icon": "🟠", "max_points": 20, "concept": "slicers, sync, interactions" },
+    { "id": 4, "name": "Storytelling",   "icon": "🟣", "max_points": 20, "concept": "bookmarks, tooltip, drillthrough" },
+    { "id": 5, "name": "Polish",         "icon": "🔵", "max_points": 20, "concept": "theme, cond. formatting, mobile" }
+  ],
+  "scoring": {
+    "max_total": 100,
+    "ranks": [
+      { "min":   0, "name": "Spectator" },
+      { "min":  20, "name": "Newbie" },
+      { "min":  40, "name": "Quarter Muncher" },
+      { "min":  60, "name": "High Roller" },
+      { "min":  80, "name": "Arcade Legend" },
+      { "min": 100, "name": "Kill Screen Survivor" }
+    ]
+  }
+}

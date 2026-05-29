@@ -106,8 +106,10 @@ def _get_game_items(game_id: str) -> List[Dict[str, str]]:
             {"type": "Notebook", "name": "loot-processor"},
         ],
         "retro-arcade": [
-            {"type": "SemanticModel", "name": "arcade-scores"},
-            {"type": "Report", "name": "retro-dashboard"},
+            {"type": "Lakehouse", "name": "Arcade_LH"},
+            {"type": "Notebook", "name": "01_Setup"},
+            {"type": "Notebook", "name": "02_Quest"},
+            {"type": "Notebook", "name": "03_Check"},
         ],
         "ocean-explorer": [
             {"type": "Eventhouse", "name": "ocean-sensors"},

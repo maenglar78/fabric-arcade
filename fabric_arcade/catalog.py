@@ -71,15 +71,15 @@ CATALOG_DATA = [
     },
     {
         "id": "retro-arcade",
-        "name": "Retro Arcade Dashboard",
-        "description": "Create a nostalgic 80s-style arcade dashboard with pixel art visuals, neon colors, and retro sound effects displaying real-time game scores.",
+        "name": "Retro Arcade",
+        "description": "Build a Power BI report on a pre-made arcade-themed Direct Lake semantic model (Pac-Man, Galaga, Donkey Kong & friends). 5 levels graded by sempy: Foundation, Visuals, Interactivity, Storytelling, Polish. Earn a signed badge from Newbie to Kill Screen Survivor.",
         "type": "arcade",
         "workloads": ["PBI"],
-        "difficulty": 1,
-        "duration_minutes": 10,
-        "icon": "🎰",
-        "tags": ["retro", "dashboard", "visualization", "fun"],
-        "achievements": ["high-score", "retro-master"]
+        "difficulty": 2,
+        "duration_minutes": 45,
+        "icon": "🕹️",
+        "tags": ["retro", "powerbi", "pbir", "sempy", "report-building"],
+        "achievements": ["newbie", "quarter-muncher", "high-roller", "arcade-legend", "kill-screen-survivor"]
     },
     {
         "id": "ocean-explorer",

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Arcade - Fabric Arcade</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game-detail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 20px 0; }
+        .level-card { background: linear-gradient(135deg, #1a1a2e 0%, #2d1545 100%); border: 1px solid #ff006e; border-radius: 6px; padding: 16px; font-family: 'Orbitron', sans-serif; }
+        .level-num { color: #ff006e; font-size: 12px; letter-spacing: 2px; }
+        .level-title { color: #f0e6ff; font-size: 16px; margin: 6px 0; font-weight: bold; }
+        .level-pts  { color: #fb5607; font-family: 'Press Start 2P', monospace; font-size: 10px; margin-top: 6px; }
+        .level-desc { color: #aaa; font-size: 13px; font-family: 'Inter', sans-serif; margin-top: 8px; }
+        .arcade-quote { font-family: 'Press Start 2P', monospace; color: #ffbe0b; background: rgba(255,0,110,0.08); border-left: 4px solid #ff006e; padding: 18px 22px; margin: 20px 0; font-size: 13px; line-height: 1.8; }
+        .rank-table td:first-child { font-family: 'Orbitron', sans-serif; color: #fb5607; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../" class="logo">🎮 Fabric Arcade</a>
+        <ul class="nav-links">
+            <li><a href="../#games">Games</a></li>
+            <li><a href="../#start">Get Started</a></li>
+            <li><a href="https://github.com/maenglar78/fabric-arcade" class="btn-github">⭐ GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main class="game-detail">
+        <a href="../#games" class="back-link">← Back to Catalog</a>
+
+        <header class="game-header">
+            <div class="game-icon-large">🕹️</div>
+            <div class="game-title-section">
+                <span class="game-badge arcade">ARCADE</span>
+                <h1>Retro Arcade</h1>
+                <p class="game-tagline">Build a Power BI report on a pre-made arcade-themed semantic model. Climb 5 levels, earn the rank of <strong>Kill Screen Survivor</strong>.</p>
+            </div>
+        </header>
+
+        <div class="game-meta-bar">
+            <div class="meta-item"><span class="meta-label">Difficulty</span><span class="meta-value">⭐⭐ Intermediate</span></div>
+            <div class="meta-item"><span class="meta-label">Deploy Time</span><span class="meta-value">~3 min</span></div>
+            <div class="meta-item"><span class="meta-label">Complete Time</span><span class="meta-value">~45 min</span></div>
+            <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value status-ready">✅ Ready · v1.0.0</span></div>
+        </div>
+
+        <div class="arcade-quote">
+            ► INSERT COIN ◄<br>
+            HIGH SCORE: 999,999<br>
+            BUILD THE BEST REPORT IN TOWN
+        </div>
+
+        <!-- OVERVIEW -->
+        <section class="game-section">
+            <h2>📋 Overview</h2>
+            <p>
+                You inherit the keys to the <strong>Arcade Hall</strong>: a Direct Lake semantic model packed with
+                decades of high-scores from <strong>12 arcade classics</strong> (Pac-Man, Galaga, Donkey Kong, Asteroids…)
+                played by <strong>40 handles</strong> across <strong>8 cabinets</strong>.
+            </p>
+            <p>
+                Your mission: build a Power BI report that climbs <strong>5 levels</strong>, each worth 20 points.
+                The Check notebook reads your report's <strong>PBIR definition</strong> via <code>sempy</code>,
+                grades each level independently, assigns a rank, and mints a <strong>signed HMAC badge</strong>.
+                No DAX required — this is pure report craft.
+            </p>
+        </section>
+
+        <!-- QUICK START -->
+        <section class="game-section quickstart">
+            <h2>🚀 Quick Start</h2>
+            <div class="code-block">
+                <pre><code><span class="comment"># In any Fabric notebook</span>
+<span class="prompt">%pip</span> install -q fabric-arcade
+
+<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+arcade.install(<span class="string">"retro-arcade"</span>, workspace=<span class="string">"My Workspace"</span>)
+<span class="comment"># Provisions: Arcade_LH (Lakehouse), 01_Setup, 02_Quest, 03_Check notebooks.</span></code></pre>
+            </div>
+            <p style="margin-top: 14px;">Then open <code>01_Setup</code>, run all cells (seeds the lakehouse + builds
+                <code>ArcadeHall_Model</code> Direct Lake semantic model). Open <code>02_Quest</code> for the brief,
+                build your report named <code>Arcade_Hall_Report</code>, then run <code>03_Check</code>.</p>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="game-section">
+            <h2>🧩 How You Play</h2>
+            <ol style="line-height: 2; color: #ccc;">
+                <li>📖 <code>01_Setup</code> generates synthetic Scores / Games / Players / Cabinets / Date tables and builds <code>ArcadeHall_Model</code> with relationships + 7 base measures.</li>
+                <li>📜 <code>02_Quest</code> details the 5 levels (Foundation, Visuals, Interactivity, Storytelling, Polish).</li>
+                <li>🎨 In the workspace: <strong>+ New → Power BI report → Pick a published semantic model → <code>ArcadeHall_Model</code></strong>. Save as <code>Arcade_Hall_Report</code>.</li>
+                <li>⚒️ Build the report following the 5 levels.</li>
+                <li>⚖️ Run <code>03_Check</code> any time — it fetches your PBIR via <code>sempy.fabric.get_report_definition</code>, parses pages/visuals/bookmarks/theme, scores 0–100, mints your badge.</li>
+            </ol>
+        </section>
+
+        <!-- 5 LEVELS -->
+        <section class="game-section">
+            <h2>🎯 The 5 Levels</h2>
+            <div class="level-grid">
+                <div class="level-card">
+                    <div class="level-num">🟢 LEVEL 1</div>
+                    <div class="level-title">Foundation</div>
+                    <div class="level-pts">20 PTS</div>
+                    <div class="level-desc">≥3 pages, meaningful page titles, page backgrounds applied.</div>
+                </div>
+                <div class="level-card">
+                    <div class="level-num">🟡 LEVEL 2</div>
+                    <div class="level-title">Pixel Perfect</div>
+                    <div class="level-pts">20 PTS</div>
+                    <div class="level-desc">≥5 unique visual types. Must include at least 1 Card and 1 Slicer.</div>
+                </div>
+                <div class="level-card">
+                    <div class="level-num">🟠 LEVEL 3</div>
+                    <div class="level-title">Combo Move</div>
+                    <div class="level-pts">20 PTS</div>
+                    <div class="level-desc">≥2 slicers, ≥1 sync slicer across pages, edit-interactions configured.</div>
+                </div>
+                <div class="level-card">
+                    <div class="level-num">🟣 LEVEL 4</div>
+                    <div class="level-title">Bonus Stage</div>
+                    <div class="level-pts">20 PTS</div>
+                    <div class="level-desc">≥1 bookmark, ≥1 tooltip page, ≥1 drill-through page.</div>
+                </div>
+                <div class="level-card">
+                    <div class="level-num">🔵 LEVEL 5</div>
+                    <div class="level-title">High Score</div>
+                    <div class="level-pts">20 PTS</div>
+                    <div class="level-desc">Custom theme, conditional formatting on ≥1 visual, mobile layout on ≥1 page.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ITEMS INSTALLED -->
+        <section class="game-section">
+            <h2>📦 What Gets Installed</h2>
+            <ul style="line-height: 2; color: #ccc;">
+                <li>🏠 <strong>Lakehouse</strong> <code>Arcade_LH</code> — seeded by <code>01_Setup</code> with Scores (~80k), Games (12), Players (40), Cabinets (8), Date (3 yrs).</li>
+                <li>📓 <strong>3 Notebooks</strong>: <code>01_Setup</code>, <code>02_Quest</code>, <code>03_Check</code>.</li>
+            </ul>
+            <p>The semantic model <code>ArcadeHall_Model</code> is <strong>built at runtime by 01_Setup</strong> via <code>sempy-labs</code> Direct Lake (with relationships + 7 base measures pre-defined so you can drag-and-drop right away).</p>
+        </section>
+
+        <!-- RANKS -->
+        <section class="game-section">
+            <h2>🏅 Ranks</h2>
+            <div class="levels-table">
+                <table class="rank-table">
+                    <tr><th>Min Score</th><th>Rank</th></tr>
+                    <tr><td>20</td><td>🥉 Newbie</td></tr>
+                    <tr><td>40</td><td>🪙 Quarter Muncher</td></tr>
+                    <tr><td>60</td><td>🎯 High Roller</td></tr>
+                    <tr><td>80</td><td>👾 Arcade Legend</td></tr>
+                    <tr><td>100</td><td>🏆 Kill Screen Survivor</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- WORKLOADS -->
+        <section class="game-section">
+            <h2>🔧 Workloads</h2>
+            <div class="game-workloads-large">
+                <span class="workload pbi">Power BI</span>
+                <span class="workload pbi">Semantic Model</span>
+                <span class="workload de">Lakehouse</span>
+            </div>
+        </section>
+
+        <a href="../#games" class="back-link" style="margin-top: 40px; display: inline-block;">← Back to Catalog</a>
+    </main>
+</body>
+</html>
