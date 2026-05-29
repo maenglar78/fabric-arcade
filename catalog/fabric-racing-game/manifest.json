@@ -107,6 +107,12 @@
             "name": "Race_Dashboard",
             "file": "notebooks/race_dashboard.ipynb",
             "description": "Real-time KQL dashboard for race analytics"
+        },
+        {
+            "type": "Notebook",
+            "name": "Race_Check",
+            "file": "notebooks/race_check.ipynb",
+            "description": "🏅 Validate at least one completed race + a working dashboard, then mint your signed achievement badge."
         }
     ],
     "tables": [

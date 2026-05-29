@@ -82,6 +82,7 @@ def _get_game_items(game_id: str) -> List[Dict[str, str]]:
             {"type": "Notebook", "name": "Race_P2"},
             {"type": "Notebook", "name": "Race_P3"},
             {"type": "Notebook", "name": "Race_P4"},
+            {"type": "Notebook", "name": "Race_Check"},
         ],
         "calc-groups-cathedral": [
             {"type": "Lakehouse", "name": "Cathedral_LH"},
