@@ -1,118 +1,122 @@
 {
     "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
     "id": "city-builder",
-    "name": "City Builder - Datapolis Star Schema",
-    "version": "0.1.0-scaffold",
-    "description": "🏙️ Become the Mayor of Datapolis! Design Fabric Warehouse tables and a Power BI semantic model district by district. Master star schema, surrogate keys, SCD, and galaxy schema to graduate as Chief Data Architect.",
+    "name": "City Builder — Datapolis",
+    "version": "0.2.0-phase1",
+    "status": "scaffold",
     "type": "mission",
-    "workloads": ["DataWarehouse", "PowerBI"],
+    "icon": "🏙️",
+    "tagline": "Become the Mayor of a floating retro-cyberpunk city. Rebuild its Data Warehouse, district by district, until you earn the rank of Grid Keeper.",
+    "description": "🏙️ Datapolis floats above the wastelands on an anti-gravity platform called The Grid. You are the newly elected Mayor, and your predecessor sabotaged the municipal Data Warehouse before fleeing. Reconstruct 7 city districts + the boss city-wide BI dashboard by writing T-SQL in Datapolis_DW and DAX in Datapolis_Model. Each district teaches a dimensional-modeling concept. The Mayor notebook validates your work via INFORMATION_SCHEMA + XMLA, emits events to an Eventhouse, and the Dashboard tracks your reputation.",
+    "workloads": ["DataWarehouse", "PowerBI", "RTI"],
     "difficulty": 3,
     "duration_minutes": 90,
-    "icon": "🏙️",
-    "tags": ["star-schema", "warehouse", "power-bi", "dax", "semantic-model", "scd", "galaxy-schema"],
-    "author": {
-        "name": "Fabric Gaming Community"
-    },
-    "status": "scaffold",
+    "tags": ["star-schema", "warehouse", "power-bi", "dax", "semantic-model", "scd1", "bridge-table", "galaxy-schema", "cyberpunk"],
+    "author": { "name": "Fabric Arcade" },
     "prerequisites": {
         "fabric_capacity": "F2",
         "python_packages": [],
-        "skills": ["Basic T-SQL", "Basic DAX", "Power BI modeling UI"]
+        "skills": ["Basic T-SQL (CREATE TABLE / INSERT SELECT)", "Basic DAX (SUM / AVERAGE / DIVIDE)", "Power BI modeling UI"]
     },
     "learning_objectives": [
-        "Identify facts vs dimensions and choose the right grain",
-        "Design surrogate keys and conformed dimensions",
-        "Apply SCD Type 1 and Type 2 patterns",
-        "Build star vs snowflake vs galaxy schemas",
-        "Author DAX measures on a Direct Lake / Import semantic model",
-        "Inspect schema correctness via INFORMATION_SCHEMA"
+        "Distinguish facts from dimensions and choose the correct grain",
+        "Design surrogate keys and apply SCD Type 1",
+        "Build additive vs semi-additive facts",
+        "Implement conformed dimensions reused across multiple facts",
+        "Model role-playing dimensions with USERELATIONSHIP",
+        "Handle junk + degenerate dimensions",
+        "Resolve many-to-many relationships with bridge tables",
+        "Assemble a galaxy schema and tune its DAX performance"
     ],
     "items": [
-        {
-            "type": "Lakehouse",
-            "name": "Datapolis_LH",
-            "description": "Raw 'dirty' datasets per district + expected oracle results for validation"
-        },
-        {
-            "type": "Warehouse",
-            "name": "Datapolis_DW",
-            "description": "Empty warehouse — player creates Fact* and Dim* tables here via T-SQL"
-        },
-        {
-            "type": "SemanticModel",
-            "name": "Datapolis_Model",
-            "description": "Direct Lake semantic model bound to Datapolis_DW — player adds relationships + DAX measures in Fabric UI"
-        },
-        {
-            "type": "Eventhouse",
-            "name": "Datapolis_EH",
-            "description": "Mayor's telemetry: districts built, measures validated, reputation"
-        },
-        {
-            "type": "KQLDatabase",
-            "name": "CityData",
-            "parent": "Datapolis_EH",
-            "description": "Database with CityEvents table"
-        },
-        {
-            "type": "Notebook",
-            "name": "CityBuilder_Seed",
-            "file": "notebooks/city_builder_seed.ipynb",
-            "description": "Generates 8 raw + expected datasets in Datapolis_LH (run once)"
-        },
-        {
-            "type": "Notebook",
-            "name": "CityBuilder_Mayor",
-            "file": "notebooks/city_builder_mayor.ipynb",
-            "description": "Briefings + mayor.inspect_district(name) validator (INFORMATION_SCHEMA + DAX via XMLA)"
-        },
-        {
-            "type": "Notebook",
-            "name": "CityBuilder_Dashboard",
-            "file": "notebooks/city_builder_dashboard.ipynb",
-            "description": "City map + reputation + DAX measure scoreboard"
-        }
+        { "type": "Lakehouse", "name": "Datapolis_LH",
+          "description": "Raw + Blueprint datasets used by the Mayor to validate the warehouse build." },
+        { "type": "Warehouse", "name": "Datapolis_DW",
+          "description": "Mostly empty — the player creates Fact*/Dim* via T-SQL. Ships with a `demo` schema (DimColor + FactExample) as a worked example." },
+        { "type": "Eventhouse", "name": "Datapolis_EH",
+          "description": "Mayor telemetry: districts attempted/built, reputation, DAX validation results." },
+        { "type": "Notebook", "name": "CityBuilder_Seed", "file": "notebooks/city_builder_seed.ipynb",
+          "description": "Run once. Generates raw + Blueprint Delta tables in Datapolis_LH using PySpark." },
+        { "type": "Notebook", "name": "CityBuilder_Mayor", "file": "notebooks/city_builder_mayor.ipynb",
+          "description": "Briefings + Mayor class. mayor.inspect_district('town-hall') validates schema + DAX, emits events." },
+        { "type": "Notebook", "name": "CityBuilder_Dashboard", "file": "notebooks/city_builder_dashboard.ipynb",
+          "description": "Datapolis city map + reputation + DAX scoreboard. Reads CityEvents." }
     ],
     "tables": [
-        {
-            "name": "CityEvents",
-            "database": "CityData",
-            "schema": "schemas/CityEvents.kql",
-            "columns": [
-                "EventId", "Timestamp", "SessionId", "PlayerId", "EventType",
-                "District", "Concept", "Reputation", "RowsValidated",
-                "MeasureName", "ExpectedValue", "ActualValue", "ValidationResult"
-            ]
-        }
-    ],
-    "eventTypes": [
-        { "name": "MayorElected", "description": "Player starts City Builder" },
-        { "name": "DistrictAttempt", "description": "Player runs mayor.inspect_district(name)" },
-        { "name": "DistrictBuilt", "description": "Schema + measures validated" },
-        { "name": "DistrictRejected", "description": "Validation failed — try again" },
-        { "name": "CityCertified", "description": "Galaxy boss completed — Chief Data Architect" }
+        { "name": "CityEvents", "database": "Datapolis_EH", "schema": "schemas/CityEvents.kql" }
     ],
     "districts": [
-        { "n": 1, "name": "Town Hall",        "icon": "🏛️", "concept": "Fact vs Dimension identification",                  "raw_dataset": "town_hall_census_raw" },
-        { "n": 2, "name": "Residential",      "icon": "🏘️", "concept": "Surrogate keys + SCD Type 1",                       "raw_dataset": "residents_raw" },
-        { "n": 3, "name": "Taxi District",    "icon": "🚕", "concept": "Additive fact + conformed dimensions (DimDate, DimGeo)", "raw_dataset": "taxi_trips_raw" },
-        { "n": 4, "name": "Energy Grid",      "icon": "⚡", "concept": "Semi-additive fact (snapshot meter readings)",       "raw_dataset": "energy_meters_raw" },
-        { "n": 5, "name": "Retail Plaza",     "icon": "🛒", "concept": "Role-playing dimensions (OrderDate vs ShipDate)",   "raw_dataset": "retail_pos_raw" },
-        { "n": 6, "name": "Hospital",         "icon": "🏥", "concept": "Junk + degenerate dimensions (TicketNumber)",       "raw_dataset": "hospital_admissions_raw" },
-        { "n": 7, "name": "Industrial Park",  "icon": "🏭", "concept": "SCD Type 2 (supplier history)",                     "raw_dataset": "suppliers_raw" },
-        { "n": 8, "name": "City-wide BI",     "icon": "🌃", "concept": "BOSS: Galaxy schema with 3 facts sharing conformed dims + perf tuning", "raw_dataset": "all_districts" }
+        {
+            "n": 1, "id": "town-hall", "name": "Town Hall — Phantom Census",
+            "icon": "🏛️", "concept": "Fact vs Dimension, grain", "points": 100,
+            "narrative": "After the '99 archive fire only one corrupted tape survived: a dump where citizen attributes and life events are mixed on the same rows. Separate them.",
+            "raw_tables": ["raw_phantom_census"],
+            "expected_dw_tables": ["DimCitizen", "FactCensusEvent"]
+        },
+        {
+            "n": 2, "id": "neon-district", "name": "Neon District — Shifting Identities",
+            "icon": "🏘️", "concept": "Surrogate keys + SCD Type 1", "points": 100,
+            "narrative": "Citizens legally rename after augmentation; source overwrites with no history. Build DimResident with a surrogate key and update-in-place semantics.",
+            "raw_tables": ["raw_neon_residents", "raw_neon_residents_updates"],
+            "expected_dw_tables": ["DimResident"]
+        },
+        {
+            "n": 3, "id": "skylane", "name": "Skylane — Anti-Grav Couriers",
+            "icon": "🚁", "concept": "Additive fact + conformed dimensions", "points": 100,
+            "narrative": "80k cargo / medevac flights across sectors. Build FactFlight + conformed DimDate + DimSector (reused later).",
+            "raw_tables": ["raw_skylane_traffic"],
+            "expected_dw_tables": ["DimDate", "DimSector", "FactFlight"]
+        },
+        {
+            "n": 4, "id": "plasma-core", "name": "Plasma Core — Reactor Readings",
+            "icon": "⚡", "concept": "Semi-additive fact (snapshot)", "points": 100,
+            "narrative": "Hourly snapshots of pressure / temperature / MW output. Summing is meaningless — AVERAGE the pressure.",
+            "raw_tables": ["raw_plasma_readings"],
+            "expected_dw_tables": ["FactReactorReading"]
+        },
+        {
+            "n": 5, "id": "bazaar-9", "name": "Bazaar 9 — The Quantum Market",
+            "icon": "🛒", "concept": "Role-playing dimensions", "points": 100,
+            "narrative": "Sales travel two timelines: OrderDate and DeliveryDate (sometimes earlier for pre-cog VIPs). Link FactSale twice to DimDate; use USERELATIONSHIP.",
+            "raw_tables": ["raw_bazaar_sales"],
+            "expected_dw_tables": ["FactSale"]
+        },
+        {
+            "n": 6, "id": "cryo-hospital", "name": "Cryo Hospital — Admission Tags",
+            "icon": "🧬", "concept": "Junk + degenerate dimensions", "points": 100,
+            "narrative": "4 boolean flags collapsed into a 16-row junk DimAdmissionType; CryoTicketNumber is a degenerate dim living on the fact.",
+            "raw_tables": ["raw_cryo_admissions"],
+            "expected_dw_tables": ["DimAdmissionType", "FactCryoAdmission"]
+        },
+        {
+            "n": 7, "id": "holo-stage", "name": "Holo-Stage — Multiverse Performers",
+            "icon": "🎭", "concept": "Many-to-many via bridge table", "points": 100,
+            "narrative": "Artists perform in multiple shows; shows feature multiple artists. Build DimArtist, DimShow, FactShow, BridgeShowArtist. Watch fan-out.",
+            "raw_tables": ["raw_holo_shows", "raw_holo_artists", "raw_holo_lineup"],
+            "expected_dw_tables": ["DimArtist", "DimShow", "FactShow", "BridgeShowArtist"]
+        },
+        {
+            "n": 8, "id": "grid-overlook", "name": "The Grid Overlook — BOSS: The Anomaly",
+            "icon": "🌃", "concept": "Galaxy schema + DAX performance", "points": 200,
+            "narrative": "A gravitational anomaly is destabilizing the platform. Build a director dashboard blending FactFlight + FactReactorReading + FactSale through shared dims; Grid Stress Index must run < 2s.",
+            "raw_tables": [],
+            "expected_dw_tables": ["FactFlight", "FactReactorReading", "FactSale", "DimDate", "DimSector"]
+        }
     ],
-    "validation_strategy": {
-        "schema_check": "Query INFORMATION_SCHEMA.TABLES / COLUMNS / KEY_COLUMN_USAGE on Datapolis_DW",
-        "measure_check": "Connect via XMLA endpoint to Datapolis_Model, execute EVALUATE, compare to expected oracle values",
-        "telemetry": "Emit DistrictBuilt / DistrictRejected events to CityEvents"
+    "scoring": {
+        "max_total": 900,
+        "ranks": [
+            { "min":   0, "name": "Suspicious Citizen" },
+            { "min": 100, "name": "Ward Councilor" },
+            { "min": 250, "name": "Urban Planning Officer" },
+            { "min": 500, "name": "Mayor of Datapolis" },
+            { "min": 800, "name": "Chief Grid Architect" },
+            { "min": 900, "name": "🏆 Grid Keeper" }
+        ]
     },
-    "post_deploy_steps": [
-        "Run CityBuilder_Seed notebook once to populate raw + expected datasets in Datapolis_LH",
-        "Open CityBuilder_Mayor notebook and read the District 1 briefing",
-        "Open Datapolis_DW in Fabric and CREATE the tables required by the briefing",
-        "Open Datapolis_Model in Fabric, add relationships, write DAX measures",
-        "Run mayor.inspect_district('town-hall') — validation + reputation update",
-        "Advance through 8 districts, ending with the City-wide BI boss (galaxy schema)"
-    ]
+    "demo_kit": {
+        "schema": "demo",
+        "tables": ["demo.DimColor (3 rows)", "demo.FactExample (10 rows, FK to DimColor)"],
+        "purpose": "Worked Dim/Fact example pre-loaded in Datapolis_DW so the player can inspect the pattern, then drop the schema before District 1."
+    }
 }
