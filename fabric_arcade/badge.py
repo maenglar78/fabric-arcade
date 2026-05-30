@@ -54,6 +54,7 @@ def issue_badge(
     score: int,
     base_url: str = DEFAULT_BASE_URL,
     timestamp: int | None = None,
+    skills: list[str] | None = None,
 ) -> Badge:
     """
     Issue a signed badge for a completed game.
@@ -65,6 +66,7 @@ def issue_badge(
     rank    : str   Final rank, e.g. "Cathedral Builder".
     score   : int   Final numeric score.
     base_url: str   Site root that hosts /badge.html.
+    skills  : list  Optional list of Fabric skills/artefacts earned (e.g. ['Power BI', 'Direct Lake', 'Lakehouse']). Rendered as chips on the badge.
     """
     payload = {
         "v": BADGE_VERSION,
@@ -74,6 +76,8 @@ def issue_badge(
         "s": int(score),
         "t": int(timestamp if timestamp is not None else time.time()),
     }
+    if skills:
+        payload["k"] = [str(s)[:24] for s in skills][:5]
     body = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
     sig = hmac.new(BADGE_SECRET, body, hashlib.sha256).digest()
     token = f"{_b64u(body)}.{_b64u(sig)}"

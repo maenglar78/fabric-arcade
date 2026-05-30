@@ -146,7 +146,47 @@ function buildSvg(payload) {
     const score  = Number(payload.s || 0).toLocaleString();
     const date   = fmtDate(payload.t || (Date.now() / 1000));
     const gname  = escapeXml(g.name);
+    const skills = Array.isArray(payload.k) ? payload.k.slice(0, 5).map(s => String(s).slice(0, 24)) : [];
     const W = 600, H = 600;
+
+    // Build skill chips (laid out on one or two centered rows)
+    let chipsSvg = "";
+    if (skills.length) {
+        const PAD_X = 12, GAP = 8, CHIP_H = 22, FONT = 12;
+        // measure approx width: 7.2px per char * len + padding*2
+        const widths = skills.map(s => Math.max(60, Math.round(s.length * 7.2 + PAD_X * 2)));
+        // pack into rows that fit within ~ W - 80
+        const MAX_W = W - 80;
+        const rows = [[]];
+        let rowW = 0;
+        widths.forEach((w, i) => {
+            if (rowW + w + (rows[rows.length-1].length ? GAP : 0) > MAX_W) {
+                rows.push([]); rowW = 0;
+            }
+            rows[rows.length - 1].push({ text: skills[i], w });
+            rowW += w + GAP;
+        });
+        const startY = 552;
+        rows.forEach((row, ri) => {
+            const totalW = row.reduce((a, c) => a + c.w, 0) + GAP * (row.length - 1);
+            let x = (W - totalW) / 2;
+            const y = startY + ri * (CHIP_H + 6);
+            row.forEach(c => {
+                chipsSvg += `
+    <g>
+      <rect x="${x.toFixed(1)}" y="${y}" rx="11" ry="11" width="${c.w}" height="${CHIP_H}"
+            fill="rgba(255,255,255,0.06)" stroke="${g.accent}" stroke-opacity="0.6" stroke-width="1"/>
+      <text x="${(x + c.w/2).toFixed(1)}" y="${y + CHIP_H/2 + 4}" text-anchor="middle"
+            font-family="Rajdhani, sans-serif" font-size="${FONT}" font-weight="600"
+            fill="#f0e6ff" letter-spacing="1">${escapeXml(c.text).toUpperCase()}</text>
+    </g>`;
+                x += c.w + GAP;
+            });
+        });
+    }
+
+    const scoreY = skills.length ? (552 + Math.ceil(skills.length / 3) * 28 + 6) : 574;
+
     return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
   <defs>
@@ -189,34 +229,37 @@ function buildSvg(payload) {
            fill="url(#ribbon)" opacity="0.85"/>
 
   <!-- medal disc -->
-  <circle cx="${W/2}" cy="290" r="135" fill="url(#medal)" stroke="${g.accent}" stroke-width="4" filter="url(#glow)"/>
-  <circle cx="${W/2}" cy="290" r="110" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="3 4"/>
+  <circle cx="${W/2}" cy="280" r="125" fill="url(#medal)" stroke="${g.accent}" stroke-width="4" filter="url(#glow)"/>
+  <circle cx="${W/2}" cy="280" r="102" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="3 4"/>
 
   <!-- game icon (emoji) -->
-  <text x="${W/2}" y="320" text-anchor="middle" font-size="110" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif">
+  <text x="${W/2}" y="308" text-anchor="middle" font-size="100" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif">
     ${g.icon}
   </text>
 
   <!-- game name -->
-  <text x="${W/2}" y="465" text-anchor="middle"
+  <text x="${W/2}" y="442" text-anchor="middle"
         font-family="Orbitron, monospace" font-size="22" font-weight="700" fill="#f0e6ff" letter-spacing="3">
     ${gname.toUpperCase()}
   </text>
 
   <!-- rank -->
-  <text x="${W/2}" y="500" text-anchor="middle"
-        font-family="Rajdhani, sans-serif" font-size="24" font-weight="600" fill="${g.accent}" letter-spacing="2">
+  <text x="${W/2}" y="476" text-anchor="middle"
+        font-family="Rajdhani, sans-serif" font-size="22" font-weight="600" fill="${g.accent}" letter-spacing="2">
     ${rank}
   </text>
 
   <!-- player -->
-  <text x="${W/2}" y="540" text-anchor="middle"
-        font-family="Rajdhani, sans-serif" font-size="18" font-weight="500" fill="#e8e8f0" letter-spacing="1">
+  <text x="${W/2}" y="512" text-anchor="middle"
+        font-family="Rajdhani, sans-serif" font-size="17" font-weight="500" fill="#e8e8f0" letter-spacing="1">
     awarded to ${player}
   </text>
 
+  <!-- skills chips -->
+  ${chipsSvg}
+
   <!-- score + date -->
-  <text x="${W/2}" y="574" text-anchor="middle"
+  <text x="${W/2}" y="${scoreY}" text-anchor="middle"
         font-family="Orbitron, monospace" font-size="12" font-weight="500" fill="#7a7aa0" letter-spacing="3">
     SCORE ${score}  ·  ${date.toUpperCase()}
   </text>
@@ -271,7 +314,10 @@ async function main() {
     document.getElementById("verdict").textContent = "✓ Signature verified";
 
     document.getElementById("meta").innerHTML =
-        `Issued <code>${fmtDate(payload.t)}</code> · player <code>${escapeXml(payload.p)}</code> · rank <code>${escapeXml(payload.r)}</code> · score <code>${payload.s}</code>`;
+        `Issued <code>${fmtDate(payload.t)}</code> · player <code>${escapeXml(payload.p)}</code> · rank <code>${escapeXml(payload.r)}</code> · score <code>${payload.s}</code>` +
+        (Array.isArray(payload.k) && payload.k.length
+          ? ` · skills <code>${payload.k.map(s => escapeXml(String(s))).join(", ")}</code>`
+          : "");
 
     const safePlayer = String(payload.p).replace(/[^a-z0-9-]+/gi, "_").slice(0, 40) || "player";
     const fileBase = `fabric-arcade_${payload.g}_${safePlayer}`;

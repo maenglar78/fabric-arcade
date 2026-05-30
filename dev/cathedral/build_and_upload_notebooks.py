@@ -1159,13 +1159,15 @@ CHECK_CELLS = [
     _BADGE_SECRET = b"fabric-arcade-badge-v1-7K9mP3xQ"
     _BASE_URL     = "https://maenglar78.github.io/fabric-arcade"
     _GAME_ID      = "calc-groups-cathedral"
+    _SKILLS       = ["DAX", "Calculation Groups", "Semantic Model"]
 
     def _b64u(b: bytes) -> str:
         return base64.urlsafe_b64encode(b).rstrip(b"=").decode("ascii")
 
     def _issue(game_id, player, rank, score):
         payload = {"v": 1, "g": game_id, "p": str(player),
-                   "r": str(rank), "s": int(score), "t": int(time.time())}
+                   "r": str(rank), "s": int(score), "t": int(time.time()),
+                   "k": _SKILLS}
         body = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()
         sig  = hmac.new(_BADGE_SECRET, body, hashlib.sha256).digest()
         return f"{_BASE_URL}/badge.html?t={_b64u(body)}.{_b64u(sig)}"

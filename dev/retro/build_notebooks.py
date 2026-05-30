@@ -310,13 +310,37 @@ SETUP_CELLS = [
         except Exception as e:
             print(f"⚠️  Refresh failed: {e}")
     else:
-        print(f"🛠️  Creating Direct Lake model '{MODEL_NAME}'...")
+        import time
+        print("⏳ Waiting 45s for SQL endpoint metadata sync of newly-written tables...")
+        time.sleep(45)
+
+        print(f"🛠️  Creating Direct Lake model '{MODEL_NAME}' from Lakehouse '{LAKEHOUSE}' (no refresh)...")
         labs_dl.generate_direct_lake_semantic_model(
             dataset=MODEL_NAME,
-            lakehouse=LAKEHOUSE,
-            lakehouse_tables=list(TABLES.values()),
+            tables=TABLES,
+            source=LAKEHOUSE,
+            source_type="Lakehouse",
+            refresh=False,
         )
-        print("✅ Model created.")
+        print(f"✅ Created '{MODEL_NAME}' (unrefreshed).")
+
+        # First refresh on a brand-new Direct Lake model can flake while the
+        # SQL endpoint catches up — retry a few times.
+        print("⏳ Refreshing model (with retries)...")
+        last_err = None
+        for attempt in range(1, 6):
+            try:
+                fabric.refresh_dataset(dataset=MODEL_NAME, refresh_type="full")
+                print(f"✅ Refresh succeeded on attempt {attempt}.")
+                last_err = None
+                break
+            except Exception as e:
+                last_err = e
+                print(f"   attempt {attempt} failed: {e}")
+                time.sleep(20)
+        if last_err is not None:
+            print("⚠️  Refresh still failing. The model exists, but Step 8 may need to wait — re-run this cell in a minute.")
+            print(f"   Last error: {last_err}")
     """),
 
     _md("## Step 8 — Add relationships and base measures"),
@@ -374,6 +398,25 @@ SETUP_CELLS = [
                             expression=expr, format_string=fmt,
                             description="Base measure provided by setup.")
         print("✅ Relationships + measures applied.")
+
+    # Renames + structural changes in Direct Lake invalidate the cached partition.
+    # Force a refresh now so the report can query the model immediately.
+    print("⏳ Refreshing model after rename / relationship / measure changes...")
+    import time as _time
+    _last = None
+    for attempt in range(1, 6):
+        try:
+            fabric.refresh_dataset(dataset=MODEL_NAME, refresh_type="full")
+            print(f"✅ Post-edit refresh OK (attempt {attempt}).")
+            _last = None
+            break
+        except Exception as e:
+            _last = e
+            print(f"   attempt {attempt} failed: {e}")
+            _time.sleep(20)
+    if _last is not None:
+        print("⚠️  Refresh still failing. Wait a minute and re-run THIS cell, or refresh the model manually from the workspace.")
+        print(f"   Last error: {_last}")
     """),
 
     _md(r"""
@@ -544,25 +587,79 @@ CHECK_CELLS = [
         subprocess.run([sys.executable, "-m", "pip", "install", "-q", "semantic-link"],
                        check=True)
         import sempy.fabric as fabric
+    try:
+        import sempy_labs as labs
+    except ImportError:
+        subprocess.run([sys.executable, "-m", "pip", "install", "-q", "semantic-link-labs"],
+                       check=True)
+        import sempy_labs as labs
     import json, base64
     from collections import Counter
     """),
 
     _md("## Step 2 — Fetch the report definition (PBIR)"),
     _code(r"""
-    # get_report_definition returns the PBIR parts as a DataFrame with columns
-    # ['path', 'payload', 'payloadType'] (payload base64-encoded).
-    print(f"📥 Fetching '{REPORT_NAME}'...")
-    df_def = fabric.get_report_definition(report=REPORT_NAME)
+    # Call Fabric REST API directly (avoids sempy/sempy_labs version mismatches).
+    import time, requests, notebookutils
+    ws_id = notebookutils.runtime.context["currentWorkspaceId"]
+    token = notebookutils.credentials.getToken("https://api.fabric.microsoft.com")
+    H = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+    BASE = "https://api.fabric.microsoft.com/v1"
+
+    # Find the report id by name
+    r = requests.get(f"{BASE}/workspaces/{ws_id}/items?type=Report", headers=H, timeout=60)
+    r.raise_for_status()
+    items = r.json().get("value", [])
+    match = [it for it in items if it.get("displayName") == REPORT_NAME]
+    if not match:
+        raise RuntimeError(f"Report '{REPORT_NAME}' not found in workspace {ws_id}")
+    report_id = match[0]["id"]
+    print(f"📥 Fetching '{REPORT_NAME}' (id={report_id})...")
+
+    def _call_get_definition(fmt=None):
+        url = f"{BASE}/workspaces/{ws_id}/items/{report_id}/getDefinition"
+        if fmt:
+            url += f"?format={fmt}"
+        r = requests.post(url, headers=H, timeout=60)
+        if r.status_code == 200:
+            return r.json().get("definition", {})
+        if r.status_code == 202:
+            op_url = r.headers.get("Location") or r.headers.get("location")
+            for _ in range(60):
+                time.sleep(2)
+                pr = requests.get(op_url, headers=H, timeout=60)
+                pr.raise_for_status()
+                body = pr.json()
+                st = body.get("status", "").lower()
+                if st in ("succeeded", "completed"):
+                    result_url = op_url + "/result" if not op_url.endswith("/result") else op_url
+                    rr = requests.get(result_url, headers=H, timeout=60)
+                    rr.raise_for_status()
+                    return rr.json().get("definition", {})
+                if st in ("failed", "cancelled"):
+                    raise RuntimeError(f"getDefinition LRO {st}: {pr.text}")
+            raise TimeoutError("getDefinition LRO timed out")
+        raise RuntimeError(f"getDefinition HTTP {r.status_code}: {r.text}")
+
+    report_format = "PBIR"
+    try:
+        definition = _call_get_definition("PBIR")
+    except RuntimeError as e:
+        if "FailedToExportReport" in str(e) or "cannot be converted" in str(e):
+            print("⚠️  Report is in legacy format (not PBIR). Falling back to default export.")
+            report_format = "LEGACY"
+            definition = _call_get_definition(None)
+        else:
+            raise
 
     # Normalize into dict {path: text}
     parts = {}
-    for _, row in df_def.iterrows():
-        p = row["path"]
-        payload = row["payload"]
-        ptype   = (row.get("payloadType") or "").lower() if hasattr(row, "get") else ""
+    for part in definition.get("parts", []):
+        p = part["path"]
+        payload = part.get("payload", "")
+        ptype = (part.get("payloadType") or "").lower()
         try:
-            if ptype == "inlinebase64" or (payload and len(payload) % 4 == 0):
+            if ptype == "inlinebase64":
                 raw = base64.b64decode(payload).decode("utf-8", errors="replace")
             else:
                 raw = str(payload)
@@ -570,7 +667,7 @@ CHECK_CELLS = [
             raw = str(payload)
         parts[p] = raw
 
-    print(f"✅ Got {len(parts)} PBIR parts.")
+    print(f"✅ Got {len(parts)} parts (format={report_format}).")
     print("Sample paths:")
     for p in list(parts.keys())[:10]:
         print(" ", p)
@@ -578,44 +675,159 @@ CHECK_CELLS = [
 
     _md("## Step 3 — Parse pages, visuals, theme, mobile layout"),
     _code(r"""
+    # ----------------------------------------------------------------
+    # Build a normalized view (pages_data, all_visuals, etc.) that works
+    # for BOTH PBIR (exploded parts) and LEGACY (single report.json with
+    # serialized layout in 'report.layout').
+    # ----------------------------------------------------------------
     def _json(path):
         if path in parts:
             try: return json.loads(parts[path])
             except Exception: return None
         return None
 
-    # ---- Pages list ----
-    pages_index = _json("definition/pages/pages.json") or {}
-    page_names  = []
-    if isinstance(pages_index.get("pageOrder"), list):
-        page_names = list(pages_index["pageOrder"])
-    else:
-        # fallback: scan folders
-        for p in parts:
-            if p.startswith("definition/pages/") and p.endswith("/page.json"):
-                page_names.append(p.split("/")[2])
-        page_names = sorted(set(page_names))
-
-    print(f"📄 Pages found: {len(page_names)}")
-    for pn in page_names: print("  ", pn)
-
     pages_data = []
-    for pn in page_names:
-        pjson = _json(f"definition/pages/{pn}/page.json") or {}
-        # gather visuals
-        visuals = []
-        for p in parts:
-            prefix = f"definition/pages/{pn}/visuals/"
-            if p.startswith(prefix) and p.endswith("/visual.json"):
-                vj = _json(p) or {}
-                visuals.append(vj)
-        pages_data.append({"name": pn, "json": pjson, "visuals": visuals})
+    report_json = {}
+    theme_paths = []
+    has_custom_theme = False
+    bookmarks_root = None
 
-    # ---- Report-level (theme, mobile) ----
-    report_json = _json("definition/report.json") or {}
-    theme_paths = [p for p in parts if p.startswith("StaticResources/RegisteredResources/")
-                                       and p.endswith(".json")]
-    has_custom_theme = bool(theme_paths)
+    if report_format == "LEGACY":
+        # Legacy: single 'report.json' with a nested 'layout' string (JSON).
+        rj = _json("report.json") or _json("definition/report.json") or {}
+        layout_raw = rj.get("layout")
+        if isinstance(layout_raw, str):
+            try: layout = json.loads(layout_raw)
+            except Exception: layout = {}
+        else:
+            layout = layout_raw or rj
+        report_json = layout
+
+        for section in (layout.get("sections") or []):
+            sec_cfg_raw = section.get("config")
+            try:
+                sec_cfg = json.loads(sec_cfg_raw) if isinstance(sec_cfg_raw, str) else (sec_cfg_raw or {})
+            except Exception:
+                sec_cfg = {}
+            sec_filters_raw = section.get("filters")
+            try:
+                sec_filters = json.loads(sec_filters_raw) if isinstance(sec_filters_raw, str) else (sec_filters_raw or [])
+            except Exception:
+                sec_filters = []
+
+            # Build a single big string with ALL section JSON to do permissive scans.
+            sec_blob = json.dumps({"section": section, "cfg": sec_cfg, "filters": sec_filters}, default=str)
+
+            # Tooltip detection (legacy). PBI stores tooltip pages with one of:
+            #   - sec_cfg.objects.pageInformation[0].properties.type.expr.Literal.Value == "'Tooltip'"
+            #   - section.height==300 width==320 + altTextCollection.type=='Tooltip'
+            #   - displayOption == 3
+            is_tooltip = (
+                "'Tooltip'" in sec_blob
+                or '"Tooltip"' in sec_blob
+                or section.get("displayOption") == 3
+            )
+
+            # Drillthrough detection (legacy):
+            #   - any filter with type == "Drillthrough" (filters can be at section.filters)
+            #   - sec_cfg.objects.pageInformation[*].properties.type with literal 'Drillthrough'
+            is_drill = (
+                "'Drillthrough'" in sec_blob
+                or '"Drillthrough"' in sec_blob
+                or '"type":"Passthrough"' in sec_blob  # newer literal name
+            )
+            for f in (sec_filters if isinstance(sec_filters, list) else []):
+                if isinstance(f, dict) and str(f.get("type", "")).lower() == "drillthrough":
+                    is_drill = True
+
+            pjson = {
+                "name": section.get("name", ""),
+                "displayName": section.get("displayName", ""),
+                "objects": (sec_cfg.get("objects") if isinstance(sec_cfg, dict) else {}) or {},
+                "_section_raw": section,
+                "_legacy_kind": "tooltip" if is_tooltip else ("drillthrough" if is_drill else "regular"),
+                "_has_mobile": (section.get("displayOption") == 1) or
+                               ('"mobile"' in (sec_cfg_raw if isinstance(sec_cfg_raw, str) else "")) or
+                               ("mobileLayout" in sec_blob),
+            }
+            visuals = []
+            for vc in (section.get("visualContainers") or []):
+                vconfig = vc.get("config")
+                try:
+                    vconfig = json.loads(vconfig) if isinstance(vconfig, str) else (vconfig or {})
+                except Exception:
+                    vconfig = {}
+                visuals.append({
+                    "visual": {"visualType": (vconfig.get("singleVisual") or {}).get("visualType")},
+                    "_raw": vc,
+                    "_config": vconfig,
+                })
+            pages_data.append({"name": pjson["name"], "json": pjson, "visuals": visuals})
+
+        # theme (legacy)
+        if isinstance(rj.get("themeCollection"), dict) or rj.get("theme"):
+            has_custom_theme = True
+
+        # bookmarks (legacy): live in report.config (a JSON string) under 'bookmarks'
+        rcfg_raw = rj.get("config")
+        try:
+            rcfg = json.loads(rcfg_raw) if isinstance(rcfg_raw, str) else (rcfg_raw or {})
+        except Exception:
+            rcfg = {}
+        bookmarks_root = rcfg.get("bookmarks") or layout.get("bookmarks") or rj.get("bookmarks")
+        # custom theme can also be flagged inside report.config
+        if not has_custom_theme:
+            if isinstance(rcfg, dict) and (rcfg.get("themeCollection") or rcfg.get("activeSectionIndex") is not None and rcfg.get("theme")):
+                if rcfg.get("themeCollection") or rcfg.get("theme"):
+                    has_custom_theme = True
+    else:
+        # PBIR
+        pages_index = _json("definition/pages/pages.json") or {}
+        page_names = []
+        if isinstance(pages_index.get("pageOrder"), list):
+            page_names = list(pages_index["pageOrder"])
+        else:
+            for p in parts:
+                if p.startswith("definition/pages/") and p.endswith("/page.json"):
+                    page_names.append(p.split("/")[2])
+            page_names = sorted(set(page_names))
+
+        for pn in page_names:
+            pjson = _json(f"definition/pages/{pn}/page.json") or {}
+            pjson["_has_mobile"] = any(
+                p.startswith(f"definition/pages/{pn}/mobile") for p in parts
+            )
+            visuals = []
+            for p in parts:
+                prefix = f"definition/pages/{pn}/visuals/"
+                if p.startswith(prefix) and p.endswith("/visual.json"):
+                    vj = _json(p) or {}
+                    visuals.append(vj)
+            pages_data.append({"name": pn, "json": pjson, "visuals": visuals})
+
+        report_json = _json("definition/report.json") or {}
+        theme_paths = [p for p in parts if p.startswith("StaticResources/RegisteredResources/")
+                                           and p.endswith(".json")]
+        has_custom_theme = bool(theme_paths)
+
+    print(f"📄 Pages found: {len(pages_data)}")
+    for pd in pages_data:
+        kind = pd["json"].get("_legacy_kind", "regular")
+        mob  = pd["json"].get("_has_mobile", False)
+        print(f"   - {pd['name']!r}  display={pd['json'].get('displayName','')!r}  kind={kind}  mobile={mob}  visuals={len(pd['visuals'])}")
+    # Debug: dump section types/displayOption for legacy reports so we can see why
+    # tooltip/drillthrough detection might miss.
+    if report_format == "LEGACY":
+        print("\n[DEBUG] Section signatures:")
+        for pd in pages_data:
+            sec = pd["json"].get("_section_raw", {}) or {}
+            cfg_raw = sec.get("config")
+            cfg_excerpt = (cfg_raw[:240] + "…") if isinstance(cfg_raw, str) and len(cfg_raw) > 240 else cfg_raw
+            print(f"   - {pd['name']!r}  displayOption={sec.get('displayOption')}  "
+                  f"w={sec.get('width')} h={sec.get('height')}  "
+                  f"filtersLen={len(sec.get('filters') or '') if isinstance(sec.get('filters'), str) else (len(sec.get('filters') or []))}")
+            if cfg_excerpt:
+                print(f"     config[:240]={cfg_excerpt}")
     """),
 
     _md("## Step 4 — Grade the 5 levels"),
@@ -641,20 +853,22 @@ CHECK_CELLS = [
         return bool(bg)
 
     def page_kind(pj):
-        # Tooltip / Drillthrough markers
-        # pageBindings shape varies, but tooltips usually have 'pageBindings':{'visualName':...} or 'type':'tooltip'
+        # Legacy: use the _legacy_kind we computed during parsing
+        if pj.get("_legacy_kind"):
+            return pj["_legacy_kind"]
+        # Tooltip / Drillthrough markers (PBIR)
         opt = pj.get("type") or pj.get("pageType") or ""
         if str(opt).lower() == "tooltip": return "tooltip"
         if str(opt).lower() == "drillthrough" or pj.get("filterConfig", {}).get("filters"):
-            # presence of drillthrough filter
             for f in (pj.get("filterConfig", {}).get("filters") or []):
                 if str(f.get("type", "")).lower() == "drillthrough":
                     return "drillthrough"
-        # mobile layout?
         return "regular"
 
     def page_has_mobile(pj):
         # PBIR mobile layout is a separate JSON: definition/pages/<page>/mobile.json
+        if pj.get("_has_mobile"):
+            return True
         return any(p.startswith(f"definition/pages/{pj.get('name','')}/mobile") for p in parts)
 
     # ---------------- Level 1 ---------------- #
@@ -704,8 +918,12 @@ CHECK_CELLS = [
     n_bookmarks = 0
     if isinstance(bookmarks_json, dict):
         n_bookmarks = len(bookmarks_json.get("items", []))
+    elif isinstance(bookmarks_root, list):
+        n_bookmarks = len(bookmarks_root)
+    elif isinstance(bookmarks_root, dict):
+        n_bookmarks = len(bookmarks_root.get("items", []) or bookmarks_root.get("children", []))
     else:
-        # scan folder
+        # scan folder (PBIR)
         n_bookmarks = sum(1 for p in parts if p.startswith("definition/bookmarks/") and p.endswith("/bookmark.json"))
     n_tooltips      = sum(1 for pd in pages_data if page_kind(pd["json"]) == "tooltip")
     n_drillthrough  = sum(1 for pd in pages_data if page_kind(pd["json"]) == "drillthrough")
@@ -761,13 +979,15 @@ CHECK_CELLS = [
     _BADGE_SECRET = b"fabric-arcade-badge-v1-7K9mP3xQ"
     _BASE_URL     = "https://maenglar78.github.io/fabric-arcade"
     _GAME_ID      = "retro-arcade"
+    _SKILLS       = ["Power BI", "Direct Lake", "Lakehouse"]
 
     def _b64u(b: bytes) -> str:
         return base64.urlsafe_b64encode(b).rstrip(b"=").decode("ascii")
 
     def _issue(game_id, player, rank, score):
         payload = {"v": 1, "g": game_id, "p": str(player),
-                   "r": str(rank), "s": int(score), "t": int(time.time())}
+                   "r": str(rank), "s": int(score), "t": int(time.time()),
+                   "k": _SKILLS}
         body = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()
         sig  = hmac.new(_BADGE_SECRET, body, hashlib.sha256).digest()
         return f"{_BASE_URL}/badge.html?t={_b64u(body)}.{_b64u(sig)}"

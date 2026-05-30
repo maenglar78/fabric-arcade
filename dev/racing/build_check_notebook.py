@@ -262,6 +262,7 @@ CELLS = [
             rank=rank,
             score=best_score,
             base_url="https://maenglar78.github.io/fabric-arcade",
+            skills=["Eventhouse", "KQL", "Real-Time Dashboard"],
         )
         print(f"🏆 Rank   : {rank}")
         print(f"🔗 Badge  : {badge.url}")
