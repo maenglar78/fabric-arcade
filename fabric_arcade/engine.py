@@ -345,7 +345,9 @@ class GameDeployer:
     
     def __init__(self, client: Optional[FabricClient] = None):
         self.client = client or FabricClient()
-        self.catalog_path = Path(__file__).parent.parent / "catalog"
+        # Packaged location (wheel): fabric_arcade/_catalog/. Dev source: repo/catalog/.
+        _pkg_catalog = Path(__file__).parent / "_catalog"
+        self.catalog_path = _pkg_catalog if _pkg_catalog.exists() else Path(__file__).parent.parent / "catalog"
     
     def deploy(self, game_id: str, workspace_name: str, 
                prefix: str = "") -> DeploymentContext:

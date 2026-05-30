@@ -576,7 +576,7 @@ CHECK_CELLS = [
     """),
 
     _md("## Step 1 — Install / import dependencies"),
-    _code(r"""
+    _code(hidden=True, text=r"""
     import subprocess, sys
     subprocess.run([sys.executable, "-m", "pip", "install", "-q", "--upgrade",
                     "--disable-pip-version-check", "PyJWT>=2.6.0"],
@@ -598,7 +598,7 @@ CHECK_CELLS = [
     """),
 
     _md("## Step 2 — Fetch the report definition (PBIR)"),
-    _code(r"""
+    _code(hidden=True, text=r"""
     # Call Fabric REST API directly (avoids sempy/sempy_labs version mismatches).
     import time, requests, notebookutils
     ws_id = notebookutils.runtime.context["currentWorkspaceId"]
@@ -668,13 +668,10 @@ CHECK_CELLS = [
         parts[p] = raw
 
     print(f"✅ Got {len(parts)} parts (format={report_format}).")
-    print("Sample paths:")
-    for p in list(parts.keys())[:10]:
-        print(" ", p)
     """),
 
     _md("## Step 3 — Parse pages, visuals, theme, mobile layout"),
-    _code(r"""
+    _code(hidden=True, text=r"""
     # ----------------------------------------------------------------
     # Build a normalized view (pages_data, all_visuals, etc.) that works
     # for BOTH PBIR (exploded parts) and LEGACY (single report.json with
@@ -729,15 +726,28 @@ CHECK_CELLS = [
             )
 
             # Drillthrough detection (legacy):
-            #   - any filter with type == "Drillthrough" (filters can be at section.filters)
-            #   - sec_cfg.objects.pageInformation[*].properties.type with literal 'Drillthrough'
+            #   - filter with type == "Drillthrough" (string OR enum int 5)
+            #   - sec_cfg.objects.pageInformation[*].type literal 'Drillthrough'
+            #   - heuristic: section.filters is non-trivial (>20 chars JSON) and not a tooltip
             is_drill = (
                 "'Drillthrough'" in sec_blob
                 or '"Drillthrough"' in sec_blob
-                or '"type":"Passthrough"' in sec_blob  # newer literal name
+                or '"type":"Passthrough"' in sec_blob
             )
             for f in (sec_filters if isinstance(sec_filters, list) else []):
-                if isinstance(f, dict) and str(f.get("type", "")).lower() == "drillthrough":
+                if isinstance(f, dict):
+                    t = f.get("type")
+                    if (isinstance(t, str) and t.lower() == "drillthrough") or t == 5:
+                        is_drill = True
+            # Heuristic fallback: a regular full-size page with non-trivial filters
+            # is almost certainly a drillthrough target (filters at page level are
+            # what define drillthrough pages in PBI).
+            if not is_drill and not is_tooltip:
+                _fl_raw = section.get("filters")
+                _flen = len(_fl_raw) if isinstance(_fl_raw, str) else (
+                    len(json.dumps(_fl_raw)) if _fl_raw else 0
+                )
+                if _flen > 20:
                     is_drill = True
 
             pjson = {
@@ -815,23 +825,10 @@ CHECK_CELLS = [
         kind = pd["json"].get("_legacy_kind", "regular")
         mob  = pd["json"].get("_has_mobile", False)
         print(f"   - {pd['name']!r}  display={pd['json'].get('displayName','')!r}  kind={kind}  mobile={mob}  visuals={len(pd['visuals'])}")
-    # Debug: dump section types/displayOption for legacy reports so we can see why
-    # tooltip/drillthrough detection might miss.
-    if report_format == "LEGACY":
-        print("\n[DEBUG] Section signatures:")
-        for pd in pages_data:
-            sec = pd["json"].get("_section_raw", {}) or {}
-            cfg_raw = sec.get("config")
-            cfg_excerpt = (cfg_raw[:240] + "…") if isinstance(cfg_raw, str) and len(cfg_raw) > 240 else cfg_raw
-            print(f"   - {pd['name']!r}  displayOption={sec.get('displayOption')}  "
-                  f"w={sec.get('width')} h={sec.get('height')}  "
-                  f"filtersLen={len(sec.get('filters') or '') if isinstance(sec.get('filters'), str) else (len(sec.get('filters') or []))}")
-            if cfg_excerpt:
-                print(f"     config[:240]={cfg_excerpt}")
     """),
 
     _md("## Step 4 — Grade the 5 levels"),
-    _code(r"""
+    _code(hidden=True, text=r"""
     SLICER_KEYS = ("slicer", "advancedSlicerVisual")
 
     def visual_type(v):
@@ -903,9 +900,37 @@ CHECK_CELLS = [
             s = json.dumps(v)
             if '"syncGroup"' in s or '"syncSlicers"' in s:
                 sync_count += 1
-    # edit-interactions: presence of "interactions" overrides at page level
-    interactions = sum(1 for pd in pages_data
-                       if '"filters"' in json.dumps(pd["json"]) and '"hidden"' in json.dumps(pd["json"]))
+    # edit-interactions: in LEGACY they live as section.visualInteractions = [{source,target,typeByVisual}]
+    # but PBI sometimes serializes them inside section.config.visualInteractions instead.
+    # In PBIR each visual.json may have 'visualContainerObjects.visualInteractions' / 'interactionType'.
+    interactions = 0
+    for pd in pages_data:
+        sec = pd["json"].get("_section_raw") or {}
+        # 1) Direct on section
+        vi = sec.get("visualInteractions")
+        if isinstance(vi, list):
+            interactions += len(vi)
+        # 2) Inside section.config (string-encoded JSON)
+        cfg_raw = sec.get("config")
+        try:
+            cfg = json.loads(cfg_raw) if isinstance(cfg_raw, str) else (cfg_raw or {})
+        except Exception:
+            cfg = {}
+        if isinstance(cfg, dict):
+            for key in ("visualInteractions", "interactions", "relationships"):
+                vi2 = cfg.get(key)
+                if isinstance(vi2, list):
+                    interactions += len(vi2)
+        # 3) Textual fallback over the whole section JSON
+        if interactions == 0:
+            sec_blob_str = json.dumps(sec, default=str)
+            hits = sec_blob_str.count('"visualInteractions"') + sec_blob_str.count('"interactionType"')
+            interactions += hits
+        # 4) PBIR per-visual
+        for v in pd["visuals"]:
+            s = json.dumps(v)
+            if '"visualInteractions"' in s or '"interactionType"' in s:
+                interactions += 1
     L3 = 0
     L3 += 7 if n_slicers >= 2 else (4 if n_slicers == 1 else 0)
     L3 += 7 if sync_count >= 1 else 0
@@ -968,7 +993,7 @@ CHECK_CELLS = [
     """),
 
     _md("## Step 5 — 🏅 Mint your shareable badge"),
-    _code(r"""
+    _code(hidden=True, text=r"""
     # ============================================================
     # Retro Arcade — Badge issuance
     # HMAC-signed URL for the GitHub Pages badge viewer
