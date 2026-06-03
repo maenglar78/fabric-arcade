@@ -492,33 +492,525 @@ SEED_CELLS = [
 
 
 # =====================================================================
-# city_builder_mayor.ipynb  (PHASE 2 stub)
+# city_builder_mayor.ipynb  (PHASE 2 — vertical slice: District 1)
 # =====================================================================
 
 MAYOR_CELLS = [
     _md(f"""
     # 🏛️ City Builder — The Mayor's Office
 
-    > Build stamp: **{BUILD_STAMP}** · *Phase 2 implementation in progress*
+    > Build stamp: **{BUILD_STAMP}** · *Phase 2 — District 1 ready*
 
-    This notebook will hold:
-    - District briefings (markdown — what to build in `Datapolis_DW` + DAX expected)
-    - The `Mayor` class: `mayor.briefing("town-hall")`, `mayor.inspect_district("town-hall")`
-    - INFORMATION_SCHEMA validators on `Datapolis_DW`
-    - DAX validators via XMLA against `Datapolis_Model` (player creates)
-    - Telemetry emitter to `CityEvents` in `Datapolis_EH`
+    You are the newly elected **Mayor of Datapolis**. Your predecessor sabotaged the
+    municipal Data Warehouse. Rebuild it district by district.
 
-    Run `CityBuilder_Seed` first to populate `Datapolis_LH` with raw + Blueprint data.
+    ## How to play
+    1. **Attach** `Datapolis_LH` as the default Lakehouse on this notebook.
+    2. **Run cells 1–2** below to wake the Mayor up.
+    3. Call `mayor.help()` to see the district roster.
+    4. For each district:
+       - `mayor.briefing("<district_id>")` → reads the case file (story + schema + DAX hints)
+       - You go to **`Datapolis_DW`** and write T-SQL to build `Dim*` / `Fact*` tables
+         using the `raw_*` data from the Lakehouse SQL endpoint (3-part name).
+       - You create / refresh a Power BI **`Datapolis_Model`** on top of `Datapolis_DW`
+         and add the requested DAX measures.
+       - `mayor.inspect("<district_id>")` → schema audit (tables + columns + nullability)
+       - `mayor.validate("<district_id>")` → DAX checks vs the blueprint, partial scoring,
+         and emits an event to the `CityEvents` Eventhouse table.
+    5. `mayor.score()` → cumulative reputation + current rank.
+
+    ## Required model name
+    The semantic model **must** be called `Datapolis_Model` (the Mayor only inspects that one).
+    """),
+
+    _md("## Step 1 — Setup"),
+    _code(r"""
+    # Identity, names, endpoints.
+    import os, uuid, json, time, struct, math, datetime as dt, requests
+    from typing import Any
+    from IPython.display import display, Markdown
+
+    WORKSPACE_ID  = mssparkutils.runtime.context.get("currentWorkspaceId") \
+                    if "mssparkutils" in dir() else None
+    try:
+        import notebookutils
+        WORKSPACE_ID = notebookutils.runtime.context.get("currentWorkspaceId") or WORKSPACE_ID
+    except Exception:
+        pass
+
+    LH_NAME    = "Datapolis_LH"
+    DW_NAME    = "Datapolis_DW"
+    EH_NAME    = "Datapolis_EH"
+    MODEL_NAME = "Datapolis_Model"
+    EH_TABLE   = "CityEvents"
+
+    SESSION_ID = str(uuid.uuid4())
+    PLAYER_ID  = os.environ.get("USER", "mayor")
+
+    print(f"Workspace:  {WORKSPACE_ID}")
+    print(f"Session:    {SESSION_ID}")
+    print(f"Player:     {PLAYER_ID}")
+    """, hidden=True),
+
+    _md("## Step 2 — Helpers (DW, DAX, Eventhouse)"),
+    _code(r"""
+    # --- Token helpers ------------------------------------------------
+    def _token(resource: str) -> str:
+        try:
+            import notebookutils
+            return notebookutils.credentials.getToken(resource)
+        except Exception:
+            import mssparkutils
+            return mssparkutils.credentials.getToken(resource)
+
+    def _fabric_get(url: str) -> dict:
+        tok = _token("pbi")
+        r = requests.get(url, headers={"Authorization": f"Bearer {tok}"}, timeout=60)
+        r.raise_for_status()
+        return r.json()
+
+    # --- Warehouse (pyodbc + AAD access token) ------------------------
+    _DW_CONN_STR = {"v": None}
+
+    def _dw_endpoint() -> str:
+        if _DW_CONN_STR["v"]:
+            return _DW_CONN_STR["v"]
+        items = _fabric_get(f"https://api.fabric.microsoft.com/v1/workspaces/{WORKSPACE_ID}/items?type=Warehouse").get("value", [])
+        target = next((i for i in items if i["displayName"] == DW_NAME), None)
+        if not target:
+            raise RuntimeError(f"Warehouse '{DW_NAME}' not found in workspace.")
+        info = _fabric_get(f"https://api.fabric.microsoft.com/v1/workspaces/{WORKSPACE_ID}/warehouses/{target['id']}")
+        srv = info.get("properties", {}).get("connectionString")
+        if not srv:
+            raise RuntimeError(f"No connectionString for warehouse '{DW_NAME}'.")
+        _DW_CONN_STR["v"] = srv
+        return srv
+
+    def dw_query(sql: str):
+        '''Run T-SQL on Datapolis_DW. Returns list[dict].'''
+        import pyodbc
+        srv = _dw_endpoint()
+        tok = _token("https://database.windows.net/.default").encode("utf-16-le")
+        attrs = {1256: bytes(struct.pack("=i", len(tok)) + tok)}  # SQL_COPT_SS_ACCESS_TOKEN
+        cs = f"Driver={{ODBC Driver 18 for SQL Server}};Server={srv};Database={DW_NAME};Encrypt=yes;TrustServerCertificate=no"
+        with pyodbc.connect(cs, attrs_before=attrs, timeout=30) as cn:
+            cur = cn.cursor(); cur.execute(sql)
+            cols = [c[0] for c in cur.description] if cur.description else []
+            return [dict(zip(cols, r)) for r in cur.fetchall()] if cols else []
+
+    # --- DAX via sempy.fabric -----------------------------------------
+    def dax_scalar(expr: str) -> float | None:
+        '''EVALUATE ROW("V", <scalar expr>) on Datapolis_Model. Returns float or None.'''
+        import sempy.fabric as fabric
+        q = f'EVALUATE ROW("V", {expr})'
+        try:
+            df = fabric.evaluate_dax(dataset=MODEL_NAME, workspace=WORKSPACE_ID, dax_string=q)
+            if df.empty: return None
+            v = df.iloc[0, 0]
+            return None if v is None else float(v)
+        except Exception as e:
+            print(f"  ⚠️ DAX error: {e}")
+            return None
+
+    def model_exists() -> bool:
+        try:
+            items = _fabric_get(f"https://api.fabric.microsoft.com/v1/workspaces/{WORKSPACE_ID}/items?type=SemanticModel").get("value", [])
+            return any(i["displayName"] == MODEL_NAME for i in items)
+        except Exception:
+            return False
+
+    # --- Blueprint readers (from Lakehouse) ---------------------------
+    def blueprint(district_id: str) -> dict[str, float]:
+        '''Read blueprint_<id> table from default Lakehouse, return MeasureName -> ExpectedValue.'''
+        tbl = "blueprint_" + district_id.replace("-", "_")
+        rows = spark.table(tbl).collect()
+        return {r["MeasureName"]: float(r["ExpectedValue"]) for r in rows}
+
+    # --- Eventhouse telemetry -----------------------------------------
+    _EH_QSI = {"v": None}
+    def _eh_query_uri() -> str:
+        if _EH_QSI["v"]: return _EH_QSI["v"]
+        dbs = _fabric_get(f"https://api.fabric.microsoft.com/v1/workspaces/{WORKSPACE_ID}/kqlDatabases").get("value", [])
+        target = next((d for d in dbs if d["displayName"] == EH_NAME), None)
+        if not target:
+            raise RuntimeError(f"KQL DB '{EH_NAME}' not found.")
+        info = _fabric_get(f"https://api.fabric.microsoft.com/v1/workspaces/{WORKSPACE_ID}/kqlDatabases/{target['id']}")
+        uri = info.get("properties", {}).get("queryServiceUri")
+        if not uri:
+            raise RuntimeError("No queryServiceUri for Datapolis_EH.")
+        _EH_QSI["v"] = uri
+        return uri
+
+    def log_event(event_type: str, district_id: str, concept: str,
+                  reputation: float, rows_validated: int,
+                  measure_name: str = "", expected: float = 0.0,
+                  actual: float = 0.0, validation_result: str = "INFO") -> None:
+        ts = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        eid = str(uuid.uuid4())
+        # Schema: EventId,Timestamp,SessionId,PlayerId,EventType,District,Concept,
+        #         Reputation,RowsValidated,MeasureName,ExpectedValue,ActualValue,ValidationResult
+        row = (f'"{eid}","{ts}","{SESSION_ID}","{PLAYER_ID}","{event_type}",'
+               f'"{district_id}","{concept}",{reputation},{rows_validated},'
+               f'"{measure_name}",{expected},{actual},"{validation_result}"')
+        csl = f".ingest inline into table {EH_TABLE} <|\n{row}"
+        try:
+            tok = _token("kusto")
+            requests.post(f"{_eh_query_uri()}/v1/rest/mgmt",
+                          headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"},
+                          json={"db": EH_NAME, "csl": csl}, timeout=15)
+        except Exception as e:
+            print(f"  ⚠️ telemetry failed: {e}")
+
+    def query_kql(kql: str):
+        tok = _token("kusto")
+        r = requests.post(f"{_eh_query_uri()}/v1/rest/query",
+                          headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"},
+                          json={"db": EH_NAME, "csl": kql}, timeout=30)
+        r.raise_for_status()
+        tbl = r.json()["Tables"][0]
+        cols = [c["ColumnName"] for c in tbl["Columns"]]
+        return [dict(zip(cols, row)) for row in tbl["Rows"]]
+
+    print("✅ Helpers loaded — dw_query, dax_scalar, blueprint, log_event, query_kql.")
+    """),
+
+    _md("## Step 3 — District spec (Town Hall fully briefed; others stubbed)"),
+    _code(r"""
+    # Each district has: concept, points, expected tables w/ columns+types,
+    # DAX measure names + canonical formula hints + blueprint key mapping.
+    DISTRICTS = {
+        "town-hall": {
+            "n": 1, "name": "🏛️ Town Hall — Phantom Census",
+            "concept": "Fact vs Dimension, grain",
+            "points": 100,
+            "narrative": (
+                "After the '99 archive fire, only ONE corrupted tape survived. "
+                "It dumps citizen attributes and life events into a single table "
+                "(`raw_phantom_census`, 7,500 rows). Some rows carry person info, "
+                "others carry event info. Same `citizen_id`, different shape. "
+                "Your job: split the tape into a **dimension** and a **fact**."
+            ),
+            "raw_tables": ["raw_phantom_census"],
+            "expected_tables": {
+                "DimCitizen": [
+                    ("CitizenKey",   "INT",            False),  # surrogate (PK)
+                    ("CitizenId",    "VARCHAR(20)",    False),  # business key
+                    ("FullName",     "VARCHAR(100)",   True),
+                    ("Profession",   "VARCHAR(50)",    True),
+                    ("HomeDistrict", "VARCHAR(50)",    True),
+                ],
+                "FactCensusEvent": [
+                    ("CitizenKey", "INT",       False),  # FK to DimCitizen
+                    ("EventType",  "VARCHAR(20)", False),
+                    ("EventDate",  "DATE",        False),
+                ],
+            },
+            "measures": [
+                # (measure_name, dax_hint, blueprint_key)
+                ("Citizens",
+                 "DISTINCTCOUNT(DimCitizen[CitizenKey])",
+                 "Citizens"),
+                ("Birth Events",
+                 'CALCULATE(COUNTROWS(FactCensusEvent), FactCensusEvent[EventType]="Birth")',
+                 "Birth Events"),
+                ("Death Events",
+                 'CALCULATE(COUNTROWS(FactCensusEvent), FactCensusEvent[EventType]="Death")',
+                 "Death Events"),
+                ("Net Population Change",
+                 '[Birth Events] - [Death Events]',
+                 "Net Population Change"),
+            ],
+            "starter_sql": '''-- ============================================================
+-- District 1 — Town Hall: split the Phantom Census tape
+-- ============================================================
+-- The Lakehouse table `[Datapolis_LH].[dbo].[raw_phantom_census]`
+-- mixes citizen attributes (row_type='ATTR') and life events
+-- (row_type='EVENT') in the SAME rows. Split them in two tables.
+
+-- 1) DIMENSION ------------------------------------------------
+DROP TABLE IF EXISTS dbo.DimCitizen;
+
+CREATE TABLE dbo.DimCitizen (
+    CitizenKey    INT             NOT NULL,   -- surrogate (PK)
+    CitizenId     VARCHAR(20)     NOT NULL,   -- business key (from raw)
+    FullName      VARCHAR(100)    NULL,
+    Profession    VARCHAR(50)     NULL,
+    HomeDistrict  VARCHAR(50)     NULL
+);
+
+INSERT INTO dbo.DimCitizen (CitizenKey, CitizenId, FullName, Profession, HomeDistrict)
+SELECT
+    -- TODO: generate a surrogate key (hint: ROW_NUMBER() OVER (ORDER BY ...))
+    NULL                                             AS CitizenKey,
+    citizen_id,
+    full_name,
+    profession,
+    home_district
+FROM [Datapolis_LH].[dbo].[raw_phantom_census]
+WHERE 1=0; -- TODO: keep only the ATTR rows
+
+-- 2) FACT -----------------------------------------------------
+DROP TABLE IF EXISTS dbo.FactCensusEvent;
+
+CREATE TABLE dbo.FactCensusEvent (
+    CitizenKey  INT          NOT NULL,   -- FK → DimCitizen.CitizenKey
+    EventType   VARCHAR(20)  NOT NULL,
+    EventDate   DATE         NOT NULL
+);
+
+INSERT INTO dbo.FactCensusEvent (CitizenKey, EventType, EventDate)
+SELECT
+    -- TODO: look up the surrogate key by joining DimCitizen on CitizenId
+    NULL          AS CitizenKey,
+    e.event_type,
+    e.event_date
+FROM [Datapolis_LH].[dbo].[raw_phantom_census] AS e
+-- TODO: JOIN dbo.DimCitizen AS d ON ...
+WHERE 1=0; -- TODO: keep only the EVENT rows
+
+-- Sanity check (expected: 1500 / 6000)
+SELECT COUNT(*) AS dim_rows  FROM dbo.DimCitizen;
+SELECT COUNT(*) AS fact_rows FROM dbo.FactCensusEvent;
+''',
+        },
+        # Other 7 districts will be briefed in the next iteration.
+        "neon-district":  {"stub": True, "name": "🏘️ Neon District — Shifting Identities"},
+        "skylane":        {"stub": True, "name": "🚁 Skylane — Anti-Grav Couriers"},
+        "plasma-core":    {"stub": True, "name": "⚡ Plasma Core — Reactor Readings"},
+        "bazaar-9":       {"stub": True, "name": "🛒 Bazaar 9 — The Quantum Market"},
+        "cryo-hospital":  {"stub": True, "name": "🏥 Cryo Hospital — Admission Tags"},
+        "holo-stage":     {"stub": True, "name": "🎭 Holo-Stage — Multiverse Performers"},
+        "grid-overlook":  {"stub": True, "name": "🌃 The Grid Overlook — BOSS"},
+    }
+
+    RANKS = [
+        (0,   "Suspicious Citizen"),
+        (100, "Ward Councilor"),
+        (250, "Urban Planning Officer"),
+        (500, "Mayor of Datapolis"),
+        (800, "Chief Grid Architect"),
+        (900, "🏆 Grid Keeper"),
+    ]
+    def rank_for(total: float) -> str:
+        r = RANKS[0][1]
+        for thr, name in RANKS:
+            if total >= thr: r = name
+        return r
+
+    print(f"🗂️  {len(DISTRICTS)} districts registered "
+          f"({sum(1 for v in DISTRICTS.values() if not v.get('stub'))} fully briefed).")
+    """, hidden=True),
+
+    _md("## Step 4 — The `Mayor` class"),
+    _code(r"""
+    class Mayor:
+        TOL_REL = 1e-4
+        TOL_ABS = 1e-2
+        PASS_THRESHOLD = 0.80  # >=80% measures correct = full points (else proportional)
+
+        # ------------------------------------------------------------
+        def help(self):
+            md = ["### 🏛️ Mayor's roster\n",
+                  "| # | District | Status | Concept |",
+                  "|---|----------|--------|---------|"]
+            for did, d in DISTRICTS.items():
+                if d.get("stub"):
+                    md.append(f"| – | {d['name']} | 🚧 *coming soon* | – |")
+                else:
+                    md.append(f"| {d['n']} | `{did}` — {d['name']} | ✅ ready | {d['concept']} |")
+            md.append("\n**Commands:** `mayor.briefing(\"town-hall\")`, "
+                      "`mayor.inspect(\"town-hall\")`, `mayor.validate(\"town-hall\")`, "
+                      "`mayor.score()`")
+            display(Markdown("\n".join(md)))
+
+        # ------------------------------------------------------------
+        def briefing(self, district_id: str):
+            d = DISTRICTS.get(district_id)
+            if not d:
+                print(f"❓ unknown district '{district_id}'"); return
+            if d.get("stub"):
+                display(Markdown(f"### {d['name']}\n🚧 *Not yet briefed by the Mayor's office.*"))
+                return
+            bp = blueprint(district_id)
+            md = [f"## {d['name']}",
+                  f"**Concept:** {d['concept']}  ·  **Reward:** {d['points']} reputation",
+                  "",
+                  f"### 📜 Case file", d['narrative'], "",
+                  f"### 📥 Source tables (in `{LH_NAME}` lakehouse)"]
+            for t in d['raw_tables']:
+                md.append(f"- `{t}`  →  reachable from `Datapolis_DW` as "
+                          f"`[{LH_NAME}].[dbo].[{t}]` via cross-database query.")
+            md += ["", "### 🏗️ Required tables in `Datapolis_DW`"]
+            for tname, cols in d['expected_tables'].items():
+                md.append(f"\n**`dbo.{tname}`**\n")
+                md.append("| Column | Type | Nullable |")
+                md.append("|--------|------|----------|")
+                for c, ty, nul in cols:
+                    md.append(f"| `{c}` | `{ty}` | {'YES' if nul else 'NO'} |")
+            md += ["", "### � How to build it", "",
+                   f"**1. Open the Warehouse.** In the workspace, open the **City Builder** folder and click on **`{DW_NAME}`**. "
+                   "In the top toolbar choose **`+ New SQL query`** → a blank T-SQL editor opens.",
+                   "",
+                   f"**2. Cross-database read.** The raw data lives in the Lakehouse, but the Warehouse can query it "
+                   f"with a **3-part name**: `[{LH_NAME}].[dbo].[<raw_table>]`.",
+                   "",
+                   "**3. Starter T-SQL.** Paste the skeleton below and fill the `-- TODO:` parts. Run it with **▶ Run**. "
+                   "You can iterate: `DROP TABLE IF EXISTS` is already there so re-running is safe.",
+                   ""]
+            if d.get("starter_sql"):
+                md.append("```sql")
+                md.append(d["starter_sql"].rstrip())
+                md.append("```")
+                md.append("")
+            md += ["### 📊 Build the semantic model + DAX measures", "",
+                   f"**4. Create the model.** After the tables exist in `{DW_NAME}`, open the warehouse, go to the **Model** "
+                   f"view (left side bar) → **`+ New semantic model`** → select your `Dim*` and `Fact*` tables → set "
+                   f"**Name = `{MODEL_NAME}`** (the Mayor only validates that exact name). Confirm relationships are 1:* "
+                   "from the dimension key to the fact key.",
+                   "",
+                   f"**5. Add the measures.** In the model, **`+ New measure`** and write each of the DAX expressions below. "
+                   "The measure **names** must match exactly (the Mayor calls them by name). The *expressions* are hints — "
+                   "any DAX that returns the expected value earns credit.",
+                   "",
+                   "| Measure name | DAX hint | Expected value |",
+                   "|--------------|----------|---------------:|"]
+            for mname, dax_hint, bp_key in d['measures']:
+                exp = bp.get(bp_key, "?")
+                exp_str = f"{exp:,.0f}" if isinstance(exp, (int, float)) else str(exp)
+                md.append(f"| `{mname}` | `{dax_hint}` | `{exp_str}` |")
+            md += ["",
+                   "### ✅ When you are done",
+                   f"Back in this notebook, run:",
+                   "",
+                   f"```python",
+                   f'mayor.inspect("{district_id}")    # schema audit on Datapolis_DW',
+                   f'mayor.validate("{district_id}")   # DAX vs blueprint → +reputation',
+                   f"```",
+                   "",
+                   "> Get **≥80%** of the measures right to claim full reputation; otherwise partial credit."]
+            display(Markdown("\n".join(md)))
+
+        # ------------------------------------------------------------
+        def inspect(self, district_id: str):
+            d = DISTRICTS.get(district_id)
+            if not d or d.get("stub"):
+                print(f"❓ no inspection plan for '{district_id}'"); return
+            print(f"🔎 Inspecting `{DW_NAME}` for District {d['n']} — {d['name']}\n")
+            try:
+                got = dw_query(
+                    "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, IS_NULLABLE "
+                    "FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='dbo'"
+                )
+            except Exception as e:
+                print(f"❌ cannot reach Datapolis_DW: {e}"); return
+
+            present = {}
+            for r in got:
+                present.setdefault(r["TABLE_NAME"], {})[r["COLUMN_NAME"]] = (
+                    r["DATA_TYPE"].lower(), r["IS_NULLABLE"]
+                )
+
+            ok = True
+            for tname, cols in d['expected_tables'].items():
+                if tname not in present:
+                    print(f"  ❌ table `{tname}` MISSING"); ok = False; continue
+                print(f"  ✅ table `{tname}` exists")
+                for cname, ctype, nullable in cols:
+                    p = present[tname].get(cname)
+                    if not p:
+                        print(f"      ❌ column `{cname}` missing"); ok = False; continue
+                    base_type = ctype.split("(")[0].lower()
+                    if base_type not in p[0]:
+                        print(f"      ⚠️  column `{cname}` type is `{p[0]}`, expected `{ctype}`")
+                    else:
+                        print(f"      ✅ `{cname}` ({p[0]})")
+            log_event("INSPECT", district_id, d['concept'], 0, len(got),
+                      validation_result="OK" if ok else "FAIL")
+            print("\n🏛️ Schema inspection complete.")
+
+        # ------------------------------------------------------------
+        def validate(self, district_id: str):
+            d = DISTRICTS.get(district_id)
+            if not d or d.get("stub"):
+                print(f"❓ no validation plan for '{district_id}'"); return
+            if not model_exists():
+                print(f"❌ Semantic model `{MODEL_NAME}` not found in this workspace.\n"
+                      f"   Create it (Power BI Desktop or web) on top of `{DW_NAME}` and try again.")
+                return
+            bp = blueprint(district_id)
+            print(f"📊 Validating District {d['n']} — {d['name']}\n")
+            passed = 0
+            total  = len(d['measures'])
+            for mname, dax_hint, bp_key in d['measures']:
+                expected = bp.get(bp_key)
+                actual   = dax_scalar(f"[{mname}]")
+                if actual is None:
+                    print(f"  ❌ `{mname}` — not found in model or DAX error")
+                    log_event("VALIDATE", district_id, d['concept'], 0, 0,
+                              mname, expected or 0, 0, "MISSING")
+                    continue
+                ok = math.isclose(actual, expected, rel_tol=self.TOL_REL, abs_tol=self.TOL_ABS)
+                tick = "✅" if ok else "❌"
+                print(f"  {tick} `{mname}`  expected={expected:,.4f}  actual={actual:,.4f}")
+                log_event("VALIDATE", district_id, d['concept'], 0, 0,
+                          mname, expected, actual, "PASS" if ok else "FAIL")
+                if ok: passed += 1
+
+            ratio = passed / total if total else 0
+            if ratio >= self.PASS_THRESHOLD:
+                pts = d['points']
+                verdict = f"🏅 FULL CREDIT  ·  +{pts} reputation"
+            else:
+                pts = round(d['points'] * ratio)
+                verdict = f"📉 PARTIAL CREDIT  ·  +{pts} reputation ({passed}/{total} measures)"
+            print(f"\n{verdict}")
+            log_event("SCORE", district_id, d['concept'], pts, 0,
+                      validation_result="PASS" if ratio >= self.PASS_THRESHOLD else "PARTIAL")
+            return pts
+
+        # ------------------------------------------------------------
+        def score(self):
+            try:
+                rows = query_kql(
+                    f"{EH_TABLE} | where SessionId == '{SESSION_ID}' and EventType == 'SCORE' "
+                    f"| summarize Reputation = sum(Reputation) by District "
+                    f"| order by District asc"
+                )
+            except Exception as e:
+                print(f"❌ cannot query Eventhouse: {e}"); return
+            total = sum(r["Reputation"] for r in rows)
+            md = ["### 🏛️ Mayor's scoreboard (this session)",
+                  "| District | Reputation |",
+                  "|----------|-----------:|"]
+            for r in rows:
+                md.append(f"| `{r['District']}` | {int(r['Reputation'])} |")
+            md.append(f"| **Total** | **{int(total)}** |")
+            md.append(f"\n**Rank:** {rank_for(total)}")
+            display(Markdown("\n".join(md)))
+
+    mayor = Mayor()
+    log_event("SESSION_START", "datapolis", "init", 0, 0, validation_result="OK")
+    print("🏛️ The Mayor is in office. Try: mayor.help()")
+    """),
+
+    _md("## Step 5 — Play"),
+    _code(r"""
+    mayor.help()
     """),
     _code(r"""
-    # 🚧 Phase 2 — implementation coming next iteration.
-    # For now: verify the seed worked by listing Blueprint tables in your default Lakehouse.
-    blueprint_tables = [t.name for t in spark.catalog.listTables() if t.name.startswith("blueprint_")]
-    print(f"Blueprint tables ready: {len(blueprint_tables)}")
-    for t in sorted(blueprint_tables):
-        spark.table(t).show(truncate=False)
+    # mayor.briefing("town-hall")
+    """),
+    _code(r"""
+    # mayor.inspect("town-hall")
+    """),
+    _code(r"""
+    # mayor.validate("town-hall")
+    """),
+    _code(r"""
+    # mayor.score()
     """),
 ]
+
 
 
 # =====================================================================
