@@ -67,3 +67,24 @@
     Callee:   string,
     CalledAt: datetime
 )
+
+// === Dimension tables (one bindable entity per row) ============================
+// Populated from the fact tables via `.set-or-replace` in the Seed notebook.
+
+.create-merge table Case1_Persons (PersonName: string)
+
+.create-merge table Case1_Rooms (RoomName: string)
+
+.create-merge table Case2_Persons (GuestName: string)
+
+.create-merge table Case2_Locations (Location: string)
+
+.create-merge table Case3_Persons (PersonName: string)
+
+.create-merge table Case4_Persons (RealName: string)
+
+.create-merge table Case4_Hotels (HotelName: string)
+
+.create-merge table Case5_Persons (PersonName: string)
+
+.create-merge table Case5_Zones (PatrolZone: string)

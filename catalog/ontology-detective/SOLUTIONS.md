@@ -17,10 +17,14 @@ inside `OntologyDetective_CaseFile`.
 
 ## Case #1 — The Stolen Pie  🧁  `stolen-pie`
 
-### Ontology
-- **Person**
-- **Room**
-- **Visit** *(reified relationship: Person `wasIn` Room from `enteredAt` to `leftAt`)*
+### Ontology (every entity bound to a real KQL table)
+| Entity   | Bind to table       | Entity key (PK)                                  |
+|----------|---------------------|--------------------------------------------------|
+| `Person` | `Case1_Persons`     | `personName`                                     |
+| `Room`   | `Case1_Rooms`       | `roomName`                                       |
+| `Visit`  | `Case1_Visits`      | composite: `personName` + `roomName` + `enteredAt` |
+
+*Relations:* `Visit.madeBy → Person`, `Visit.inRoom → Room`.
 
 ### KQL
 ```kql
@@ -44,9 +48,13 @@ detective.accuse("stolen-pie", "Bob Hollowstone")
 ## Case #2 — Disappearance at the Museum  🏛️  `museum`
 
 ### Ontology
-- **Person**
-- **Location**
-- **CameraEvent** *(Person `wasAt` Location at `seenAt`)*
+| Entity        | Bind to table          | Entity key (PK)                                |
+|---------------|------------------------|------------------------------------------------|
+| `Person`      | `Case2_Persons`        | `guestName`                                    |
+| `Location`    | `Case2_Locations`      | `location`                                     |
+| `CameraEvent` | `Case2_CameraEvents`   | composite: `guestName` + `location` + `seenAt` |
+
+*Relations:* `CameraEvent.observed → Person`, `CameraEvent.at → Location`.
 
 ### KQL
 ```kql
@@ -68,8 +76,12 @@ detective.accuse("museum", "Lady Marlowe")
 ## Case #3 — The Mysterious Phone Call  📞  `phone-call`
 
 ### Ontology
-- **Person**
-- **PhoneCall** *(Person `called` Person at `calledAt`)*  — self-relationship
+| Entity      | Bind to table        | Entity key (PK)                          |
+|-------------|----------------------|------------------------------------------|
+| `Person`    | `Case3_Persons`      | `personName`                             |
+| `PhoneCall` | `Case3_PhoneCalls`   | composite: `caller` + `callee` + `calledAt` |
+
+*Relations:* `PhoneCall.from → Person (Caller)`, `PhoneCall.to → Person (Callee)`.
 
 ### KQL
 ```kql
@@ -99,9 +111,14 @@ detective.accuse("phone-call", "Vincenzo Lupara")
 ## Case #4 — Stolen Identity  🎭  `stolen-identity`
 
 ### Ontology
-- **Person**
-- **Alias** *(Alias `sameAs` Person)*
-- **HotelCheckIn** *(Alias `checkedIn` Hotel at `checkedInAt`)*
+| Entity         | Bind to table            | Entity key (PK)                              |
+|----------------|--------------------------|----------------------------------------------|
+| `Person`       | `Case4_Persons`          | `realName`                                   |
+| `Alias`        | `Case4_Aliases`          | `aliasName`                                  |
+| `Hotel`        | `Case4_Hotels`           | `hotelName`                                  |
+| `HotelCheckIn` | `Case4_HotelCheckIns`    | composite: `usedName` + `hotelName` + `checkedInAt` |
+
+*Relations:* `Alias.aliasOf → Person`, `HotelCheckIn.using → Alias`, `HotelCheckIn.at → Hotel`.
 
 ### KQL
 ```kql
@@ -123,10 +140,16 @@ detective.accuse("stolen-identity", "Ricardo Vega")
 
 ## Case #5 — The Final Heist (BOSS)  🌃  `final-heist`
 
-### Ontology — three sub-namespaces under one shared `Person`
-- **Bank.Account** *(Person `owns` Account, kind `RelayShell`)*
-- **Police.Patrol** *(Person `seenIn` Zone, `onDutyRegister: bool`)*
-- **Telecom.PhoneCall** *(Person `called` PhoneNumber)*
+### Ontology — three sub-namespaces sharing one `Person`
+| Entity                  | Bind to table             | Entity key (PK)                                   |
+|-------------------------|---------------------------|---------------------------------------------------|
+| `Person`                | `Case5_Persons`           | `personName`                                      |
+| `Bank.Account`          | `Case5_BankAccounts`      | composite: `personName` + `accountKind` + `openedAt` |
+| `Police.Zone`           | `Case5_Zones`             | `patrolZone`                                      |
+| `Police.Patrol`         | `Case5_PolicePatrols`     | composite: `personName` + `patrolZone` + `seenAt` |
+| `Telecom.PhoneCall`     | `Case5_BurnerCalls`       | composite: `caller` + `callee` + `calledAt`       |
+
+*Relations:* `Bank.Account.owner → Person`, `Police.Patrol.officer → Person`, `Police.Patrol.zone → Police.Zone`, `Telecom.PhoneCall.from → Person`.
 
 ### KQL
 ```kql

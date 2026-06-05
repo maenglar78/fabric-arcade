@@ -349,6 +349,24 @@ SEED_CELLS: list[dict] = [
     .create-merge table Case5_BurnerCalls (
         Caller: string, Callee: string, CalledAt: datetime
     )
+
+    .create-merge table Case1_Persons (PersonName: string)
+
+    .create-merge table Case1_Rooms (RoomName: string)
+
+    .create-merge table Case2_Persons (GuestName: string)
+
+    .create-merge table Case2_Locations (Location: string)
+
+    .create-merge table Case3_Persons (PersonName: string)
+
+    .create-merge table Case4_Persons (RealName: string)
+
+    .create-merge table Case4_Hotels (HotelName: string)
+
+    .create-merge table Case5_Persons (PersonName: string)
+
+    .create-merge table Case5_Zones (PatrolZone: string)
     '''
     for block in [b.strip() for b in SCHEMA.split("\n\n") if b.strip()]:
         _kql_mgmt(block)
@@ -372,6 +390,28 @@ def _render_seed_evidence_cell() -> str:
         # KQL .clear table then re-ingest (idempotent for replay)
         blocks.append(f".clear table {table} data")
         blocks.append(ingest)
+
+    # Populate dimension tables from fact tables via .set-or-replace (idempotent).
+    # Every dimension row maps 1-to-1 to one bindable ontology entity instance.
+    dim_commands = [
+        ".set-or-replace Case1_Persons   <| Case1_Visits        | distinct PersonName",
+        ".set-or-replace Case1_Rooms     <| Case1_Visits        | distinct RoomName",
+        ".set-or-replace Case2_Persons   <| Case2_CameraEvents  | distinct GuestName",
+        ".set-or-replace Case2_Locations <| Case2_CameraEvents  | distinct Location",
+        (".set-or-replace Case3_Persons   <| "
+         "Case3_PhoneCalls | project PersonName=Caller "
+         "| union (Case3_PhoneCalls | project PersonName=Callee) | distinct PersonName"),
+        ".set-or-replace Case4_Persons   <| Case4_Aliases       | distinct RealName",
+        ".set-or-replace Case4_Hotels    <| Case4_HotelCheckIns | distinct HotelName",
+        (".set-or-replace Case5_Persons   <| "
+         "Case5_BankAccounts | project PersonName "
+         "| union (Case5_PolicePatrols | project PersonName) "
+         "| union (Case5_BurnerCalls   | project PersonName=Caller) "
+         "| distinct PersonName"),
+        ".set-or-replace Case5_Zones     <| Case5_PolicePatrols | distinct PatrolZone",
+    ]
+    blocks.extend(dim_commands)
+
     joined = "\n\n".join(blocks)
     return (
         "EVIDENCE = r'''\n" + joined + "\n'''\n"
@@ -391,7 +431,12 @@ SEED_CELLS += [
     union withsource=Table
         Case1_Visits, Case2_CameraEvents, Case3_PhoneCalls,
         Case4_Aliases, Case4_HotelCheckIns,
-        Case5_BankAccounts, Case5_PolicePatrols, Case5_BurnerCalls
+        Case5_BankAccounts, Case5_PolicePatrols, Case5_BurnerCalls,
+        Case1_Persons, Case1_Rooms,
+        Case2_Persons, Case2_Locations,
+        Case3_Persons,
+        Case4_Persons, Case4_Hotels,
+        Case5_Persons, Case5_Zones
     | summarize Rows=count() by Table
     | order by Table asc
     '''
