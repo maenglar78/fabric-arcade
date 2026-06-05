@@ -523,6 +523,14 @@ MAYOR_CELLS = [
     The semantic model **must** be called `Datapolis_Model` (the Mayor only inspects that one).
     """),
 
+    _md("## ⚙️ Step 0 — Player"),
+    _code(r"""
+    # --- EDIT THIS ---
+    PLAYER_NAME = "Your Name Here"   # shown on your shareable badge at the end
+    # -----------------
+    print(f"Player: {PLAYER_NAME}")
+    """),
+
     _md("## Step 1 — Setup"),
     _code(r"""
     # Identity, names, endpoints.
@@ -773,14 +781,595 @@ SELECT COUNT(*) AS dim_rows  FROM dbo.DimCitizen;
 SELECT COUNT(*) AS fact_rows FROM dbo.FactCensusEvent;
 ''',
         },
-        # Other 7 districts will be briefed in the next iteration.
-        "neon-district":  {"stub": True, "name": "🏘️ Neon District — Shifting Identities"},
-        "skylane":        {"stub": True, "name": "🚁 Skylane — Anti-Grav Couriers"},
-        "plasma-core":    {"stub": True, "name": "⚡ Plasma Core — Reactor Readings"},
-        "bazaar-9":       {"stub": True, "name": "🛒 Bazaar 9 — The Quantum Market"},
-        "cryo-hospital":  {"stub": True, "name": "🏥 Cryo Hospital — Admission Tags"},
-        "holo-stage":     {"stub": True, "name": "🎭 Holo-Stage — Multiverse Performers"},
-        "grid-overlook":  {"stub": True, "name": "🌃 The Grid Overlook — BOSS"},
+        # ============================================================
+        # District 2 — Neon District (SCD Type 1)
+        # ============================================================
+        "neon-district": {
+            "n": 2,
+            "name": "🏘️ Neon District — Shifting Identities",
+            "concept": "Surrogate keys + SCD Type 1 (overwrite)",
+            "points": 100,
+            "narrative": (
+                "Citizens legally rename themselves after augmentation. The source overwrites "
+                "names with **no history kept** — that is the definition of **SCD Type 1**. "
+                "Merge `raw_neon_residents` with `raw_neon_residents_updates`, generate a "
+                "surrogate key, and let the new values overwrite the old."
+            ),
+            "raw_tables": ["raw_neon_residents", "raw_neon_residents_updates"],
+            "expected_tables": {
+                "DimResident": [
+                    ("ResidentKey",   "INT",          False),  # surrogate
+                    ("CitizenId",     "VARCHAR(20)",  False),  # business key
+                    ("FullName",      "VARCHAR(100)", True),
+                    ("IsAugmented",   "BIT",          False),
+                    ("District",      "VARCHAR(50)",  True),
+                    ("Tier",          "VARCHAR(20)",  True),
+                ],
+            },
+            "measures": [
+                ("Residents",
+                 "DISTINCTCOUNT(DimResident[ResidentKey])",
+                 "Residents"),
+                ("Augmented Residents",
+                 "CALCULATE(COUNTROWS(DimResident), DimResident[IsAugmented]=TRUE())",
+                 "Augmented Residents"),
+                ("Gold Tier Residents",
+                 'CALCULATE(COUNTROWS(DimResident), DimResident[Tier]="Gold")',
+                 "Gold Tier Residents"),
+            ],
+            "starter_sql": '''-- ============================================================
+-- District 2 — Neon District: SCD Type 1 merge
+-- ============================================================
+-- Source: residents file + later updates file (renames, tier upgrades).
+-- Goal: ONE DimResident row per CitizenId, latest values win.
+
+DROP TABLE IF EXISTS dbo.DimResident;
+
+CREATE TABLE dbo.DimResident (
+    ResidentKey  INT           NOT NULL,   -- surrogate (PK)
+    CitizenId    VARCHAR(20)   NOT NULL,   -- business key
+    FullName     VARCHAR(100)  NULL,
+    IsAugmented  BIT           NOT NULL,
+    District     VARCHAR(50)   NULL,
+    Tier         VARCHAR(20)   NULL
+);
+
+-- Strategy hint (one of many): build a CTE that UNIONs original + updates,
+-- then for each CitizenId keep the LATEST row using ROW_NUMBER().
+INSERT INTO dbo.DimResident (ResidentKey, CitizenId, FullName, IsAugmented, District, Tier)
+SELECT
+    -- TODO: ROW_NUMBER() OVER (ORDER BY CitizenId) AS ResidentKey,
+    NULL                                              AS ResidentKey,
+    CitizenId,
+    FullName,
+    IsAugmented,
+    District,
+    Tier
+FROM (
+    -- TODO: UNION ALL the two raw tables (mark each with a priority column,
+    --       e.g. 0=original, 1=update) then keep priority=MAX per CitizenId.
+    SELECT TOP 0
+        CAST(NULL AS VARCHAR(20))  AS CitizenId,
+        CAST(NULL AS VARCHAR(100)) AS FullName,
+        CAST(NULL AS BIT)          AS IsAugmented,
+        CAST(NULL AS VARCHAR(50))  AS District,
+        CAST(NULL AS VARCHAR(20))  AS Tier
+) AS latest;
+
+-- Sanity (expected: 600)
+SELECT COUNT(*) AS residents FROM dbo.DimResident;
+''',
+        },
+
+        # ============================================================
+        # District 3 — Skylane (Additive fact + conformed dimensions)
+        # ============================================================
+        "skylane": {
+            "n": 3,
+            "name": "🚁 Skylane — Anti-Grav Couriers",
+            "concept": "Additive fact + conformed dimensions",
+            "points": 100,
+            "narrative": (
+                "Anti-grav couriers run cargo and medevac flights across the city sectors. "
+                "Build a clean additive **FactFlight** plus two **conformed dimensions** "
+                "(`DimDate`, `DimSector`) that you will reuse in later districts. "
+                "Note: ~2% of source rows have NULL `pickup_sector` — drop them."
+            ),
+            "raw_tables": ["raw_skylane_traffic"],
+            "expected_tables": {
+                "DimDate": [
+                    ("DateKey",   "INT",   False),   # yyyymmdd
+                    ("FullDate",  "DATE",  False),
+                    ("Year",      "INT",   False),
+                    ("MonthNum",  "INT",   False),
+                ],
+                "DimSector": [
+                    ("SectorKey",   "INT",          False),
+                    ("SectorName",  "VARCHAR(50)",  False),
+                ],
+                "FactFlight": [
+                    ("FlightId",         "VARCHAR(20)",  False),
+                    ("DateKey",          "INT",          False),
+                    ("PickupSectorKey",  "INT",          False),
+                    ("DropSectorKey",    "INT",          False),
+                    ("DurationMin",      "INT",          False),
+                    ("DistanceKm",       "FLOAT",        False),
+                    ("Helium3Kg",        "FLOAT",        False),
+                ],
+            },
+            "measures": [
+                ("Flights",
+                 "COUNTROWS(FactFlight)",
+                 "Flights"),
+                ("Total Helium-3 Burned",
+                 "SUM(FactFlight[Helium3Kg])",
+                 "Total Helium-3 Burned"),
+                ("Avg Flight Duration",
+                 "AVERAGE(FactFlight[DurationMin])",
+                 "Avg Flight Duration"),
+            ],
+            "starter_sql": '''-- ============================================================
+-- District 3 — Skylane: additive fact + conformed dimensions
+-- ============================================================
+
+-- 1) DimDate (one row per distinct flight date, but you usually want a full calendar)
+DROP TABLE IF EXISTS dbo.DimDate;
+CREATE TABLE dbo.DimDate (
+    DateKey  INT  NOT NULL,    -- yyyymmdd
+    FullDate DATE NOT NULL,
+    Year     INT  NOT NULL,
+    MonthNum INT  NOT NULL
+);
+INSERT INTO dbo.DimDate (DateKey, FullDate, Year, MonthNum)
+SELECT DISTINCT
+    -- TODO: build YYYYMMDD as INT, e.g. YEAR(d)*10000 + MONTH(d)*100 + DAY(d)
+    NULL                AS DateKey,
+    flight_date         AS FullDate,
+    YEAR(flight_date),
+    MONTH(flight_date)
+FROM [Datapolis_LH].[dbo].[raw_skylane_traffic]
+WHERE flight_date IS NOT NULL;
+
+-- 2) DimSector (DISTINCT of pickup_sector + drop_sector, NULLs excluded)
+DROP TABLE IF EXISTS dbo.DimSector;
+CREATE TABLE dbo.DimSector (
+    SectorKey  INT          NOT NULL,
+    SectorName VARCHAR(50)  NOT NULL
+);
+INSERT INTO dbo.DimSector (SectorKey, SectorName)
+SELECT
+    -- TODO: ROW_NUMBER() OVER (ORDER BY SectorName)
+    NULL          AS SectorKey,
+    SectorName
+FROM (
+    SELECT pickup_sector AS SectorName FROM [Datapolis_LH].[dbo].[raw_skylane_traffic] WHERE pickup_sector IS NOT NULL
+    UNION
+    SELECT drop_sector   AS SectorName FROM [Datapolis_LH].[dbo].[raw_skylane_traffic] WHERE drop_sector   IS NOT NULL
+) s;
+
+-- 3) FactFlight (drop the NULL-pickup rows; join twice to DimSector for the two keys)
+DROP TABLE IF EXISTS dbo.FactFlight;
+CREATE TABLE dbo.FactFlight (
+    FlightId         VARCHAR(20)  NOT NULL,
+    DateKey          INT          NOT NULL,
+    PickupSectorKey  INT          NOT NULL,
+    DropSectorKey    INT          NOT NULL,
+    DurationMin      INT          NOT NULL,
+    DistanceKm       FLOAT        NOT NULL,
+    Helium3Kg        FLOAT        NOT NULL
+);
+INSERT INTO dbo.FactFlight (FlightId, DateKey, PickupSectorKey, DropSectorKey, DurationMin, DistanceKm, Helium3Kg)
+SELECT
+    f.flight_id,
+    -- TODO: lookup DateKey from DimDate
+    NULL  AS DateKey,
+    -- TODO: lookup pickup SectorKey from DimSector
+    NULL  AS PickupSectorKey,
+    -- TODO: lookup drop SectorKey from DimSector
+    NULL  AS DropSectorKey,
+    f.duration_min, f.distance_km, f.helium3_kg
+FROM [Datapolis_LH].[dbo].[raw_skylane_traffic] AS f
+WHERE f.pickup_sector IS NOT NULL;   -- dirty-data filter
+''',
+        },
+
+        # ============================================================
+        # District 4 — Plasma Core (Semi-additive snapshot fact)
+        # ============================================================
+        "plasma-core": {
+            "n": 4,
+            "name": "⚡ Plasma Core — Reactor Readings",
+            "concept": "Semi-additive fact (periodic snapshot)",
+            "points": 100,
+            "narrative": (
+                "Hourly reactor snapshots over 3 years. Pressure / temperature / output are "
+                "**semi-additive** — summing pressure across hours is meaningless. Average it "
+                "instead. Critical Hours = count of snapshots where pressure > 5.0 MPa."
+            ),
+            "raw_tables": ["raw_plasma_readings"],
+            "expected_tables": {
+                "FactReactorReading": [
+                    ("ReadingTs",     "DATETIME2",  False),
+                    ("PressureMPa",   "FLOAT",      False),
+                    ("TemperatureK",  "FLOAT",      False),
+                    ("OutputMW",      "FLOAT",      False),
+                ],
+            },
+            "measures": [
+                ("Avg Pressure",
+                 "AVERAGE(FactReactorReading[PressureMPa])",
+                 "Avg Pressure"),
+                ("Max Output MW",
+                 "MAX(FactReactorReading[OutputMW])",
+                 "Max Output MW"),
+                ("Critical Hours",
+                 "CALCULATE(COUNTROWS(FactReactorReading), FactReactorReading[PressureMPa] > 5.0)",
+                 "Critical Hours"),
+            ],
+            "starter_sql": '''-- ============================================================
+-- District 4 — Plasma Core: semi-additive snapshot fact
+-- ============================================================
+-- No dimension to build — the grain is one row per (reactor, hour) and we
+-- only have one reactor. A timestamp + 3 measures is enough.
+
+DROP TABLE IF EXISTS dbo.FactReactorReading;
+
+CREATE TABLE dbo.FactReactorReading (
+    ReadingTs    DATETIME2 NOT NULL,
+    PressureMPa  FLOAT     NOT NULL,
+    TemperatureK FLOAT     NOT NULL,
+    OutputMW     FLOAT     NOT NULL
+);
+
+INSERT INTO dbo.FactReactorReading (ReadingTs, PressureMPa, TemperatureK, OutputMW)
+SELECT
+    reading_ts,
+    pressure_mpa,
+    temperature_k,
+    output_mw
+FROM [Datapolis_LH].[dbo].[raw_plasma_readings];
+
+-- Sanity (expected ~26,280 rows = 3 * 365 * 24)
+SELECT COUNT(*) AS hourly_rows FROM dbo.FactReactorReading;
+''',
+        },
+
+        # ============================================================
+        # District 5 — Bazaar 9 (Role-playing dimension)
+        # ============================================================
+        "bazaar-9": {
+            "n": 5,
+            "name": "🛒 Bazaar 9 — The Quantum Market",
+            "concept": "Role-playing dimension + USERELATIONSHIP",
+            "points": 100,
+            "narrative": (
+                "Each sale has TWO dates: `OrderDate` and `DeliveryDate` (sometimes earlier "
+                "for pre-cog VIPs!). In the model you'll wire `FactSale` to `DimDate` **twice** "
+                "— one active relationship (OrderDate) and one inactive — then use "
+                "**USERELATIONSHIP** in DAX to switch contexts."
+            ),
+            "raw_tables": ["raw_bazaar_sales"],
+            "expected_tables": {
+                "FactSale": [
+                    ("SaleId",        "VARCHAR(20)",  False),
+                    ("OrderDateKey",  "INT",          False),
+                    ("DeliveryDateKey", "INT",        False),
+                    ("CustomerId",    "VARCHAR(20)",  False),
+                    ("AmountCredits", "FLOAT",        False),
+                    ("IsPreCog",      "BIT",          False),
+                ],
+            },
+            "measures": [
+                ("Sales by Order Date",
+                 "SUM(FactSale[AmountCredits])",
+                 "Sales by Order Date"),
+                ("Sales by Delivery Date",
+                 "CALCULATE(SUM(FactSale[AmountCredits]), "
+                 "USERELATIONSHIP(FactSale[DeliveryDateKey], DimDate[DateKey]))",
+                 "Sales by Delivery Date"),
+                ("Pre-Cog Deliveries",
+                 "CALCULATE(COUNTROWS(FactSale), FactSale[IsPreCog]=TRUE())",
+                 "Pre-Cog Deliveries"),
+            ],
+            "starter_sql": '''-- ============================================================
+-- District 5 — Bazaar 9: role-playing date dimension
+-- ============================================================
+-- Reuses DimDate from District 3. If you skipped District 3, extend
+-- DimDate first so it covers every order_date AND delivery_date here.
+
+DROP TABLE IF EXISTS dbo.FactSale;
+
+CREATE TABLE dbo.FactSale (
+    SaleId          VARCHAR(20)  NOT NULL,
+    OrderDateKey    INT          NOT NULL,
+    DeliveryDateKey INT          NOT NULL,
+    CustomerId      VARCHAR(20)  NOT NULL,
+    AmountCredits   FLOAT        NOT NULL,
+    IsPreCog        BIT          NOT NULL
+);
+
+INSERT INTO dbo.FactSale (SaleId, OrderDateKey, DeliveryDateKey, CustomerId, AmountCredits, IsPreCog)
+SELECT
+    sale_id,
+    -- TODO: build INT DateKey from order_date (YYYYMMDD)
+    NULL  AS OrderDateKey,
+    -- TODO: build INT DateKey from delivery_date
+    NULL  AS DeliveryDateKey,
+    customer_id,
+    amount_credits,
+    CAST(is_pre_cog AS BIT)
+FROM [Datapolis_LH].[dbo].[raw_bazaar_sales];
+
+-- In the semantic model:
+--   * Create relationship FactSale[OrderDateKey]    -> DimDate[DateKey]  ACTIVE
+--   * Create relationship FactSale[DeliveryDateKey] -> DimDate[DateKey]  INACTIVE
+--   * Use USERELATIONSHIP(...) in the "Sales by Delivery Date" measure.
+''',
+        },
+
+        # ============================================================
+        # District 6 — Cryo Hospital (Junk + degenerate dimensions)
+        # ============================================================
+        "cryo-hospital": {
+            "n": 6,
+            "name": "🏥 Cryo Hospital — Admission Tags",
+            "concept": "Junk dimension + degenerate dimension",
+            "points": 100,
+            "narrative": (
+                "Four boolean flags (`is_emergency`, `has_insurance`, `is_augmented`, `is_vip`) "
+                "would bloat the fact with low-cardinality columns. Collapse them into a "
+                "**junk dimension** `DimAdmissionType` with 16 rows. `CryoTicketNumber` is a "
+                "**degenerate dimension** — keep it on the fact, no separate table."
+            ),
+            "raw_tables": ["raw_cryo_admissions"],
+            "expected_tables": {
+                "DimAdmissionType": [
+                    ("AdmissionTypeKey", "INT",  False),
+                    ("IsEmergency",     "BIT",  False),
+                    ("HasInsurance",    "BIT",  False),
+                    ("IsAugmented",     "BIT",  False),
+                    ("IsVip",           "BIT",  False),
+                ],
+                "FactCryoAdmission": [
+                    ("CryoTicket",       "VARCHAR(20)", False),  # degenerate dim
+                    ("AdmissionDateKey", "INT",         False),
+                    ("AdmissionTypeKey", "INT",         False),
+                    ("DurationDays",     "INT",         False),
+                ],
+            },
+            "measures": [
+                ("Admissions",
+                 "COUNTROWS(FactCryoAdmission)",
+                 "Admissions"),
+                ("VIP Emergency Admissions",
+                 "CALCULATE(COUNTROWS(FactCryoAdmission), "
+                 "DimAdmissionType[IsVip]=TRUE(), DimAdmissionType[IsEmergency]=TRUE())",
+                 "VIP Emergency Admissions"),
+                ("Avg Cryo Duration",
+                 "AVERAGE(FactCryoAdmission[DurationDays])",
+                 "Avg Cryo Duration"),
+            ],
+            "starter_sql": '''-- ============================================================
+-- District 6 — Cryo Hospital: junk + degenerate dims
+-- ============================================================
+
+-- 1) Junk dim: cross-join all 4 flags = 2^4 = 16 rows.
+DROP TABLE IF EXISTS dbo.DimAdmissionType;
+CREATE TABLE dbo.DimAdmissionType (
+    AdmissionTypeKey INT NOT NULL,
+    IsEmergency      BIT NOT NULL,
+    HasInsurance     BIT NOT NULL,
+    IsAugmented      BIT NOT NULL,
+    IsVip            BIT NOT NULL
+);
+INSERT INTO dbo.DimAdmissionType (AdmissionTypeKey, IsEmergency, HasInsurance, IsAugmented, IsVip)
+SELECT
+    -- TODO: ROW_NUMBER() OVER (ORDER BY a.b, b.b, c.b, d.b) AS AdmissionTypeKey
+    NULL AS AdmissionTypeKey,
+    CAST(a.b AS BIT), CAST(b.b AS BIT), CAST(c.b AS BIT), CAST(d.b AS BIT)
+FROM (VALUES (0),(1)) a(b)
+CROSS JOIN (VALUES (0),(1)) b(b)
+CROSS JOIN (VALUES (0),(1)) c(b)
+CROSS JOIN (VALUES (0),(1)) d(b);
+
+-- 2) Fact, with degenerate CryoTicket sitting right on the row.
+DROP TABLE IF EXISTS dbo.FactCryoAdmission;
+CREATE TABLE dbo.FactCryoAdmission (
+    CryoTicket       VARCHAR(20) NOT NULL,
+    AdmissionDateKey INT         NOT NULL,
+    AdmissionTypeKey INT         NOT NULL,
+    DurationDays     INT         NOT NULL
+);
+INSERT INTO dbo.FactCryoAdmission (CryoTicket, AdmissionDateKey, AdmissionTypeKey, DurationDays)
+SELECT
+    r.cryo_ticket,
+    -- TODO: build INT date key from admission_date
+    NULL AS AdmissionDateKey,
+    -- TODO: lookup AdmissionTypeKey by joining DimAdmissionType on the 4 BIT columns
+    NULL AS AdmissionTypeKey,
+    r.duration_days
+FROM [Datapolis_LH].[dbo].[raw_cryo_admissions] r;
+''',
+        },
+
+        # ============================================================
+        # District 7 — Holo-Stage (Many-to-many bridge)
+        # ============================================================
+        "holo-stage": {
+            "n": 7,
+            "name": "🎭 Holo-Stage — Multiverse Performers",
+            "concept": "Many-to-many via bridge table",
+            "points": 100,
+            "narrative": (
+                "Each show features 2–6 artists; each artist plays many shows. Build "
+                "`DimArtist`, `DimShow`, `FactShow` (one row per show, additive) and a "
+                "**BridgeShowArtist** that resolves the M:N. Beware of fan-out: COUNTROWS on "
+                "the fact must NOT inflate when filtered by artist."
+            ),
+            "raw_tables": ["raw_holo_shows", "raw_holo_artists", "raw_holo_lineup"],
+            "expected_tables": {
+                "DimArtist": [
+                    ("ArtistKey",  "INT",          False),
+                    ("ArtistId",   "VARCHAR(10)",  False),
+                    ("ArtistName", "VARCHAR(50)",  False),
+                    ("Region",     "VARCHAR(20)",  True),
+                    ("BaseCachet", "FLOAT",        True),
+                ],
+                "DimShow": [
+                    ("ShowKey",  "INT",          False),
+                    ("ShowId",   "VARCHAR(10)",  False),
+                    ("ShowDate", "DATE",         False),
+                    ("Genre",    "VARCHAR(30)",  True),
+                ],
+                "FactShow": [
+                    ("ShowKey",        "INT",   False),
+                    ("Attendance",     "INT",   False),
+                    ("RevenueCredits", "FLOAT", False),
+                ],
+                "BridgeShowArtist": [
+                    ("ShowKey",   "INT",   False),
+                    ("ArtistKey", "INT",   False),
+                    ("Cachet",    "FLOAT", False),
+                ],
+            },
+            "measures": [
+                ("Shows",
+                 "DISTINCTCOUNT(DimShow[ShowKey])",
+                 "Shows"),
+                ("Total Cachet",
+                 "SUM(BridgeShowArtist[Cachet])",
+                 "Total Cachet"),
+                ("Avg Cachet per Show",
+                 "DIVIDE(SUM(BridgeShowArtist[Cachet]), DISTINCTCOUNT(DimShow[ShowKey]))",
+                 "Avg Cachet per Show"),
+                ("Total Attendance",
+                 "SUM(FactShow[Attendance])",
+                 "Total Attendance"),
+            ],
+            "starter_sql": '''-- ============================================================
+-- District 7 — Holo-Stage: M:N with a bridge table
+-- ============================================================
+
+-- 1) Dimensions
+DROP TABLE IF EXISTS dbo.DimArtist;
+CREATE TABLE dbo.DimArtist (
+    ArtistKey  INT          NOT NULL,
+    ArtistId   VARCHAR(10)  NOT NULL,
+    ArtistName VARCHAR(50)  NOT NULL,
+    Region     VARCHAR(20)  NULL,
+    BaseCachet FLOAT        NULL
+);
+INSERT INTO dbo.DimArtist (ArtistKey, ArtistId, ArtistName, Region, BaseCachet)
+SELECT
+    -- TODO: ROW_NUMBER() OVER (ORDER BY artist_id)
+    NULL, artist_id, artist_name, region, base_cachet
+FROM [Datapolis_LH].[dbo].[raw_holo_artists];
+
+DROP TABLE IF EXISTS dbo.DimShow;
+CREATE TABLE dbo.DimShow (
+    ShowKey  INT          NOT NULL,
+    ShowId   VARCHAR(10)  NOT NULL,
+    ShowDate DATE         NOT NULL,
+    Genre    VARCHAR(30)  NULL
+);
+INSERT INTO dbo.DimShow (ShowKey, ShowId, ShowDate, Genre)
+SELECT
+    -- TODO: ROW_NUMBER() OVER (ORDER BY show_id)
+    NULL, show_id, show_date, genre
+FROM [Datapolis_LH].[dbo].[raw_holo_shows];
+
+-- 2) Fact at show grain (NOT inflated by artists)
+DROP TABLE IF EXISTS dbo.FactShow;
+CREATE TABLE dbo.FactShow (
+    ShowKey        INT   NOT NULL,
+    Attendance     INT   NOT NULL,
+    RevenueCredits FLOAT NOT NULL
+);
+INSERT INTO dbo.FactShow (ShowKey, Attendance, RevenueCredits)
+SELECT
+    -- TODO: lookup ShowKey from DimShow by show_id
+    NULL, attendance, revenue_credits
+FROM [Datapolis_LH].[dbo].[raw_holo_shows];
+
+-- 3) Bridge (one row per show-artist pairing) carries Cachet as a fact-like measure
+DROP TABLE IF EXISTS dbo.BridgeShowArtist;
+CREATE TABLE dbo.BridgeShowArtist (
+    ShowKey   INT   NOT NULL,
+    ArtistKey INT   NOT NULL,
+    Cachet    FLOAT NOT NULL
+);
+INSERT INTO dbo.BridgeShowArtist (ShowKey, ArtistKey, Cachet)
+SELECT
+    -- TODO: lookup ShowKey from DimShow + ArtistKey from DimArtist
+    NULL, NULL, l.cachet
+FROM [Datapolis_LH].[dbo].[raw_holo_lineup] l;
+
+-- In the semantic model:
+--   DimShow   1 ---* BridgeShowArtist *--- 1 DimArtist     (bridge resolves M:N)
+--   DimShow   1 ---* FactShow         (one-to-one on ShowKey)
+''',
+        },
+
+        # ============================================================
+        # District 8 — Grid Overlook (BOSS: galaxy schema + DAX perf)
+        # ============================================================
+        "grid-overlook": {
+            "n": 8,
+            "name": "🌃 The Grid Overlook — BOSS: The Anomaly",
+            "concept": "Galaxy schema + DAX performance (Grid Stress Index < 2s)",
+            "points": 200,
+            "narrative": (
+                "A gravitational anomaly is destabilizing The Grid. The director needs ONE "
+                "dashboard blending **FactFlight + FactReactorReading + FactSale** through "
+                "the conformed `DimDate` and `DimSector`. Build the **Grid Stress Index** as a "
+                "single DAX measure that runs in under 2 seconds:\n\n"
+                "`StressIndex = 0.4 * (AvgPressure / 5.0) + 0.3 * (TotalHe3 / 50000) + "
+                "0.3 * (TotalSales / 1e7)`"
+            ),
+            "raw_tables": [],
+            "expected_tables": {
+                # Just verify the conformed dims and the three facts exist.
+                "DimDate":            [("DateKey",   "INT",          False)],
+                "DimSector":          [("SectorKey", "INT",          False)],
+                "FactFlight":         [("FlightId",  "VARCHAR(20)",  False)],
+                "FactReactorReading": [("ReadingTs", "DATETIME2",    False)],
+                "FactSale":           [("SaleId",    "VARCHAR(20)",  False)],
+            },
+            "measures": [
+                ("Total Flights (clean)",
+                 "COUNTROWS(FactFlight)",
+                 "Total Flights (clean)"),
+                ("Total Helium-3",
+                 "SUM(FactFlight[Helium3Kg])",
+                 "Total Helium-3"),
+                ("Avg Reactor Pressure",
+                 "AVERAGE(FactReactorReading[PressureMPa])",
+                 "Avg Reactor Pressure"),
+                ("Total Sales",
+                 "SUM(FactSale[AmountCredits])",
+                 "Total Sales"),
+                ("Grid Stress Index",
+                 "0.4 * DIVIDE([Avg Reactor Pressure], 5.0) "
+                 "+ 0.3 * DIVIDE([Total Helium-3], 50000) "
+                 "+ 0.3 * DIVIDE([Total Sales], 10000000)",
+                 "Grid Stress Index"),
+            ],
+            "starter_sql": '''-- ============================================================
+-- District 8 — BOSS: nothing new to build in T-SQL!
+-- ============================================================
+-- The galaxy schema = Districts 3 + 4 + 5 already in Datapolis_DW:
+--    DimDate, DimSector   (conformed dimensions)
+--    FactFlight           (District 3)
+--    FactReactorReading   (District 4)
+--    FactSale             (District 5)
+--
+-- If any of those is missing, finish that district first. Then in the
+-- Datapolis_Model semantic model:
+--   1. Verify the conformed dims connect to ALL three facts.
+--   2. Add the 5 measures listed above (Grid Stress Index references the others).
+--   3. Aim for < 2s response time on a full-table evaluation.
+''',
+        },
     }
 
     RANKS = [
@@ -986,7 +1575,12 @@ SELECT COUNT(*) AS fact_rows FROM dbo.FactCensusEvent;
                 md.append(f"| `{r['District']}` | {int(r['Reputation'])} |")
             md.append(f"| **Total** | **{int(total)}** |")
             md.append(f"\n**Rank:** {rank_for(total)}")
+            md.append(f"\n> Run the next cell (**Step 6**) to mint your shareable badge.")
             display(Markdown("\n".join(md)))
+            # Export for the badge-issuance cell (same pattern as retro-arcade)
+            globals()["FINAL_SCORE"] = int(total)
+            globals()["FINAL_RANK"]  = rank_for(total)
+            return total
 
     mayor = Mayor()
     log_event("SESSION_START", "datapolis", "init", 0, 0, validation_result="OK")
@@ -1008,6 +1602,74 @@ SELECT COUNT(*) AS fact_rows FROM dbo.FactCensusEvent;
     """),
     _code(r"""
     # mayor.score()
+    """),
+
+    _md("## Step 6 — Run all districts & compute final score\n\n"
+        "Once you've added the T-SQL tables in `Datapolis_DW` and the DAX measures in\n"
+        "`Datapolis_Model` for every district, run this cell to inspect + validate them\n"
+        "all in one go and get your cumulative reputation."),
+    _code(r"""
+    for d in ["town-hall","neon-district","skylane","plasma-core",
+              "bazaar-9","cryo-hospital","holo-stage","grid-overlook"]:
+        mayor.inspect(d)
+        mayor.validate(d)
+    mayor.score()
+    """),
+
+    _md("## Step 7 — 🏅 Mint your shareable badge"),
+    _code(r"""
+    # ============================================================
+    # City Builder — Badge issuance
+    # HMAC-signed URL for the GitHub Pages badge viewer
+    # ============================================================
+    import json, time, hmac, hashlib, base64
+    from IPython.display import display, Markdown, HTML
+
+    _BADGE_SECRET = b"fabric-arcade-badge-v1-7K9mP3xQ"
+    _BASE_URL     = "https://maenglar78.github.io/fabric-arcade"
+    _GAME_ID      = "city-builder"
+    _SKILLS       = ["Data Warehouse", "T-SQL", "Power BI", "DAX", "Star Schema"]
+
+    def _b64u(b: bytes) -> str:
+        return base64.urlsafe_b64encode(b).rstrip(b"=").decode("ascii")
+
+    def _issue(game_id, player, rank, score):
+        payload = {"v": 1, "g": game_id, "p": str(player),
+                   "r": str(rank), "s": int(score), "t": int(time.time()),
+                   "k": _SKILLS}
+        body = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()
+        sig  = hmac.new(_BADGE_SECRET, body, hashlib.sha256).digest()
+        return f"{_BASE_URL}/badge.html?t={_b64u(body)}.{_b64u(sig)}"
+
+    score = globals().get("FINAL_SCORE", 0)
+    rank  = globals().get("FINAL_RANK", "Suspicious Citizen")
+
+    if score < 100:
+        display(Markdown(
+            f"### 🚧 Not yet eligible (score {score}/900)\n\n"
+            f"Reach **at least 100 reputation** to earn the Ward Councilor badge. "
+            f"Run `mayor.validate(\"<district-id>\")` on any district you skipped, "
+            f"then re-run `mayor.score()` and this cell."
+        ))
+    elif PLAYER_NAME.strip() in ("", "Your Name Here"):
+        display(Markdown(
+            "### ✍️ Set your name first\n\n"
+            "Edit `PLAYER_NAME` in **Step 0** and re-run `mayor.score()` + this cell."
+        ))
+    else:
+        url = _issue(_GAME_ID, PLAYER_NAME, rank, score)
+        display(Markdown(
+            f"### 🏅 Badge minted\n\n"
+            f"**{PLAYER_NAME}** — *{rank}* · reputation **{score}/900**\n\n"
+            f"🔗 **[Open your badge]({url})**\n\n"
+            f"Click *Download PNG* / *Share on LinkedIn* on the badge page."
+        ))
+        display(HTML(f'<a href="{url}" target="_blank" '
+                     f'style="display:inline-block;padding:10px 20px;border-radius:8px;'
+                     f'background:linear-gradient(135deg,#00d4ff,#8338ec);color:white;'
+                     f'text-decoration:none;font-weight:600">🏅 Open my badge page</a>'))
+        log_event("BADGE", "grid-overlook", rank, int(score), 0,
+                  measure_name=url, validation_result="ISSUED")
     """),
 ]
 

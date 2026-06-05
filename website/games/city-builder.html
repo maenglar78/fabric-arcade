@@ -67,7 +67,7 @@
             </div>
             <div class="meta-item">
                 <span class="meta-label">Status</span>
-                <span class="meta-value status-coming">🔜 Coming Soon</span>
+                <span class="meta-value status-ready">✅ Ready · v1.0.0</span>
             </div>
         </div>
 
@@ -89,18 +89,20 @@
         <!-- QUICK START -->
         <section class="game-section quickstart">
             <h2>🚀 Quick Start</h2>
-            <p>Coming soon! This game is currently in development.</p>
             <div class="code-block">
-                <pre><code><span class="comment"># Coming soon</span>
-<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+                <pre><code><span class="comment"># In any Fabric notebook</span>
+<span class="prompt">%pip</span> install -q fabric-arcade
 
-arcade.install(<span class="string">"city-builder"</span>)</code></pre>
+<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+arcade.install(<span class="string">"city-builder"</span>, workspace=<span class="string">"My Workspace"</span>)
+<span class="comment"># Provisions: Datapolis_LH, Datapolis_DW, Datapolis_EH (KQL),</span>
+<span class="comment"># CityBuilder_Seed, CityBuilder_Mayor, CityBuilder_Dashboard notebooks.</span></code></pre>
             </div>
-            <p style="margin-top: 15px;">
-                <strong>Want to be notified?</strong>
-                <a href="https://github.com/maenglar78/fabric-arcade" style="color: #00b894;">⭐ Star the repo</a>
-                to get updates!
-            </p>
+            <p style="margin-top: 14px;">Then run <code>CityBuilder_Seed</code> once (loads 8 raw datasets into <code>Datapolis_LH</code>),
+                create an empty Power BI semantic model named <strong><code>Datapolis_Model</code></strong> bound to <code>Datapolis_DW</code>,
+                open <code>CityBuilder_Mayor</code>, set <code>PLAYER_NAME</code> in Step 0, then for each district write the
+                T-SQL + DAX and run <code>mayor.validate("&lt;district-id&gt;")</code>. Finish with <code>mayor.score()</code>
+                and mint your signed badge.</p>
         </section>
 
         <!-- HOW IT WORKS -->
@@ -138,55 +140,55 @@ arcade.install(<span class="string">"city-builder"</span>)</code></pre>
         <!-- DISTRICTS -->
         <section class="game-section">
             <h2>🗺️ The 8 Districts of Datapolis</h2>
-            <p>Each district teaches one star-schema concept:</p>
+            <p>Each district teaches one star-schema concept. Districts 3, 4 and 5 must be done before the boss.</p>
             <div class="district-grid">
                 <div class="district-card">
                     <div class="district-icon">🏛️</div>
                     <div class="district-level">District 1</div>
                     <div class="district-name">Town Hall</div>
-                    <div class="district-concept">Identify facts vs dimensions, choose the right grain</div>
+                    <div class="district-concept">Phantom Census — facts vs dimensions, grain &amp; surrogate keys</div>
                 </div>
                 <div class="district-card">
-                    <div class="district-icon">🏘️</div>
+                    <div class="district-icon">🌆</div>
                     <div class="district-level">District 2</div>
-                    <div class="district-name">Residential</div>
-                    <div class="district-concept">Surrogate keys + SCD Type 1 (overwrite)</div>
+                    <div class="district-name">Neon District</div>
+                    <div class="district-concept">Shifting Identities — SCD Type 1 overwrite merge</div>
                 </div>
                 <div class="district-card">
-                    <div class="district-icon">🚕</div>
+                    <div class="district-icon">🚁</div>
                     <div class="district-level">District 3</div>
-                    <div class="district-name">Taxi District</div>
-                    <div class="district-concept">Additive fact + conformed dimensions (DimDate, DimGeo)</div>
+                    <div class="district-name">Skylane</div>
+                    <div class="district-concept">Anti-Grav Couriers — additive fact + conformed DimDate/DimSector</div>
                 </div>
                 <div class="district-card">
                     <div class="district-icon">⚡</div>
                     <div class="district-level">District 4</div>
-                    <div class="district-name">Energy Grid</div>
-                    <div class="district-concept">Semi-additive fact (snapshot meter readings)</div>
+                    <div class="district-name">Plasma Core</div>
+                    <div class="district-concept">Reactor Readings — semi-additive fact (snapshot metrics)</div>
                 </div>
                 <div class="district-card">
-                    <div class="district-icon">🛒</div>
+                    <div class="district-icon">🛍️</div>
                     <div class="district-level">District 5</div>
-                    <div class="district-name">Retail Plaza</div>
-                    <div class="district-concept">Role-playing dimensions (OrderDate vs ShipDate)</div>
+                    <div class="district-name">Bazaar 9</div>
+                    <div class="district-concept">Quantum Market — role-playing DimDate (Order vs Delivery)</div>
                 </div>
                 <div class="district-card">
                     <div class="district-icon">🏥</div>
                     <div class="district-level">District 6</div>
-                    <div class="district-name">Hospital</div>
-                    <div class="district-concept">Junk + degenerate dimensions (TicketNumber)</div>
+                    <div class="district-name">Cryo Hospital</div>
+                    <div class="district-concept">Admission Tags — junk &amp; degenerate dimensions</div>
                 </div>
                 <div class="district-card">
-                    <div class="district-icon">🏭</div>
+                    <div class="district-icon">🎭</div>
                     <div class="district-level">District 7</div>
-                    <div class="district-name">Industrial Park</div>
-                    <div class="district-concept">SCD Type 2 (supplier history)</div>
+                    <div class="district-name">Holo-Stage</div>
+                    <div class="district-concept">Multiverse Performers — many-to-many bridge table</div>
                 </div>
                 <div class="district-card boss">
                     <div class="district-icon">🌃</div>
                     <div class="district-level">District 8 — BOSS</div>
-                    <div class="district-name">City-wide BI</div>
-                    <div class="district-concept">Galaxy schema: 3 facts sharing conformed dimensions + perf tuning</div>
+                    <div class="district-name">Grid Overlook</div>
+                    <div class="district-concept">Galaxy schema — 3 facts, shared dims, Grid Stress Index DAX</div>
                 </div>
             </div>
         </section>
@@ -224,6 +226,23 @@ arcade.install(<span class="string">"city-builder"</span>)</code></pre>
                 <span class="workload-tag dw">Data Warehouse</span>
                 <span class="workload-tag pbi">Power BI</span>
                 <span class="workload-tag rti">Real-Time Intelligence</span>
+            </div>
+        </section>
+
+        <!-- RANKS -->
+        <section class="game-section">
+            <h2>🏅 Mayor Ranks</h2>
+            <p>Each validated district awards reputation; the Mayor's title scales with the cumulative score (max 900).</p>
+            <div class="levels-table">
+                <table class="rank-table">
+                    <tr><th>Min Reputation</th><th>Rank</th></tr>
+                    <tr><td>0</td><td>Suspicious Citizen</td></tr>
+                    <tr><td>100</td><td>🥉 Ward Councilor</td></tr>
+                    <tr><td>250</td><td>🥈 Urban Planning Officer</td></tr>
+                    <tr><td>500</td><td>🥇 Mayor of Datapolis</td></tr>
+                    <tr><td>800</td><td>🏗️ Chief Grid Architect</td></tr>
+                    <tr><td>900</td><td>🏆 Grid Keeper</td></tr>
+                </table>
             </div>
         </section>
 
