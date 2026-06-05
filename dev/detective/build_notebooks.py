@@ -396,7 +396,12 @@ SEED_CELLS += [
     | order by Table asc
     '''
     res = _kql_query(counts_kql)
-    rows = res["Tables"][0]["Rows"]
+    # v2/rest/query returns a list of frames; pick the PrimaryResult DataTable.
+    rows = []
+    for frame in res:
+        if frame.get("FrameType") == "DataTable" and frame.get("TableKind") == "PrimaryResult":
+            rows = frame["Rows"]
+            break
     md_lines = ["| Table | Rows |", "|-------|-----:|"] + [f"| `{r[0]}` | {r[1]} |" for r in rows]
     display(Markdown("\n".join(md_lines)))
     print("✅ Seeded successfully. Open OntologyDetective_CaseFile next.")
