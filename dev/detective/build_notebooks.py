@@ -282,7 +282,7 @@ SEED_CELLS: list[dict] = [
     print("Workspace :", WORKSPACE_ID)
     print("KQL DB    :", DB_NAME, "id=", DB_ID)
     print("Endpoint  :", KQL_URI)
-    """),
+    """, hidden=True),
 
     _md("## Step 2 — Helpers (KQL management + query)"),
     _code(r"""
@@ -305,7 +305,7 @@ SEED_CELLS: list[dict] = [
         if r.status_code != 200:
             raise RuntimeError(f"KQL query {r.status_code}: {r.text[:500]}")
         return r.json()
-    """),
+    """, hidden=True),
 
     _md("## Step 3 — Apply schema (idempotent `.create-merge`)"),
     _code(rf"""
@@ -354,7 +354,7 @@ SEED_CELLS: list[dict] = [
         _kql_mgmt(block)
         print("  ✓", block.splitlines()[0][:80])
     print("Schema applied.")
-    """),
+    """, hidden=True),
 
     _md(
         "## Step 4 — Load evidence (idempotent: clears each evidence table first)\n\n"
@@ -382,7 +382,7 @@ def _render_seed_evidence_cell() -> str:
         "print('Evidence loaded for all 5 cases.')"
     )
 
-SEED_CELLS[-1] = _code(_render_seed_evidence_cell())
+SEED_CELLS[-1] = _code(_render_seed_evidence_cell(), hidden=True)
 
 SEED_CELLS += [
     _md("## Step 5 — Sanity check (row counts per evidence table)"),
@@ -566,7 +566,7 @@ CASEFILE_CELLS: list[dict] = [
     print("Player    :", PLAYER_NAME)
     print("Session   :", SESSION_ID)
     print("Endpoint  :", KQL_URI)
-    """),
+    """, hidden=True),
 
     _code(r"""
     def query_kql(csl: str):
@@ -605,7 +605,7 @@ CASEFILE_CELLS: list[dict] = [
         )
         try: _mgmt(cmd)
         except Exception as e: print(f"(telemetry suppressed: {e})")
-    """),
+    """, hidden=True),
 
     _md("## Step 2 — Detective class & ranks"),
     _code(r"""
@@ -723,13 +723,13 @@ CASEFILE_CELLS: list[dict] = [
     detective = Detective()
     log_event("DetectiveOnDuty", result="INFO")
     print("🕵️ Detective on duty. Try: detective.help()")
-    """),
+    """, hidden=True),
 
     _md("## Step 3 — Briefings (markdown)"),
     _code(r"""
     BRIEFINGS_MD = """ + repr({k: _briefing_md(i+1, k, *v[:1], v[1], v[2])
                                  for i, (k, v) in enumerate(BRIEFINGS.items())}) + r"""
-    """),
+    """, hidden=True),
 
     _md("## Step 4 — Play"),
     _code(r"""
@@ -871,7 +871,7 @@ DASH_CELLS: list[dict] = [
                 cols = [c["ColumnName"] for c in f["Columns"]]
                 return [dict(zip(cols, row)) for row in f["Rows"]]
         return []
-    """),
+    """, hidden=True),
 
     _md("## Cases solved per player"),
     _code(r"""
