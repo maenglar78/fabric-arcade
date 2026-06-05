@@ -16,6 +16,9 @@
         .case-card.boss .case-title { color: #ffd700; }
         .case-concept { color: #aaa; font-size: 13px; }
         .noir-quote { font-family: 'Special Elite', 'Courier New', monospace; color: #ccc; font-style: italic; background: rgba(0,0,0,0.4); border-left: 3px solid #c0392b; padding: 15px 20px; margin: 20px 0; }
+        .rank-row { display: flex; align-items: center; gap: 14px; padding: 8px 0; color: #ccc; }
+        .rank-cases { width: 90px; color: #888; font-family: 'Inter', sans-serif; font-size: 13px; }
+        .rank-name { color: #f0e6d2; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -36,15 +39,15 @@
             <div class="game-title-section">
                 <span class="game-badge mission">MYSTERY</span>
                 <h1>Ontology Detective</h1>
-                <p class="game-tagline">Datapolis P.I. — model real Fabric Ontologies, ingest evidence, write KQL queries, catch the culprit.</p>
+                <p class="game-tagline">Datapolis P.I. — design real Fabric Ontologies, write KQL queries, catch the culprit across 5 noir cases.</p>
             </div>
         </header>
 
         <div class="game-meta-bar">
             <div class="meta-item"><span class="meta-label">Difficulty</span><span class="meta-value">⭐⭐⭐ Advanced</span></div>
             <div class="meta-item"><span class="meta-label">Deploy Time</span><span class="meta-value">~5 min</span></div>
-            <div class="meta-item"><span class="meta-label">Complete Time</span><span class="meta-value">~120 min</span></div>
-            <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value status-coming">🔜 Coming Soon</span></div>
+            <div class="meta-item"><span class="meta-label">Complete Time</span><span class="meta-value">~60 min</span></div>
+            <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value status-ready">✅ Ready · v1.0.0</span></div>
         </div>
 
         <!-- NOIR OPENING -->
@@ -56,31 +59,29 @@
         <section class="game-section">
             <h2>📋 Overview</h2>
             <p>
-                You are <strong>Detective Sherlock Graph</strong> at <strong>Datapolis P.I.</strong>, the city's last honest investigation agency.
-                Ten cases. Ten mysteries. Each one is solved by <strong>modeling the right ontology</strong>, ingesting evidence, and writing
-                a <strong>KQL semantic query</strong> that converges on the one — and only one — suspect.
+                You are <strong>Detective Sherlock Graph</strong> at <strong>Datapolis P.I.</strong>, the city's last honest investigation
+                agency. Five cases. Five mysteries. Each one is solved by <strong>designing the right ontology</strong> in the Fabric
+                <strong>Digital Twin Builder</strong> UI, then writing a <strong>KQL query</strong> against the case evidence that converges
+                on a single suspect.
             </p>
             <p>
-                A great detective doesn't fabricate evidence. The judge rewards <strong>ontology minimalism</strong>: every entity type you create
-                must earn its place in your solving query.
+                The ontology is your <em>thinking tool</em>. The KQL is your <em>weapon</em>. The judge — <code>detective.accuse(case_id, name)</code> —
+                doesn't care how pretty your model is, only that you can name the culprit.
             </p>
         </section>
 
         <!-- QUICK START -->
         <section class="game-section quickstart">
             <h2>🚀 Quick Start</h2>
-            <p>Coming soon! This game is currently in development.</p>
             <div class="code-block">
-                <pre><code><span class="comment"># Coming soon</span>
+                <pre><code><span class="comment"># 1. Install (deploys an Eventhouse, an Ontology item, and 3 notebooks)</span>
 <span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
 
-arcade.install(<span class="string">"ontology-detective"</span>)</code></pre>
+arcade.install(<span class="string">"ontology-detective"</span>)
+
+<span class="comment"># 2. Run OntologyDetective_Seed (one-time, loads all 5 case datasets)</span>
+<span class="comment"># 3. Open OntologyDetective_CaseFile and play</span></code></pre>
             </div>
-            <p style="margin-top: 15px;">
-                <strong>Want to be notified?</strong>
-                <a href="https://github.com/maenglar78/fabric-arcade" style="color: #00b894;">⭐ Star the repo</a>
-                to get updates!
-            </p>
         </section>
 
         <!-- HOW IT WORKS -->
@@ -88,12 +89,12 @@ arcade.install(<span class="string">"ontology-detective"</span>)</code></pre>
             <h2>🧩 How You Play (Real Fabric, Not a Simulation)</h2>
             <p>Each case follows the same investigative loop:</p>
             <ol style="line-height: 2; color: #ccc;">
-                <li>📖 Read the <strong>noir briefing</strong> in the <code>OntologyDetective_CaseFile</code> notebook — victim, time window, evidence available, suspect list.</li>
-                <li>🏛️ Open <strong>DetectiveOntology</strong> in the Fabric <strong>Digital Twin Builder</strong> UI and add the entity types + relationships you'll need (e.g. <code>Person</code>, <code>Location</code>, <code>PhoneCall</code>, <code>wasAt</code>, <code>called</code>).</li>
-                <li>📥 Run the <strong>"Ingest Evidence"</strong> ready-cell — it will fail loudly if your ontology is missing required types (your first clue).</li>
-                <li>🔍 Write a <strong>KQL query</strong> over the ontology event store that returns exactly one <code>Person</code> — the culprit. Save it to the <code>SOLUTION_QUERY</code> variable.</li>
-                <li>⚖️ Call <code>detective.accuse("Mr. Pythagoras")</code> — the judge <strong>decrypts the solution</strong> (AES-encrypted per player/case), re-executes your query to confirm it actually returns the accused, and scores your ontology <strong>minimalism</strong>.</li>
-                <li>📊 The <code>OntologyDetective_Dashboard</code> updates with cases solved, accuracy, and Detective Rank.</li>
+                <li>📖 Read the <strong>noir briefing</strong> in the <code>OntologyDetective_CaseFile</code> notebook — victim, time window, evidence tables, suspect list.</li>
+                <li>🏛️ Open <strong>DetectiveOntology</strong> in the Fabric <strong>Digital Twin Builder</strong> UI and add the entity types &amp; relationships the briefing calls for (e.g. <code>Person</code>, <code>Room</code>, <code>Visit</code>; or <code>Person</code>, <code>Alias</code>, <code>sameAs</code>).</li>
+                <li>🔍 Write a <strong>KQL query</strong> against the case evidence tables in <code>Datapolis_DetectiveEH</code> until it returns exactly one suspect.</li>
+                <li>⚖️ Call <code>detective.accuse("case-id", "Suspect Name")</code> — the judge confirms or releases them, and logs the event to the Eventhouse.</li>
+                <li>📊 The <code>OntologyDetective_Dashboard</code> shows cases solved, wrong calls, and your detective rank.</li>
+                <li>🏅 Solve all 5 cases, set your <code>PLAYER_NAME</code>, and run the badge cell to mint your <strong>Commissioner of Datapolis</strong> badge — shareable on LinkedIn.</li>
             </ol>
         </section>
 
@@ -102,14 +103,13 @@ arcade.install(<span class="string">"ontology-detective"</span>)</code></pre>
             <h2>📦 What Gets Installed in Your Workspace</h2>
             <p><code>arcade.install("ontology-detective")</code> deploys:</p>
             <ul style="line-height: 2; color: #ccc;">
-                <li>🏠 <strong>1 Lakehouse</strong> <code>Datapolis_DetectiveLH</code> — 10 case folders with witness CSVs, camera logs, phone records, and <code>solution.json.enc</code> (AES-encrypted).</li>
-                <li>🌐 <strong>1 Ontology</strong> <code>DetectiveOntology</code> — <em>pre-created empty</em> in Digital Twin Builder. You build it case by case.</li>
-                <li>⚡ <strong>1 Eventhouse</strong> <code>Datapolis_DetectiveEH</code> with KQL Database <code>DetectiveData</code> and table <code>DetectiveEvents</code> — telemetry of cases, accusations, rank.</li>
+                <li>⚡ <strong>1 Eventhouse</strong> <code>Datapolis_DetectiveEH</code> — holds the <code>DetectiveEvents</code> telemetry table plus the 8 evidence tables (one per case data source).</li>
+                <li>🌐 <strong>1 Ontology</strong> <code>DetectiveOntology</code> — <em>pre-created empty</em>. You design the entities and relationships in Digital Twin Builder as each case demands.</li>
                 <li>📓 <strong>3 Notebooks</strong>:
                     <ul>
-                        <li><code>OntologyDetective_Seed</code> — generates the 10 case bundles (run once).</li>
-                        <li><code>OntologyDetective_CaseFile</code> — noir briefings + ready ingestion cells + <code>detective.accuse(name)</code> judge.</li>
-                        <li><code>OntologyDetective_Dashboard</code> — live cases / accuracy / minimalism / rank.</li>
+                        <li><code>OntologyDetective_Seed</code> — applies the KQL schema and bulk-loads all 5 case datasets (run once).</li>
+                        <li><code>OntologyDetective_CaseFile</code> — 5 noir briefings + <code>detective</code> object (briefing, accuse, scoreboard) + badge cell.</li>
+                        <li><code>OntologyDetective_Dashboard</code> — leaderboard, recent events, accuracy.</li>
                     </ul>
                 </li>
             </ul>
@@ -117,47 +117,53 @@ arcade.install(<span class="string">"ontology-detective"</span>)</code></pre>
 
         <!-- CASES -->
         <section class="game-section">
-            <h2>📂 The 10 Case Files of Datapolis P.I.</h2>
-            <p>Ten unsolved mysteries. Ten ontology concepts to master:</p>
+            <h2>📂 The 5 Case Files of Datapolis P.I.</h2>
             <div class="case-grid">
-                <div class="case-card"><div class="case-num">Case 01 — 🧁</div><div class="case-title">The Stolen Pie</div><div class="case-concept">Entity types + properties (tutorial)</div></div>
-                <div class="case-card"><div class="case-num">Case 02 — 🏛️</div><div class="case-title">Disappearance at the Museum</div><div class="case-concept">1-N relationship (<code>Suspect wasAt Location</code>)</div></div>
-                <div class="case-card"><div class="case-num">Case 03 — 🔪</div><div class="case-title">Murder in the Library</div><div class="case-concept">Temporal event filtering + alibis</div></div>
-                <div class="case-card"><div class="case-num">Case 04 — 💎</div><div class="case-title">The Datapolis Diamond Heist</div><div class="case-concept">Inheritance (Guard → Employee → Person)</div></div>
-                <div class="case-card"><div class="case-num">Case 05 — 📞</div><div class="case-title">The Mysterious Phone Call</div><div class="case-concept">N-N relationship (<code>Person called Person</code>)</div></div>
-                <div class="case-card"><div class="case-num">Case 06 — 🚗</div><div class="case-title">Hit & Run on Vector Avenue</div><div class="case-concept">Multi-source events on one Vehicle</div></div>
-                <div class="case-card"><div class="case-num">Case 07 — 💌</div><div class="case-title">The Anonymous Blackmail</div><div class="case-concept">Reasoning via transitive relations</div></div>
-                <div class="case-card"><div class="case-num">Case 08 — 🎭</div><div class="case-title">Stolen Identity</div><div class="case-concept">Aliases / <code>sameAs</code> links</div></div>
-                <div class="case-card"><div class="case-num">Case 09 — 🏦</div><div class="case-title">Conspiracy at the Senate</div><div class="case-concept">Cycle detection (<code>bribes</code> loop)</div></div>
-                <div class="case-card boss"><div class="case-num">Case 10 — 🌃 BOSS</div><div class="case-title">The Final Heist</div><div class="case-concept">Multi-domain in a single ontology with 3 sub-namespaces (Bank, Police, Telecom)</div></div>
+                <div class="case-card"><div class="case-num">Case 01 — 🧁</div><div class="case-title">The Stolen Pie</div><div class="case-concept">Entity + temporal visit (<code>Person wasIn Room</code> within window)</div></div>
+                <div class="case-card"><div class="case-num">Case 02 — 🏛️</div><div class="case-title">Disappearance at the Museum</div><div class="case-concept">Camera events (<code>Person wasAt Location @ time</code>)</div></div>
+                <div class="case-card"><div class="case-num">Case 03 — 📞</div><div class="case-title">The Mysterious Phone Call</div><div class="case-concept">N-N self-relationship + temporal join (called both within 2h)</div></div>
+                <div class="case-card"><div class="case-num">Case 04 — 🎭</div><div class="case-title">Stolen Identity</div><div class="case-concept">Aliases / <code>sameAs</code> — entity resolution via alias graph</div></div>
+                <div class="case-card boss"><div class="case-num">Case 05 — 🌃 BOSS</div><div class="case-title">The Final Heist</div><div class="case-concept">3 sub-namespaces (Bank · Police · Telecom) federated under one <code>Person</code>; intersection across all three</div></div>
             </div>
         </section>
 
-        <!-- JUDGE -->
+        <!-- EXAMPLE KQL -->
         <section class="game-section">
-            <h2>⚖️ What the Judge Checks</h2>
-            <ul style="line-height: 2; color: #ccc;">
-                <li>✅ <strong>Correct culprit</strong> — decrypts <code>solution.json.enc</code> with key <code>SHA256(player_id || case_id || workspace_id)</code></li>
-                <li>✅ <strong>Supporting query</strong> — re-runs your saved <code>SOLUTION_QUERY</code> to confirm it actually returns the accused</li>
-                <li>✅ <strong>Ontology minimalism</strong> — <code>entity_types_used_in_query / entity_types_created</code> close to <code>1.0</code></li>
-                <li>✅ <strong>Accuracy tracking</strong> — prior wrong accusations count against you</li>
-                <li>🏆 <strong>Rank promotion</strong> — Rookie → Inspector → Commissioner</li>
-            </ul>
+            <h2>🔍 Example: Case 1 KQL</h2>
+            <p>The briefing tells you Mrs. Plum's pie went missing from the kitchen between <strong>14:00 and 14:30</strong>. Three neighbours visited. Find the one who was in the kitchen during the window.</p>
+            <div class="code-block">
+                <pre><code>Case1_Visits
+| <span class="keyword">where</span> RoomName == <span class="string">"Kitchen"</span>
+| <span class="keyword">where</span> EnteredAt &lt; datetime(2026-06-05 14:30:00)
+  <span class="keyword">and</span> LeftAt   &gt; datetime(2026-06-05 14:00:00)
+| <span class="keyword">where</span> PersonName != <span class="string">"Mrs. Plum"</span>
+| <span class="keyword">project</span> PersonName</code></pre>
+            </div>
+            <p style="color: #aaa; margin-top: 10px;">One row comes back. Pass that name to <code>detective.accuse("stolen-pie", "...")</code> and you're a Rookie.</p>
+        </section>
+
+        <!-- RANKS -->
+        <section class="game-section">
+            <h2>🏆 Detective Ranks</h2>
+            <div class="rank-row"><span class="rank-cases">0 cases</span><span>Aspiring Detective</span></div>
+            <div class="rank-row"><span class="rank-cases">1 case</span><span class="rank-name">🥉 Rookie</span></div>
+            <div class="rank-row"><span class="rank-cases">2 cases</span><span class="rank-name">🥈 Investigator</span></div>
+            <div class="rank-row"><span class="rank-cases">3 cases</span><span class="rank-name">🎯 Inspector</span></div>
+            <div class="rank-row"><span class="rank-cases">4 cases</span><span class="rank-name">🔍 Senior Detective</span></div>
+            <div class="rank-row"><span class="rank-cases">5 cases</span><span class="rank-name">🏆 Commissioner of Datapolis</span></div>
         </section>
 
         <!-- TELEMETRY -->
         <section class="game-section">
             <h2>📊 Telemetry Events → Eventhouse</h2>
-            <p>Every move you make in the agency goes on record:</p>
+            <p>Every move you make in the agency goes on record in <code>DetectiveEvents</code>:</p>
             <div class="telemetry-events">
                 <span class="telemetry-event">DetectiveOnDuty</span>
                 <span class="telemetry-event">CaseOpened</span>
-                <span class="telemetry-event">OntologyExtended</span>
-                <span class="telemetry-event">EvidenceIngested</span>
                 <span class="telemetry-event">AccusationMade</span>
                 <span class="telemetry-event">CaseSolved</span>
                 <span class="telemetry-event">WrongAccusation</span>
-                <span class="telemetry-event">RankPromoted</span>
+                <span class="telemetry-event">BadgeIssued</span>
             </div>
         </section>
 
@@ -176,14 +182,13 @@ arcade.install(<span class="string">"ontology-detective"</span>)</code></pre>
             <div class="levels-table">
                 <table>
                     <tr><th>Skill</th><th>Fabric / Modeling Feature</th><th>Level</th></tr>
-                    <tr><td>Model entity types &amp; properties</td><td>Fabric Ontology</td><td>⭐</td></tr>
-                    <tr><td>Design relationships (1-N, N-N)</td><td>Ontology relations</td><td>⭐⭐</td></tr>
-                    <tr><td>Temporal reasoning</td><td>KQL <code>between</code>, <code>summarize</code></td><td>⭐⭐</td></tr>
-                    <tr><td>Inheritance hierarchies</td><td>Subclass modeling</td><td>⭐⭐⭐</td></tr>
-                    <tr><td>Transitive reasoning</td><td>Multi-hop joins</td><td>⭐⭐⭐</td></tr>
-                    <tr><td>Aliases &amp; <code>sameAs</code></td><td>Entity resolution</td><td>⭐⭐⭐</td></tr>
-                    <tr><td>Cycle detection</td><td>KQL graph patterns</td><td>⭐⭐⭐</td></tr>
-                    <tr><td>Multi-namespace federation</td><td>Ontology design</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Model entity types &amp; properties</td><td>Fabric Ontology + Digital Twin Builder</td><td>⭐</td></tr>
+                    <tr><td>Design relationships (1-N, N-N, self)</td><td>Ontology relations</td><td>⭐⭐</td></tr>
+                    <tr><td>Temporal reasoning</td><td>KQL <code>between</code>, <code>datetime_diff</code></td><td>⭐⭐</td></tr>
+                    <tr><td>Joins &amp; multi-hop reasoning</td><td>KQL <code>join kind=inner</code></td><td>⭐⭐</td></tr>
+                    <tr><td>Aliases &amp; entity resolution</td><td><code>sameAs</code> alias graph</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Multi-namespace federation</td><td>Bank · Police · Telecom under one <code>Person</code></td><td>⭐⭐⭐</td></tr>
+                    <tr><td>Telemetry-driven gameplay</td><td>Eventhouse + KQL Dashboard</td><td>⭐⭐</td></tr>
                 </table>
             </div>
         </section>

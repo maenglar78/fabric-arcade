@@ -1,18 +1,69 @@
-// DetectiveEvents — KQL schema for Ontology Detective telemetry
+// DetectiveEvents — Ontology Detective telemetry table
 .create-merge table DetectiveEvents (
     EventId: string,
     Timestamp: datetime,
     SessionId: string,
     PlayerId: string,
-    EventType: string,         // DetectiveOnDuty | CaseOpened | OntologyExtended | EvidenceIngested | AccusationMade | CaseSolved | WrongAccusation | RankPromoted
-    CaseId: int,
+    EventType: string,
+    CaseId: string,
     AccusedPerson: string,
-    EntityTypesCreated: int,   // total entity types the player has created in the ontology so far
-    EntityTypesUsed: int,      // entity types referenced by the player's solving KQL query
-    QuerySaved: string,        // the player's saved KQL query (truncated)
-    ValidationResult: string,  // PASS | FAIL | NOT_MINIMAL | WRONG_PERSON
+    ValidationResult: string,
     DurationSeconds: long,
-    Rank: string               // Rookie | Inspector | Commissioner
+    Rank: string
 )
 
 .alter-merge table DetectiveEvents policy retention softdelete = 90d
+
+// Case 1 — The Stolen Pie
+.create-merge table Case1_Visits (
+    PersonName: string,
+    RoomName:   string,
+    EnteredAt:  datetime,
+    LeftAt:     datetime
+)
+
+// Case 2 — Disappearance at the Museum
+.create-merge table Case2_CameraEvents (
+    GuestName: string,
+    Location:  string,
+    SeenAt:    datetime
+)
+
+// Case 3 — The Mysterious Phone Call
+.create-merge table Case3_PhoneCalls (
+    Caller:   string,
+    Callee:   string,
+    CalledAt: datetime
+)
+
+// Case 4 — Stolen Identity
+.create-merge table Case4_Aliases (
+    AliasName: string,
+    RealName:  string
+)
+
+.create-merge table Case4_HotelCheckIns (
+    UsedName:    string,
+    HotelName:   string,
+    CheckedInAt: datetime
+)
+
+// Case 5 — The Final Heist (BOSS)
+.create-merge table Case5_BankAccounts (
+    PersonName:  string,
+    AccountKind: string,
+    OpenedAt:    datetime
+)
+
+.create-merge table Case5_PolicePatrols (
+    PersonName:     string,
+    PatrolZone:     string,
+    SeenAt:         datetime,
+    OnDutyRegister: bool
+)
+
+.create-merge table Case5_BurnerCalls (
+    Caller:   string,
+    Callee:   string,
+    CalledAt: datetime
+)
