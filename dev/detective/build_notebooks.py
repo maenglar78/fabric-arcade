@@ -321,24 +321,31 @@ SEED_CELLS: list[dict] = [
     .create-merge table Case1_Visits (
         PersonName: string, RoomName: string, EnteredAt: datetime, LeftAt: datetime
     )
+
     .create-merge table Case2_CameraEvents (
         GuestName: string, Location: string, SeenAt: datetime
     )
+
     .create-merge table Case3_PhoneCalls (
         Caller: string, Callee: string, CalledAt: datetime
     )
+
     .create-merge table Case4_Aliases (
         AliasName: string, RealName: string
     )
+
     .create-merge table Case4_HotelCheckIns (
         UsedName: string, HotelName: string, CheckedInAt: datetime
     )
+
     .create-merge table Case5_BankAccounts (
         PersonName: string, AccountKind: string, OpenedAt: datetime
     )
+
     .create-merge table Case5_PolicePatrols (
         PersonName: string, PatrolZone: string, SeenAt: datetime, OnDutyRegister: bool
     )
+
     .create-merge table Case5_BurnerCalls (
         Caller: string, Callee: string, CalledAt: datetime
     )
