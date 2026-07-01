@@ -50,3 +50,7 @@ Thumbs.db
 
 # Netlify
 .netlify/
+
+# Scratch / dump temporanei di sviluppo (nella root del repo)
+/_*.txt
+/_*.json
