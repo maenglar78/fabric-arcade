@@ -128,6 +128,28 @@
             "icon": "🌀",
             "tags": ["mirroring", "shortcuts", "onelake", "copilot", "data-agent"],
             "status": "coming-soon"
+        },
+        {
+            "id": "vault-keeper",
+            "name": "Vault Keeper",
+            "description": "🏦 Guard the transactional Vault of Datapolis on a Fabric SQL Database. Design tables, write stored procedures and run ACID transactions to keep the city's ledger honest.",
+            "workloads": ["DB"],
+            "difficulty": 3,
+            "duration_minutes": 45,
+            "icon": "🏦",
+            "tags": ["sql-database", "oltp", "t-sql", "transactions", "stored-procedures"],
+            "status": "coming-soon"
+        },
+        {
+            "id": "the-sphinx",
+            "name": "The Sphinx",
+            "description": "🦁 Awaken the Sphinx of Datapolis: build a Fabric Data Agent over your data and teach it to answer riddles in natural language. Ground it, test it, and pass the Trial of Questions.",
+            "workloads": ["AI"],
+            "difficulty": 3,
+            "duration_minutes": 40,
+            "icon": "🦁",
+            "tags": ["copilot", "data-agent", "ai-skill", "natural-language", "grounding"],
+            "status": "coming-soon"
         }
     ]
 }

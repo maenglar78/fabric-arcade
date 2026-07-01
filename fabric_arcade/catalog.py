@@ -176,6 +176,30 @@ CATALOG_DATA = [
         "icon": "🌀",
         "tags": ["mirroring", "shortcuts", "onelake", "copilot", "data-agent"],
         "achievements": ["portal-opener", "nexus-keeper"]
+    },
+    {
+        "id": "vault-keeper",
+        "name": "Vault Keeper",
+        "description": "Guard the transactional Vault of Datapolis on a Fabric SQL Database. Design tables, write stored procedures and run ACID transactions to keep the city's ledger honest.",
+        "type": "mission",
+        "workloads": ["DB"],
+        "difficulty": 3,
+        "duration_minutes": 45,
+        "icon": "\U0001f3e6",
+        "tags": ["sql-database", "oltp", "t-sql", "transactions", "stored-procedures"],
+        "achievements": ["teller", "vault-keeper", "master-of-coin"]
+    },
+    {
+        "id": "the-sphinx",
+        "name": "The Sphinx",
+        "description": "Awaken the Sphinx of Datapolis: build a Fabric Data Agent over your data and teach it to answer riddles in natural language. Ground it, test it, and pass the Trial of Questions.",
+        "type": "challenge",
+        "workloads": ["AI"],
+        "difficulty": 3,
+        "duration_minutes": 40,
+        "icon": "\U0001f981",
+        "tags": ["copilot", "data-agent", "ai-skill", "natural-language", "grounding"],
+        "achievements": ["riddle-solver", "sphinx-awakened"]
     }
 ]
 

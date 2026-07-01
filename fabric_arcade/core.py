@@ -27,6 +27,8 @@ class Workload(Enum):
     DS = "Data Science"
     DF = "Data Factory"
     DW = "Data Warehouse"
+    DB = "Fabric SQL Database"
+    AI = "AI / Copilot"
 
 @dataclass
 class Game:
