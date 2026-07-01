@@ -1,0 +1,20 @@
+.create-merge table ProphecyEvents (
+    EventId: string,
+    Timestamp: datetime,
+    SessionId: string,
+    PlayerId: string,
+    EventType: string,
+    Level: int,
+    ModelName: string,
+    Algorithm: string,
+    Metric: string,
+    MetricValue: real,
+    RowsScored: long,
+    ValidationResult: string
+)
+
+// Optional: keep telemetry hot for 30 days
+.alter-merge table ProphecyEvents policy retention softdelete = 30d
+
+// Optional: update policy / mapping can be added here if events are ingested
+// from an Eventstream. For notebook-driven ingestion the table above is enough.

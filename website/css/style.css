@@ -20,6 +20,7 @@
     --pbi: #ffaa00;
     --dw: #ff6b6b;
     --ds: #aa88ff;
+    --df: #ff88cc;
     
     /* Spacing */
     --spacing-xs: 0.5rem;
@@ -433,6 +434,7 @@ body {
 .workload.pbi { background: rgba(255, 170, 0, 0.2); color: var(--pbi); }
 .workload.dw { background: rgba(255, 107, 107, 0.2); color: var(--dw); }
 .workload.ds { background: rgba(170, 136, 255, 0.2); color: var(--ds); }
+.workload.df { background: rgba(255, 136, 204, 0.2); color: var(--df); }
 
 .btn-play {
     display: inline-block;

@@ -1,0 +1,113 @@
+{
+    "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
+    "id": "oracles-forge",
+    "name": "Oracle's Forge",
+    "version": "1.0.0",
+    "description": "🔮 Forge Prophecy Crystals (ML models) in the Sacred Fire. Prepare the auspices, ignite AutoML, battle models in the Arena, crown a champion in the Model Registry, and read the Prophecy with batch scoring. A full Data Science quest on real Fabric.",
+    "type": "challenge",
+    "workloads": ["DataScience"],
+    "difficulty": 4,
+    "duration_minutes": 75,
+    "icon": "🔮",
+    "tags": ["automl", "mlflow", "data-science", "prediction", "fantasy", "fabric", "learning"],
+    "author": {
+        "name": "Fabric Gaming Community"
+    },
+    "status": "coming-soon",
+    "prerequisites": {
+        "fabric_capacity": "F2",
+        "python_packages": [],
+        "skills": ["Fabric notebook basics", "Python / pandas basics", "What a classification model is"]
+    },
+    "learning_objectives": [
+        "Prepare and explore a dataset in a Fabric Lakehouse with Spark + pandas",
+        "Run Fabric AutoML (FLAML) to search models automatically",
+        "Track experiments, parameters and metrics with MLflow",
+        "Compare candidate models and select a champion by metric",
+        "Register the champion model in the MLflow model registry",
+        "Score new data in batch with the Fabric PREDICT function",
+        "Validate that the final model beats the target metric threshold"
+    ],
+    "items": [
+        {
+            "type": "Lakehouse",
+            "name": "OraclesForge_LH",
+            "description": "Holds omens_train (input), omens_holdout (oracle), and prophecy_scores (player output) tables"
+        },
+        {
+            "type": "Eventhouse",
+            "name": "OraclesForge_EH",
+            "description": "Telemetry for level completions, model runs, best metrics and final rank"
+        },
+        {
+            "type": "KQLDatabase",
+            "name": "ForgeData",
+            "parent": "OraclesForge_EH",
+            "description": "Database with ProphecyEvents table"
+        },
+        {
+            "type": "Notebook",
+            "name": "OraclesForge_Seed",
+            "file": "notebooks/oracle_seed.ipynb",
+            "description": "Generates the synthetic omens_train + omens_holdout datasets (customer-churn style)"
+        },
+        {
+            "type": "Notebook",
+            "name": "OraclesForge_Forge",
+            "file": "notebooks/oracle_forge.ipynb",
+            "description": "Player workbench for Levels 1-4: EDA, AutoML, MLflow tracking, model comparison and registration"
+        },
+        {
+            "type": "Notebook",
+            "name": "OraclesForge_Prophecy",
+            "file": "notebooks/oracle_prophecy.ipynb",
+            "description": "Level 5: batch scoring with PREDICT and writing prophecy_scores"
+        },
+        {
+            "type": "Notebook",
+            "name": "OraclesForge_Judge",
+            "file": "notebooks/oracle_judge.ipynb",
+            "description": "Per-level briefing + validator (judge.check_level(N))"
+        },
+        {
+            "type": "Notebook",
+            "name": "OraclesForge_Dashboard",
+            "file": "notebooks/oracle_dashboard.ipynb",
+            "description": "KQL/Plotly dashboard: best metric over time, models tried, final rank"
+        }
+    ],
+    "tables": [
+        {
+            "name": "ProphecyEvents",
+            "database": "ForgeData",
+            "schema": "schemas/ProphecyEvents.kql",
+            "columns": [
+                "EventId", "Timestamp", "SessionId", "PlayerId", "EventType",
+                "Level", "ModelName", "Algorithm", "Metric", "MetricValue",
+                "RowsScored", "ValidationResult"
+            ]
+        }
+    ],
+    "eventTypes": [
+        { "name": "QuestStart", "description": "Player begins Oracle's Forge" },
+        { "name": "LevelAttempt", "description": "Player runs judge.check_level(N)" },
+        { "name": "LevelComplete", "description": "Validation passed — crystal forged" },
+        { "name": "LevelFailed", "description": "Validation failed — reforge the crystal" },
+        { "name": "OracleCrowned", "description": "Champion model beats the threshold — quest complete" }
+    ],
+    "levels": [
+        { "n": 1, "name": "Gather the Auspices", "trial": "🌫️ The Fog",        "skill": "Load + explore data, fix features",            "notebook": "oracle_forge.ipynb" },
+        { "n": 2, "name": "Light the Forge",     "trial": "🔥 The Spark",       "skill": "First AutoML trial + MLflow run",              "notebook": "oracle_forge.ipynb" },
+        { "n": 3, "name": "Arena of Models",     "trial": "⚔️ The Contest",     "skill": "Compare >=3 models on AUC/accuracy/F1",        "notebook": "oracle_forge.ipynb" },
+        { "n": 4, "name": "Crown the Crystal",   "trial": "👑 The Coronation",  "skill": "Register champion in the model registry",      "notebook": "oracle_forge.ipynb" },
+        { "n": 5, "name": "The Prophecy",        "trial": "🔮 The Vision",      "skill": "Batch scoring with PREDICT above threshold",   "notebook": "oracle_prophecy.ipynb" }
+    ],
+    "post_deploy_steps": [
+        "Run OraclesForge_Seed notebook once to populate omens_train + omens_holdout tables",
+        "Open OraclesForge_Judge notebook and read the Level 1 briefing",
+        "Work through Levels 1-4 in OraclesForge_Forge, running judge.check_level(N) after each",
+        "Run OraclesForge_Prophecy to score the holdout omens and write prophecy_scores",
+        "Run judge.check_level(5) to see if your Oracle beats the threshold",
+        "Watch OraclesForge_Dashboard track your best metric and final rank"
+    ]
+}

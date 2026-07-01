@@ -128,6 +128,54 @@ CATALOG_DATA = [
         "icon": "🚂",
         "tags": ["trains", "simulation", "streaming", "optimization"],
         "achievements": ["on-time", "traffic-controller", "rail-master"]
+    },
+    {
+        "id": "oracles-forge",
+        "name": "Oracle's Forge",
+        "description": "Forge Prophecy Crystals (ML models) in the Sacred Fire. Train models with AutoML, track experiments in MLflow, crown a champion and predict the future with batch scoring.",
+        "type": "challenge",
+        "workloads": ["DS"],
+        "difficulty": 4,
+        "duration_minutes": 75,
+        "icon": "🔮",
+        "tags": ["automl", "mlflow", "data-science", "prediction", "fantasy"],
+        "achievements": ["seer", "forgemaster", "grand-oracle"]
+    },
+    {
+        "id": "sentinel-grid",
+        "name": "Sentinel Grid",
+        "description": "Guard the Sentinel Grid of Datapolis. Build Activator rules on live event streams and neutralize five incidents by wiring the right condition to the right action.",
+        "type": "challenge",
+        "workloads": ["RTI"],
+        "difficulty": 2,
+        "duration_minutes": 40,
+        "icon": "🛰️",
+        "tags": ["activator", "reflex", "alerts", "real-time", "cyberpunk"],
+        "achievements": ["watcher", "grid-warden"]
+    },
+    {
+        "id": "purity-protocol",
+        "name": "Purity Protocol",
+        "description": "Distill raw ingredients into pure essences using the power of Power Query M. Five Dataflow Gen2 levels of cleaning, merging and reshaping, output to Lakehouse.",
+        "type": "challenge",
+        "workloads": ["DF"],
+        "difficulty": 2,
+        "duration_minutes": 35,
+        "icon": "⚗️",
+        "tags": ["dataflow-gen2", "power-query", "transform", "low-code", "alchemy"],
+        "achievements": ["apprentice-alchemist", "master-alchemist"]
+    },
+    {
+        "id": "portal-nexus",
+        "name": "Portal Nexus",
+        "description": "Keep the Nexus of Portals. Link external worlds with Mirroring and OneLake Shortcuts without copying them, then query the multiverse in natural language with a Data Agent.",
+        "type": "mission",
+        "workloads": ["DE", "RTI"],
+        "difficulty": 3,
+        "duration_minutes": 50,
+        "icon": "🌀",
+        "tags": ["mirroring", "shortcuts", "onelake", "copilot", "data-agent"],
+        "achievements": ["portal-opener", "nexus-keeper"]
     }
 ]
 
