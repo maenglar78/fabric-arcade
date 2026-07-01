@@ -66,13 +66,6 @@ def _get_game_items(game_id: str) -> List[Dict[str, str]]:
     
     # Game-specific item definitions
     GAME_ITEMS = {
-        "mission-artemis-2": [
-            {"type": "Eventhouse", "name": "artemis2-telemetry"},
-            {"type": "Eventstream", "name": "artemis2-stream"},
-            {"type": "KQLDatabase", "name": "mission-data"},
-            {"type": "RTDashboard", "name": "mission-control"},
-            {"type": "Notebook", "name": "artemis2-simulator"},
-        ],
         "fabric-racing-game": [
             {"type": "Eventhouse", "name": "racing-events"},
             {"type": "Eventstream", "name": "racing-stream"},

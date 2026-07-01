@@ -321,7 +321,6 @@ FabricRacingGame/
 
 ## 🎮 Related Games
 
-- 🚀 **Mission Artemis 2** - Advanced RTI with synchronized video
 - ⚽ **Sports Tracker** - Analytics for team sports
 - 🎯 **Target Practice** - RTI fundamentals in 5 minutes
 

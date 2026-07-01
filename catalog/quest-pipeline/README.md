@@ -254,7 +254,6 @@ Schedule: Daily at midnight (when the dungeons reset!)
 
 - 🏙️ **City Builder** - Apply medallion to urban simulation
 - 🌊 **Ocean Explorer** - Combine with ML workflows
-- 🚀 **Mission Artemis** - Add real-time streaming layer
 
 ---
 

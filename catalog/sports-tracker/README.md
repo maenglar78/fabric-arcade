@@ -185,7 +185,6 @@ Create a Real-Time Dashboard with:
 ## 🎮 Related Games
 
 - 🏎️ **Race Analytics** - Apply streaming to motorsport
-- 🚀 **Mission Artemis** - More complex RTI patterns
 - 🧙 **Wizard's Workshop** - Deep dive into ML
 
 ---

@@ -6,11 +6,9 @@ This directory contains images for the Fabric Arcade documentation.
 
 ### Thumbnail Images (for catalog)
 - `fabric-racing-game-thumb.png` - 400x300px thumbnail
-- `mission-artemis-2-thumb.png` - 400x300px thumbnail
 
 ### Architecture Diagrams
 - `fabric-racing-game-architecture.svg` - Solution architecture diagram
-- `mission-artemis-2-architecture.svg` - Solution architecture diagram
 
 ## Image Guidelines
 

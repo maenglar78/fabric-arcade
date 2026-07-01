@@ -10,18 +10,6 @@ from .core import Game, GameType, Workload, Difficulty
 # Catalog data - in production this would be loaded from a remote source
 CATALOG_DATA = [
     {
-        "id": "mission-artemis-2",
-        "name": "Mission Artemis 2",
-        "description": "Lunar mission with 4 astronauts. 4-minute video synchronized with real-time telemetry: acceleration, pressure, heart rate, flight phases.",
-        "type": "mission",
-        "workloads": ["RTI", "DE"],
-        "difficulty": 3,
-        "duration_minutes": 45,
-        "icon": "🚀",
-        "tags": ["space", "telemetry", "streaming", "video-sync"],
-        "achievements": ["first-launch", "lunar-orbit", "splashdown"]
-    },
-    {
         "id": "fabric-racing-game",
         "name": "Fabric Racing Game",
         "description": "HTML5 multiplayer racing game for 4 drivers with real-time telemetry. Custom Endpoint, JSON mapping, live dashboard.",
@@ -196,8 +184,8 @@ def search_games(
         
     Example
     -------
-    >>> search_games("space", workloads=[Workload.RTI])
-    [Game(id='mission-artemis-2', ...)]
+    >>> search_games("racing", workloads=[Workload.RTI])
+    [Game(id='fabric-racing-game', ...)]
     """
     games = get_catalog()
     query_lower = query.lower()

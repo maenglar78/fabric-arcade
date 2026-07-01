@@ -53,17 +53,6 @@
             "tags": ["quest", "pipelines", "data-factory", "lakehouse", "eventhouse", "fabric", "learning"]
         },
         {
-            "id": "mission-artemis-2",
-            "name": "Mission Artemis 2",
-            "description": "🚀 Lunar mission with 4 astronauts. Real-time telemetry: acceleration, pressure, heart rate, flight phases.",
-            "workloads": ["RTI", "DE"],
-            "difficulty": 3,
-            "duration_minutes": 45,
-            "icon": "🚀",
-            "tags": ["space", "telemetry", "streaming", "video-sync"],
-            "status": "coming-soon"
-        },
-        {
             "id": "sports-tracker",
             "name": "Sports Tracker",
             "description": "⚽ Track live sports statistics from matches. Analyze player performance and predict outcomes using ML.",

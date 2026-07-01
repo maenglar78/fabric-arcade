@@ -35,30 +35,6 @@ Browse gamified accelerators and tutorials for Microsoft Fabric. Find a game, de
 
 ---
 
-### 🚀 [Mission Artemis 2](mission-artemis-2.md)
-
-![Mission Artemis](../images/mission-artemis-2-thumb.png)
-
-| | |
-|---|---|
-| **Type** | Accelerator |
-| **Difficulty** | Advanced |
-| **Deploy Time** | ~5 min |
-| **Complete Time** | ~45 min |
-
-**Workloads:** Real-Time Intelligence, Data Engineering
-
-**Fabric Items Deployed:**
-- Eventhouse
-- KQL Database (4 tables)
-- Eventstream
-- Notebook (x2)
-- Real-Time Dashboard
-
-**Scenarios:** Streaming, IoT Telemetry, Video Synchronization
-
-> Lunar mission with 4 astronauts. Real-time telemetry: acceleration, pressure, heart rate, flight phases. Synchronized with 4-minute mission video.
-
 ---
 
 ### ⚽ Sports Tracker *(Coming Soon)*

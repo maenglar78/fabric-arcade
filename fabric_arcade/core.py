@@ -143,14 +143,13 @@ def install(game_id: str, workspace: Optional[str] = None) -> Dict[str, Any]:
     Example
     -------
     >>> import fabric_arcade as arcade
-    >>> arcade.install("mission-artemis-2")
-    🚀 Installing Mission Artemis 2...
-    ✅ Created Eventhouse: artemis2-telemetry
-    ✅ Created Eventstream: artemis2-stream  
-    ✅ Created Dashboard: mission-control
-    ✅ Created Notebook: artemis2-simulator
+    >>> arcade.install("fabric-racing-game")
+    🎮 Installing Fabric Racing Game...
+    ✅ Created Eventhouse: racing-events
+    ✅ Created Eventstream: racing-stream
+    ✅ Created Notebook: Deploy_FabricRacingGame
     
-    Installation complete! Run arcade.play("mission-artemis-2") to start.
+    Installation complete! Run arcade.play("fabric-racing-game") to start.
     """
     from .deploy import deploy_game
     
@@ -178,10 +177,10 @@ def play(game_id: str) -> None:
     Example
     -------
     >>> import fabric_arcade as arcade
-    >>> arcade.play("mission-artemis-2")
-    🚀 Starting Mission Artemis 2...
+    >>> arcade.play("fabric-racing-game")
+    🎮 Starting Fabric Racing Game...
     
-    Opening Mission Control Dashboard...
+    Opening the game notebook...
     """
     print(f"\n🎮 Starting game: {game_id}")
     print("-" * 40)

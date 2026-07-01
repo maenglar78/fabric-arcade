@@ -91,7 +91,6 @@ Output:
 🎮 Fabric Arcade - Available Games
 ──────────────────────────────────
 🏎️ Fabric Racing Game  ⭐⭐   RTI  30 min  ✅ Available
-🚀 Mission Artemis 2   ⭐⭐⭐  RTI  45 min  🚧 In Development
 ⚽ Sports Tracker      ⭐⭐   RTI  25 min  🔜 Coming Soon
 ```
 
@@ -151,7 +150,6 @@ Once a game is installed:
 
 | Game | You'll Learn |
 |------|--------------|
-| 🚀 Mission Artemis 2 | Multi-table streaming, IoT telemetry, complex KQL |
 | 🏰 Quest Data Pipeline | Medallion architecture, Data Factory pipelines |
 
 ---
@@ -189,7 +187,6 @@ Some advanced games require F4+ capacity. Check the game requirements in the cat
 
 1. **[Browse the Game Catalog](catalog/index.md)** - Find a game that interests you
 2. **[Fabric Racing Game](catalog/fabric-racing-game.md)** - Great first game for beginners
-3. **[Mission Artemis 2](catalog/mission-artemis-2.md)** - Advanced multi-stream architecture
 
 ---
 
@@ -206,7 +203,6 @@ Some advanced games require F4+ capacity. Check the game requirements in the cat
 ### For Advanced (30-60 min)
 | Game | You'll Learn |
 |------|-------------|
-| 🚀 Mission Artemis | Complete RTI + anomaly detection |
 | 🏰 Quest Pipeline | Medallion architecture |
 | 🏙️ City Builder | Data Warehouse star schema |
 | 🌊 Ocean Explorer | Advanced RTI + ML |

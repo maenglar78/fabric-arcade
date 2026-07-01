@@ -31,10 +31,10 @@ class TestCatalog:
 
     def test_get_game_by_id(self):
         """Should retrieve a specific game by ID"""
-        game = get_game("mission-artemis-2")
+        game = get_game("fabric-racing-game")
         assert game is not None
-        assert game.id == "mission-artemis-2"
-        assert game.name == "Mission Artemis 2"
+        assert game.id == "fabric-racing-game"
+        assert game.name == "Fabric Racing Game"
 
     def test_get_game_returns_none_for_invalid_id(self):
         """Should return None for non-existent game"""
@@ -43,10 +43,10 @@ class TestCatalog:
 
     def test_search_games_by_query(self):
         """Should find games by search query"""
-        results = search_games("space")
+        results = search_games("racing")
         assert len(results) >= 1
-        # Artemis should be in results
-        assert any("artemis" in g.id.lower() for g in results)
+        # Racing game should be in results
+        assert any("racing" in g.id.lower() for g in results)
 
     def test_search_games_by_workload(self):
         """Should filter games by workload"""
@@ -104,13 +104,6 @@ class TestGame:
 
 class TestSpecificGames:
     """Test specific game entries"""
-
-    def test_mission_artemis_2_exists(self):
-        """Mission Artemis 2 should be in catalog"""
-        game = get_game("mission-artemis-2")
-        assert game is not None
-        assert Workload.RTI in game.workloads
-        assert game.difficulty == Difficulty.ADVANCED
 
     def test_fabric_racing_game_exists(self):
         """Fabric Racing Game should be in catalog"""

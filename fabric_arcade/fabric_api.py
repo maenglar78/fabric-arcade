@@ -138,15 +138,6 @@ def _get_catalog() -> List[dict]:
             "difficulty": 3,
             "duration_minutes": 60,
             "icon": "🏛️"
-        },
-        {
-            "id": "mission-artemis-2",
-            "name": "Mission Artemis 2",
-            "description": "🚀 Lunar mission with 4 astronauts and real-time telemetry",
-            "workloads": ["RTI", "DE"],
-            "difficulty": 3,
-            "duration_minutes": 45,
-            "icon": "🚀"
         }
     ]
 
@@ -570,40 +561,6 @@ GameEvents
 
 ### 🏆 Earn Your Badge
 Reach the **Cathedral Builder** rank to unlock a signed, shareable achievement badge.'''
-
-    elif game_id == "mission-artemis-2":
-        game_instructions = '''## 🚀 How to Start the Mission
-
-### Step 1: Configure the Eventstream
-1. Open **ArtemisEventstream** in your workspace
-2. Click **Edit** to enter edit mode
-3. Add **4 Custom Endpoint Sources**:
-   - `VehicleTelemetryInput`
-   - `CrewVitalsInput`
-   - `EnvironmentalInput`
-   - `MissionEventsInput`
-4. Add a **KQL Database Destination**:
-   - Select **ArtemisEventhouse** → **MissionData**
-5. Map each Source to its corresponding table
-6. Click **Publish**
-
-### Step 2: Start the Simulation
-1. Open the **Artemis_Simulator** notebook
-2. Configure the Eventstream Custom Endpoint URLs
-3. Run the configuration cell
-4. Start the simulation with `start_mission()`
-
-### Step 3: Monitor from Mission Control
-1. Open the **Mission_Control** notebook
-2. Run the cells to visualize:
-   - 📊 Real-time vehicle telemetry
-   - 👨‍🚀 Crew vital signs
-   - 🌡️ Environmental conditions
-   - 📜 Mission event log
-3. The mission video is synchronized with the data!
-
-### Step 4: Analyze with KQL
-Explore the data with KQL queries in the "KQL Queries" section below.'''
 
     else:
         game_instructions = '''## 🎮 How to Get Started

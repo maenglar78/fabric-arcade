@@ -41,7 +41,6 @@ Instead of boring technical tutorials, you learn by building:
 | Game | You Learn | Workloads |
 |------|-----------|-----------|
 | 🏎️ **Fabric Racing Game** | Custom Endpoints, JSON mapping, streaming dashboards | RTI |
-| 🚀 **Mission Artemis 2** | Real-time telemetry, multi-table streaming, video sync | RTI, DE |
 | ⚽ **Sports Tracker** | ML predictions on streaming data | RTI, DS |
 | 🏰 **Quest Data Pipeline** | Medallion architecture (Bronze/Silver/Gold) | DE, DF |
 | 🎯 **Target Practice** | Eventstream → Eventhouse basics | RTI |
@@ -89,7 +88,6 @@ arcade.install("fabric-racing-game", workspace_id="your-workspace-guid")
 | Game | Type | Difficulty | Duration | Status |
 |------|------|------------|----------|--------|
 | 🏎️ Fabric Racing Game | Mission | ⭐⭐ | 30 min | ✅ Available |
-| 🚀 Mission Artemis 2 | Mission | ⭐⭐⭐ | 45 min | 🚧 In Development |
 | ⚽ Sports Tracker | Challenge | ⭐⭐ | 25 min | 🔜 Coming Soon |
 | 🏰 Quest Data Pipeline | Mission | ⭐⭐⭐ | 40 min | 🔜 Coming Soon |
 | 🎯 Target Practice | Challenge | ⭐ | 15 min | 🔜 Coming Soon |
