@@ -283,7 +283,7 @@
             <div class="game-title-section">
                 <span class="game-badge quest">QUEST</span>
                 <h1>Monster Breach</h1>
-                <p class="game-tagline">Build and defend your data pipelines against the Corruption Horde!</p>
+                <p class="game-tagline">Build real Data Pipelines to cleanse corrupted crystals and defeat the Corruption Horde!</p>
             </div>
         </header>
 
@@ -298,11 +298,11 @@
             </div>
             <div class="meta-item">
                 <span class="meta-label">Complete Time</span>
-                <span class="meta-value">~90 min</span>
+                <span class="meta-value">~60 min</span>
             </div>
             <div class="meta-item">
                 <span class="meta-label">Status</span>
-                <span class="meta-value status-coming">🔜 Coming Soon</span>
+                <span class="meta-value status-ready">✅ Ready · v1.0.0</span>
             </div>
         </div>
 
@@ -326,17 +326,16 @@
         <!-- QUICK START -->
         <section class="game-section quickstart">
             <h2>🚀 Quick Start</h2>
-            <p>Coming soon! This game is currently in development.</p>
+            <p>Install the game into your own Fabric workspace, then open the <code>MonsterBreach_Judge</code> notebook and start the campaign.</p>
             <div class="code-block">
-                <pre><code><span class="comment"># Coming in v0.2.0</span>
-<span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
+                <pre><code><span class="keyword">from</span> fabric_arcade <span class="keyword">import</span> arcade
 
 arcade.install(<span class="string">"monster-breach"</span>)</code></pre>
             </div>
             <p style="margin-top: 15px;">
-                <strong>Want to be notified?</strong> 
+                <strong>Enjoying the quest?</strong> 
                 <a href="https://github.com/maenglar78/fabric-arcade" style="color: #00b894;">⭐ Star the repo</a> 
-                to get updates!
+                to support Fabric Arcade!
             </p>
         </section>
 
@@ -358,7 +357,7 @@ arcade.install(<span class="string">"monster-breach"</span>)</code></pre>
             <h2>📦 What Gets Installed in Your Workspace</h2>
             <p><code>arcade.install("monster-breach")</code> deploys:</p>
             <ul style="line-height: 2; color: #ccc;">
-                <li>🏠 <strong>1 Lakehouse</strong> <code>MonsterBreach_LH</code> — holds <code>dirty_crystals</code> (input), <code>clean_crystals_expected</code> (oracle), and your output tables.</li>
+                <li>🏠 <strong>1 Lakehouse</strong> <code>MonsterBreach_LH</code> — holds the <code>dirty_crystals_*</code> inputs, the <code>clean_expected_*</code> oracles, the <code>mine_thresholds</code> reference table, and your <code>player_*</code> output tables.</li>
                 <li>⚡ <strong>1 Eventhouse</strong> <code>MonsterBreach_EH</code> with KQL Database <code>BattleData</code> and table <code>BattleEvents</code> — telemetry for every attempt.</li>
                 <li>📓 <strong>3 Notebooks</strong>:
                     <ul>
@@ -367,8 +366,8 @@ arcade.install(<span class="string">"monster-breach"</span>)</code></pre>
                         <li><code>MonsterBreach_Dashboard</code> — live KQL/Plotly dashboard.</li>
                     </ul>
                 </li>
-                <li>🛠️ <strong>8 empty level pipelines</strong> <code>Lvl01_CopyQuest</code> → <code>Lvl08_RetryReef</code> — you fill them in.</li>
-                <li>👑 <strong>1 empty boss pipeline</strong> <code>BossBattle_CorruptionKing</code> — orchestrate all 10 activities in one mega-flow.</li>
+                <li>🛠️ <strong>4 empty level pipelines</strong> <code>Lvl01_CopyQuest</code>, <code>Lvl02_FilterFortress</code>, <code>Lvl03_BranchLair</code>, <code>Lvl04_ForEachReef</code> — you fill them in.</li>
+                <li>👑 <strong>1 empty boss pipeline</strong> <code>BossBattle_CorruptionKing</code> — chain every technique into one mega-flow.</li>
             </ul>
         </section>
 
@@ -450,23 +449,23 @@ arcade.install(<span class="string">"monster-breach"</span>)</code></pre>
         <!-- MONSTERS -->
         <section class="game-section">
             <h2>🐉 The Corruption Horde (Enemies)</h2>
-            <p>These monsters attack your pipeline and corrupt your data:</p>
+            <p>Four monsters guard the crystal mines — each corrupts the data in two ways. Defeat them in order, then face the Corruption King:</p>
             <div class="monster-grid">
-                <div class="monster-card" style="--monster-color: #9b59b6;">
+                <div class="monster-card" style="--monster-color: #2ecc71;">
                     <div class="monster-header">
                         <div class="monster-icon">🐛</div>
                         <div>
                             <div class="monster-name">Null Bug</div>
-                            <div class="monster-type">Common • Wave 1+</div>
+                            <div class="monster-type">Level 1 · Copy Quest</div>
                         </div>
                     </div>
                     <div class="monster-effect">
                         <div class="monster-effect-label">Attack</div>
-                        <div class="monster-effect-text">Injects NULL values into your data</div>
+                        <div class="monster-effect-text">Devours <code>CrystalId</code>s (NULLs) and scorches the type metadata: <code>Weight</code> and <code>Purity</code> arrive as text ("85%").</div>
                     </div>
                     <div class="monster-counter">
                         <div class="monster-counter-label">Counter</div>
-                        <div class="monster-counter-text">Filter Activity (remove nulls)</div>
+                        <div class="monster-counter-text">Copy Activity + schema cast: drop NULL ids, cast Weight, parse Purity.</div>
                     </div>
                 </div>
 
@@ -475,88 +474,52 @@ arcade.install(<span class="string">"monster-breach"</span>)</code></pre>
                         <div class="monster-icon">👻</div>
                         <div>
                             <div class="monster-name">Duplicate Ghost</div>
-                            <div class="monster-type">Common • Wave 2+</div>
+                            <div class="monster-type">Level 2 · Filter Fortress</div>
                         </div>
                     </div>
                     <div class="monster-effect">
                         <div class="monster-effect-label">Attack</div>
-                        <div class="monster-effect-text">Creates duplicate rows</div>
+                        <div class="monster-effect-text">Echoes each crystal as identical copies, while the Latency Demon mixes in stale <code>IngestDate</code> batches.</div>
                     </div>
                     <div class="monster-counter">
                         <div class="monster-counter-label">Counter</div>
-                        <div class="monster-counter-text">Dataflow with Distinct</div>
+                        <div class="monster-counter-text">Dataflow: keep the latest batch (max IngestDate) + Distinct.</div>
+                    </div>
+                </div>
+
+                <div class="monster-card" style="--monster-color: #9b59b6;">
+                    <div class="monster-header">
+                        <div class="monster-icon">🎭</div>
+                        <div>
+                            <div class="monster-name">Branch Mimic</div>
+                            <div class="monster-type">Level 3 · Branch Lair</div>
+                        </div>
+                    </div>
+                    <div class="monster-effect">
+                        <div class="monster-effect-label">Attack</div>
+                        <div class="monster-effect-text">Disguises corrupted crystals as valid and grades them A/B/C/F.</div>
+                    </div>
+                    <div class="monster-counter">
+                        <div class="monster-counter-label">Counter</div>
+                        <div class="monster-counter-text">If Condition on Status + Switch on Grade (keep Valid & Grade &ne; F).</div>
                     </div>
                 </div>
 
                 <div class="monster-card" style="--monster-color: #e67e22;">
                     <div class="monster-header">
-                        <div class="monster-icon">🔥</div>
-                        <div>
-                            <div class="monster-name">Schema Dragon</div>
-                            <div class="monster-type">Rare • Wave 4+</div>
-                        </div>
-                    </div>
-                    <div class="monster-effect">
-                        <div class="monster-effect-label">Attack</div>
-                        <div class="monster-effect-text">Changes column types randomly</div>
-                    </div>
-                    <div class="monster-counter">
-                        <div class="monster-counter-label">Counter</div>
-                        <div class="monster-counter-text">Schema Mapping activity</div>
-                    </div>
-                </div>
-
-                <div class="monster-card" style="--monster-color: #95a5a6;">
-                    <div class="monster-header">
-                        <div class="monster-icon">💀</div>
-                        <div>
-                            <div class="monster-name">Timeout Skeleton</div>
-                            <div class="monster-type">Uncommon • Wave 3+</div>
-                        </div>
-                    </div>
-                    <div class="monster-effect">
-                        <div class="monster-effect-label">Attack</div>
-                        <div class="monster-effect-text">Slows pipeline to a crawl</div>
-                    </div>
-                    <div class="monster-counter">
-                        <div class="monster-counter-label">Counter</div>
-                        <div class="monster-counter-text">Retry Policy + Timeout config</div>
-                    </div>
-                </div>
-
-                <div class="monster-card" style="--monster-color: #1abc9c;">
-                    <div class="monster-header">
                         <div class="monster-icon">🌀</div>
                         <div>
-                            <div class="monster-name">Infinite Loop Wraith</div>
-                            <div class="monster-type">Rare • Wave 5+</div>
+                            <div class="monster-name">Loop Wraith</div>
+                            <div class="monster-type">Level 4 · ForEach Reef</div>
                         </div>
                     </div>
                     <div class="monster-effect">
                         <div class="monster-effect-label">Attack</div>
-                        <div class="monster-effect-text">Creates circular dependencies</div>
+                        <div class="monster-effect-text">Scatters crystals across five mines with under-weight readings — each mine has its OWN minimum weight.</div>
                     </div>
                     <div class="monster-counter">
                         <div class="monster-counter-label">Counter</div>
-                        <div class="monster-counter-text">ForEach with batch limits</div>
-                    </div>
-                </div>
-
-                <div class="monster-card" style="--monster-color: #e74c3c;">
-                    <div class="monster-header">
-                        <div class="monster-icon">☠️</div>
-                        <div>
-                            <div class="monster-name">Deadlock Demon</div>
-                            <div class="monster-type">Elite • Wave 6+</div>
-                        </div>
-                    </div>
-                    <div class="monster-effect">
-                        <div class="monster-effect-label">Attack</div>
-                        <div class="monster-effect-text">Freezes entire pipeline</div>
-                    </div>
-                    <div class="monster-counter">
-                        <div class="monster-counter-label">Counter</div>
-                        <div class="monster-counter-text">Sequential execution mode</div>
+                        <div class="monster-counter-text">ForEach mine with parameters + Retry, using <code>mine_thresholds</code>.</div>
                     </div>
                 </div>
             </div>
@@ -564,47 +527,32 @@ arcade.install(<span class="string">"monster-breach"</span>)</code></pre>
 
         <!-- LEVELS -->
         <section class="game-section">
-            <h2>🗺️ Campaign: The 8 Realms</h2>
+            <h2>🗺️ Campaign: 5 Levels</h2>
             <div class="timeline">
                 <div class="timeline-item" style="--timeline-color: #2ecc71;">
-                    <div class="timeline-level">Level 1</div>
-                    <div class="timeline-title">Tutorial Valley</div>
-                    <div class="timeline-desc">Learn the basics: Copy Activity and simple source→destination flow</div>
+                    <div class="timeline-level">Level 1 · 🐛 Null Bug</div>
+                    <div class="timeline-title">Copy Quest</div>
+                    <div class="timeline-desc">Copy Activity + schema cast: drop NULL ids and fix text-typed Weight/Purity → <code>player_lvl01</code></div>
                 </div>
                 <div class="timeline-item" style="--timeline-color: #3498db;">
-                    <div class="timeline-level">Level 2</div>
-                    <div class="timeline-title">Filter Forest</div>
-                    <div class="timeline-desc">Face Null Bugs! Master the Filter Activity to clean your data</div>
+                    <div class="timeline-level">Level 2 · 👻 Duplicate Ghost</div>
+                    <div class="timeline-title">Filter Fortress</div>
+                    <div class="timeline-desc">Distinct + latest batch: remove identical copies and keep only the newest IngestDate → <code>player_lvl02</code></div>
                 </div>
                 <div class="timeline-item" style="--timeline-color: #9b59b6;">
-                    <div class="timeline-level">Level 3</div>
-                    <div class="timeline-title">Transform Temple</div>
-                    <div class="timeline-desc">Duplicate Ghosts appear! Use Dataflow transformations</div>
+                    <div class="timeline-level">Level 3 · 🎭 Branch Mimic</div>
+                    <div class="timeline-title">Branch Lair</div>
+                    <div class="timeline-desc">If Condition + Switch: keep only Status = Valid and Grade &ne; F → <code>player_lvl03</code></div>
                 </div>
                 <div class="timeline-item" style="--timeline-color: #e67e22;">
-                    <div class="timeline-level">Level 4</div>
-                    <div class="timeline-title">Lookup Lagoon</div>
-                    <div class="timeline-desc">Enrich data with Lookup Activity, face Schema Dragons</div>
-                </div>
-                <div class="timeline-item" style="--timeline-color: #f39c12;">
-                    <div class="timeline-level">Level 5</div>
-                    <div class="timeline-title">Parallel Plains</div>
-                    <div class="timeline-desc">Master ForEach loops to process massive data volumes</div>
-                </div>
-                <div class="timeline-item" style="--timeline-color: #1abc9c;">
-                    <div class="timeline-level">Level 6</div>
-                    <div class="timeline-title">Conditional Caves</div>
-                    <div class="timeline-desc">If/Switch activities for complex branching logic</div>
-                </div>
-                <div class="timeline-item" style="--timeline-color: #95a5a6;">
-                    <div class="timeline-level">Level 7</div>
-                    <div class="timeline-title">Error Highlands</div>
-                    <div class="timeline-desc">Timeout Skeletons attack! Configure retry policies and error handling</div>
+                    <div class="timeline-level">Level 4 · 🌀 Loop Wraith</div>
+                    <div class="timeline-title">ForEach Reef</div>
+                    <div class="timeline-desc">ForEach + parameters + Retry: keep each crystal above its own mine's MinWeight → <code>player_lvl04</code></div>
                 </div>
                 <div class="timeline-item" style="--timeline-color: #e74c3c;">
-                    <div class="timeline-level">Level 8</div>
-                    <div class="timeline-title">Corruption Citadel</div>
-                    <div class="timeline-desc">The Final Boss awaits...</div>
+                    <div class="timeline-level">Level 5 · 👑 Corruption King</div>
+                    <div class="timeline-title">Boss Battle</div>
+                    <div class="timeline-desc">Mega-pipeline: chain every technique to cleanse all defects at once → <code>player_boss</code></div>
                 </div>
             </div>
         </section>
@@ -617,7 +565,7 @@ arcade.install(<span class="string">"monster-breach"</span>)</code></pre>
                     <div class="boss-icon">👑</div>
                     <div>
                         <div class="boss-name">THE CORRUPTION KING</div>
-                        <div class="boss-subtitle">Lord of Data Chaos • Final Boss • Level 8</div>
+                        <div class="boss-subtitle">Lord of Data Chaos • Final Boss • Level 5</div>
                     </div>
                 </div>
                 
@@ -720,34 +668,34 @@ SOURCE → <span style="color:#3498db">COPY</span> → <span style="color:#9b59b
             <h2>📦 Fabric Items Deployed</h2>
             <div class="items-grid">
                 <div class="item-card">
-                    <span class="item-icon">🔄</span>
-                    <span class="item-name">Data Pipeline</span>
-                    <span class="item-detail">QuestPipeline</span>
-                </div>
-                <div class="item-card">
-                    <span class="item-icon">📊</span>
-                    <span class="item-name">Dataflow Gen2</span>
-                    <span class="item-detail">QuestTransforms</span>
-                </div>
-                <div class="item-card">
                     <span class="item-icon">🏠</span>
-                    <span class="item-name">Eventhouse</span>
-                    <span class="item-detail">QuestEventhouse</span>
+                    <span class="item-name">Lakehouse</span>
+                    <span class="item-detail">MonsterBreach_LH</span>
                 </div>
                 <div class="item-card">
-                    <span class="item-icon">🌊</span>
-                    <span class="item-name">Eventstream</span>
-                    <span class="item-detail">QuestStream</span>
+                    <span class="item-icon">⚡</span>
+                    <span class="item-name">Eventhouse</span>
+                    <span class="item-detail">MonsterBreach_EH · BattleEvents</span>
                 </div>
                 <div class="item-card">
                     <span class="item-icon">📓</span>
                     <span class="item-name">Notebook</span>
-                    <span class="item-detail">Quest_DataPipeline</span>
+                    <span class="item-detail">MonsterBreach_Seed</span>
                 </div>
                 <div class="item-card">
-                    <span class="item-icon">🏢</span>
-                    <span class="item-name">Lakehouse</span>
-                    <span class="item-detail">QuestLakehouse</span>
+                    <span class="item-icon">⚖️</span>
+                    <span class="item-name">Notebook</span>
+                    <span class="item-detail">MonsterBreach_Judge</span>
+                </div>
+                <div class="item-card">
+                    <span class="item-icon">📊</span>
+                    <span class="item-name">Notebook</span>
+                    <span class="item-detail">MonsterBreach_Dashboard</span>
+                </div>
+                <div class="item-card">
+                    <span class="item-icon">🛠️</span>
+                    <span class="item-name">Data Pipelines</span>
+                    <span class="item-detail">4 levels + BossBattle_CorruptionKing</span>
                 </div>
             </div>
         </section>
@@ -777,7 +725,7 @@ SOURCE → <span style="color:#3498db">COPY</span> → <span style="color:#9b59b
                 <span class="scenario-tag">ETL/ELT</span>
                 <span class="scenario-tag">Data Orchestration</span>
                 <span class="scenario-tag">Error Handling</span>
-                <span class="scenario-tag">Tower Defense</span>
+                <span class="scenario-tag">Data Quality</span>
             </div>
         </section>
 

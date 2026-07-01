@@ -2,25 +2,25 @@
     "$schema": "https://arcade.fabric.example.com/schemas/game-manifest-v1.json",
     "id": "monster-breach",
     "name": "Monster Breach - Pipeline Defense",
-    "version": "0.1.0-scaffold",
-    "description": "🧙‍♂️ Build real Fabric Data Pipelines to defeat the Corruption Horde. Each level teaches a Pipeline Activity. Defeat 8 bosses then face the Corruption King in a 10-activity mega-pipeline.",
+    "version": "1.0.0",
+    "description": "🧙‍♂️ Build real Fabric Data Pipelines to defeat the Corruption Horde. Four monsters each guard two data defects; clean the crystals to defeat them, then face the Corruption King in a mega-pipeline that combines every technique.",
     "type": "quest",
     "workloads": ["DataFactory", "DataEngineering", "RTI"],
     "difficulty": 3,
-    "duration_minutes": 90,
+    "duration_minutes": 60,
     "icon": "🧙‍♂️",
     "tags": ["quest", "pipelines", "data-factory", "lakehouse", "eventhouse", "fabric", "learning"],
     "author": {
         "name": "Fabric Gaming Community"
     },
-    "status": "scaffold",
+    "status": "available",
     "prerequisites": {
         "fabric_capacity": "F2",
         "python_packages": [],
         "skills": ["Fabric workspace basics", "Data Factory pipeline UI"]
     },
     "learning_objectives": [
-        "Build Copy, Filter, Dataflow, Lookup, ForEach, If, Switch, Retry activities",
+        "Build Copy, Dataflow Gen2, Lookup, ForEach, If, Switch and Retry activities",
         "Orchestrate multi-activity pipelines with error handling",
         "Use Lakehouse as pipeline source and sink",
         "Track real-time progress via Eventhouse + KQL dashboard",
@@ -30,7 +30,7 @@
         {
             "type": "Lakehouse",
             "name": "MonsterBreach_LH",
-            "description": "Holds dirty_crystals (input), clean_crystals_expected (oracle), and player output tables"
+            "description": "Holds dirty_crystals (input), clean_expected (oracle), and player output tables"
         },
         {
             "type": "Eventhouse",
@@ -47,7 +47,7 @@
             "type": "Notebook",
             "name": "MonsterBreach_Seed",
             "file": "notebooks/seed_dirty_data.ipynb",
-            "description": "Generates synthetic dirty + expected datasets for all 8 levels"
+            "description": "Generates synthetic dirty + expected datasets for all 5 levels"
         },
         {
             "type": "Notebook",
@@ -64,47 +64,27 @@
         {
             "type": "DataPipeline",
             "name": "Lvl01_CopyQuest",
-            "description": "Empty pipeline — player adds Copy Activity"
+            "description": "Empty pipeline — player adds Copy Activity + schema cast (drop NULL ids, cast Weight/Purity)"
         },
         {
             "type": "DataPipeline",
             "name": "Lvl02_FilterFortress",
-            "description": "Empty pipeline — player adds Dataflow with Distinct"
+            "description": "Empty pipeline — player adds Distinct + latest-batch filter"
         },
         {
             "type": "DataPipeline",
-            "name": "Lvl03_SchemaShrine",
-            "description": "Empty pipeline — player adds schema mapping / cast"
+            "name": "Lvl03_BranchLair",
+            "description": "Empty pipeline — player adds If Condition + Switch (Status=Valid, drop Grade F)"
         },
         {
             "type": "DataPipeline",
-            "name": "Lvl04_TriggerTower",
-            "description": "Empty pipeline — player configures scheduled trigger"
-        },
-        {
-            "type": "DataPipeline",
-            "name": "Lvl05_ForEachField",
-            "description": "Empty pipeline — player adds ForEach + parameters"
-        },
-        {
-            "type": "DataPipeline",
-            "name": "Lvl06_IfMimicLair",
-            "description": "Empty pipeline — player adds If Condition + expressions"
-        },
-        {
-            "type": "DataPipeline",
-            "name": "Lvl07_SwitchHydraDen",
-            "description": "Empty pipeline — player adds Switch Activity multi-branch"
-        },
-        {
-            "type": "DataPipeline",
-            "name": "Lvl08_RetryReef",
-            "description": "Empty pipeline — player adds Retry policy + error handling"
+            "name": "Lvl04_ForEachReef",
+            "description": "Empty pipeline — player adds ForEach + parameters + Retry policy (Weight>0)"
         },
         {
             "type": "DataPipeline",
             "name": "BossBattle_CorruptionKing",
-            "description": "Empty mega-pipeline — player orchestrates ALL 10 activities (Copy + Filter + Dataflow + Lookup + ForEach + If + Switch + Retry + Notification + Validation) in one flow"
+            "description": "Empty mega-pipeline — player orchestrates ALL techniques (Lookup + ForEach + Copy/Dataflow + filters + Distinct) in one flow"
         }
     ],
     "tables": [
@@ -127,22 +107,18 @@
         { "name": "BossDefeated", "description": "Corruption King defeated — quest complete" }
     ],
     "levels": [
-        { "n": 1, "name": "Copy Quest",          "monster": "🐛 Null Bug",         "skill": "Copy Activity",                       "pipeline": "Lvl01_CopyQuest" },
-        { "n": 2, "name": "Filter Fortress",     "monster": "👻 Duplicate Ghost",  "skill": "Dataflow Gen2 with Distinct",         "pipeline": "Lvl02_FilterFortress" },
-        { "n": 3, "name": "Schema Shrine",       "monster": "🔥 Schema Dragon",    "skill": "Schema mapping / data type cast",     "pipeline": "Lvl03_SchemaShrine" },
-        { "n": 4, "name": "Trigger Tower",       "monster": "⏰ Latency Demon",     "skill": "Trigger / scheduling",                "pipeline": "Lvl04_TriggerTower" },
-        { "n": 5, "name": "ForEach Field",       "monster": "🌀 Loop Wraith",      "skill": "ForEach + parameters",                "pipeline": "Lvl05_ForEachField" },
-        { "n": 6, "name": "If Mimic Lair",       "monster": "🎭 If Mimic",         "skill": "If Condition + expressions",          "pipeline": "Lvl06_IfMimicLair" },
-        { "n": 7, "name": "Switch Hydra Den",    "monster": "⚡ Switch Hydra",     "skill": "Switch Activity multi-branch",        "pipeline": "Lvl07_SwitchHydraDen" },
-        { "n": 8, "name": "Retry Reef",          "monster": "💀 Failure Phantom",  "skill": "Retry policy + error handling",       "pipeline": "Lvl08_RetryReef" },
-        { "n": 9, "name": "Boss Battle",         "monster": "👑 Corruption King",  "skill": "Mega-pipeline: all 10 activities",    "pipeline": "BossBattle_CorruptionKing" }
+        { "n": 1, "name": "Copy Quest",       "monster": "🐛 Null Bug",        "skill": "Copy Activity + schema cast",          "pipeline": "Lvl01_CopyQuest" },
+        { "n": 2, "name": "Filter Fortress",  "monster": "👻 Duplicate Ghost", "skill": "Distinct + latest batch",              "pipeline": "Lvl02_FilterFortress" },
+        { "n": 3, "name": "Branch Lair",      "monster": "🎭 Branch Mimic",    "skill": "If Condition + Switch",                "pipeline": "Lvl03_BranchLair" },
+        { "n": 4, "name": "ForEach Reef",     "monster": "🌀 Loop Wraith",     "skill": "ForEach + parameters + Retry",         "pipeline": "Lvl04_ForEachReef" },
+        { "n": 5, "name": "Boss Battle",      "monster": "👑 Corruption King", "skill": "Mega-pipeline: every defect",          "pipeline": "BossBattle_CorruptionKing" }
     ],
     "post_deploy_steps": [
-        "Run MonsterBreach_Seed notebook once to populate dirty_crystals + clean_crystals_expected tables",
+        "Run MonsterBreach_Seed notebook once to populate dirty_crystals + clean_expected tables",
         "Open MonsterBreach_Judge notebook and read the Level 1 briefing",
         "Open Lvl01_CopyQuest pipeline in Fabric UI and build it as instructed",
         "Run the pipeline, then run judge.check_level(1) in the notebook",
         "Watch MonsterBreach_Dashboard update with your progress",
-        "Advance through all 8 levels, then face the Corruption King in BossBattle_CorruptionKing"
+        "Advance through all 4 levels, then face the Corruption King in BossBattle_CorruptionKing"
     ]
 }

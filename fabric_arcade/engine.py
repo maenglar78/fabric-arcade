@@ -228,7 +228,37 @@ class FabricClient:
             definition=definition,
             description=f"Fabric Arcade Notebook - {name}"
         )
-    
+
+    def create_data_pipeline(self, workspace_id: str, name: str,
+                             description: str = "") -> Dict:
+        """Create an empty Data Pipeline the player will build in the UI.
+
+        The pipeline-content.json carries no activities; the player assembles
+        them in the Fabric UI as part of the gameplay.
+        """
+        content = {"properties": {"activities": []}}
+        if description:
+            content["properties"]["description"] = description
+        encoded = base64.b64encode(
+            json.dumps(content).encode("utf-8")
+        ).decode("ascii")
+        definition = {
+            "parts": [
+                {
+                    "path": "pipeline-content.json",
+                    "payload": encoded,
+                    "payloadType": "InlineBase64",
+                }
+            ]
+        }
+        return self.create_item(
+            workspace_id=workspace_id,
+            item_type="DataPipeline",
+            display_name=name,
+            definition=definition,
+            description=description or f"Fabric Arcade Pipeline - {name}",
+        )
+
     def get_item(self, workspace_id: str, item_id: str) -> Dict:
         """Get item details"""
         response = requests.get(
@@ -546,6 +576,17 @@ class GameDeployer:
                     )
                     ctx.created_items[item["name"]] = result["id"]
                     print(f"    ✓ Created: {result['id']}")
+
+        # 6. Create Data Pipeline(s) — empty shells the player fills in the UI
+        for item in manifest.get("items", []):
+            if item["type"] == "DataPipeline":
+                name = f"{prefix}{item['name']}" if prefix else item["name"]
+                print(f"  Creating Data Pipeline: {name}...")
+                result = self.client.create_data_pipeline(
+                    ctx.workspace_id, name, item.get("description", "")
+                )
+                ctx.created_items[item["name"]] = result["id"]
+                print(f"    ✓ Created: {result['id']}")
     
     def _parse_kql_commands(self, kql_content: str) -> list:
         """
@@ -618,8 +659,8 @@ class GameDeployer:
         # Get all items in workspace
         items = self.client.list_items(workspace_id)
         
-        # Delete items in reverse order (notebooks, eventstreams, databases, eventhouses)
-        item_types_order = ["Notebook", "Eventstream", "KQLDatabase", "Eventhouse"]
+        # Delete items in reverse order (pipelines, notebooks, eventstreams, databases, eventhouses, lakehouses)
+        item_types_order = ["DataPipeline", "Notebook", "Eventstream", "KQLDatabase", "Eventhouse", "Lakehouse"]
         
         for item_type in item_types_order:
             for manifest_item in manifest.get("items", []):

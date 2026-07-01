@@ -1,5 +1,5 @@
 {
-    "version": "1.2.0",
+    "version": "1.3.0",
     "updated": "2026-07-01",
     "games": [
         {
@@ -41,6 +41,16 @@
             "duration_minutes": 60,
             "icon": "🕵️",
             "tags": ["ontology", "digital-twin", "kql", "knowledge-graph", "mystery", "noir", "rti"]
+        },
+        {
+            "id": "monster-breach",
+            "name": "Monster Breach - Pipeline Defense",
+            "description": "🧙‍♂️ Build real Fabric Data Pipelines to defeat the Corruption Horde. Four monsters each guard two data defects; clean the crystals, then face the Corruption King in a mega-pipeline that combines every technique.",
+            "workloads": ["DF", "DE", "RTI"],
+            "difficulty": 3,
+            "duration_minutes": 60,
+            "icon": "🧙‍♂️",
+            "tags": ["quest", "pipelines", "data-factory", "lakehouse", "eventhouse", "fabric", "learning"]
         },
         {
             "id": "mission-artemis-2",
