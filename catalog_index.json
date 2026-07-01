@@ -1,6 +1,6 @@
 {
-    "version": "1.1.0",
-    "updated": "2026-05-29",
+    "version": "1.2.0",
+    "updated": "2026-07-01",
     "games": [
         {
             "id": "fabric-racing-game",
@@ -21,6 +21,26 @@
             "duration_minutes": 60,
             "icon": "🏛️",
             "tags": ["dax", "calc-groups", "semantic-model", "direct-lake", "puzzle"]
+        },
+        {
+            "id": "city-builder",
+            "name": "City Builder — Datapolis",
+            "description": "🏙️ Become Mayor of a floating retro-cyberpunk city and rebuild its municipal Data Warehouse district by district. 8 districts of dimensional modeling in T-SQL + DAX, validated live.",
+            "workloads": ["DW", "PBI", "RTI"],
+            "difficulty": 3,
+            "duration_minutes": 90,
+            "icon": "🏙️",
+            "tags": ["star-schema", "warehouse", "power-bi", "dax", "semantic-model", "cyberpunk"]
+        },
+        {
+            "id": "ontology-detective",
+            "name": "Ontology Detective - Datapolis P.I.",
+            "description": "🕵️ You are Detective Sherlock Graph at Datapolis P.I. Design a real Fabric Ontology in Digital Twin Builder, query evidence in KQL, catch the culprit. 5 noir cases.",
+            "workloads": ["RTI"],
+            "difficulty": 3,
+            "duration_minutes": 60,
+            "icon": "🕵️",
+            "tags": ["ontology", "digital-twin", "kql", "knowledge-graph", "mystery", "noir", "rti"]
         },
         {
             "id": "mission-artemis-2",
