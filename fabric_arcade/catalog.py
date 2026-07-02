@@ -185,7 +185,7 @@ CATALOG_DATA = [
         "workloads": ["DB"],
         "difficulty": 3,
         "duration_minutes": 45,
-        "icon": "\U0001f3e6",
+        "icon": "\U0001f510",
         "tags": ["sql-database", "oltp", "t-sql", "transactions", "stored-procedures"],
         "achievements": ["teller", "vault-keeper", "master-of-coin"]
     },

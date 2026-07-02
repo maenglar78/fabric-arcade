@@ -136,7 +136,7 @@
             "workloads": ["DB"],
             "difficulty": 3,
             "duration_minutes": 45,
-            "icon": "🏦",
+            "icon": "🔐",
             "tags": ["sql-database", "oltp", "t-sql", "transactions", "stored-procedures"],
             "status": "coming-soon"
         },
