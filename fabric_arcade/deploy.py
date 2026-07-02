@@ -85,19 +85,6 @@ def _get_game_items(game_id: str) -> List[Dict[str, str]]:
             {"type": "Notebook", "name": "03_Check"},
             {"type": "Notebook", "name": "04_Dashboard"},
         ],
-        "sports-tracker": [
-            {"type": "Eventhouse", "name": "sports-events"},
-            {"type": "Eventstream", "name": "match-stream"},
-            {"type": "Notebook", "name": "sports-ml-model"},
-            {"type": "MLModel", "name": "outcome-predictor"},
-        ],
-        "quest-pipeline": [
-            {"type": "Lakehouse", "name": "bronze-dungeon"},
-            {"type": "Lakehouse", "name": "silver-treasury"},
-            {"type": "Lakehouse", "name": "gold-vault"},
-            {"type": "Pipeline", "name": "quest-etl"},
-            {"type": "Notebook", "name": "loot-processor"},
-        ],
         "retro-arcade": [
             {"type": "Lakehouse", "name": "Arcade_LH"},
             {"type": "Notebook", "name": "01_Setup"},
@@ -110,11 +97,6 @@ def _get_game_items(game_id: str) -> List[Dict[str, str]]:
             {"type": "Notebook", "name": "marine-detection"},
             {"type": "MLModel", "name": "species-classifier"},
             {"type": "RTDashboard", "name": "ocean-monitor"},
-        ],
-        "target-practice": [
-            {"type": "Eventhouse", "name": "target-events"},
-            {"type": "Eventstream", "name": "target-stream"},
-            {"type": "Notebook", "name": "target-tutorial"},
         ],
         "city-builder": [
             {"type": "Lakehouse", "name": "city-bronze"},

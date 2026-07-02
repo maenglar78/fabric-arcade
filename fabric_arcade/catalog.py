@@ -34,30 +34,6 @@ CATALOG_DATA = [
         "achievements": ["stonemason", "architect", "cathedral-builder"]
     },
     {
-        "id": "sports-tracker",
-        "name": "Sports Tracker",
-        "description": "Track live sports statistics from matches. Analyze player performance, team stats, and predict outcomes using ML models on streaming data.",
-        "type": "challenge",
-        "workloads": ["RTI", "DS"],
-        "difficulty": 2,
-        "duration_minutes": 25,
-        "icon": "⚽",
-        "tags": ["sports", "analytics", "ml", "predictions"],
-        "achievements": ["stat-master", "prediction-ace"]
-    },
-    {
-        "id": "quest-pipeline",
-        "name": "Quest Data Pipeline",
-        "description": "Build a medallion architecture data pipeline as a fantasy quest. Bronze = Raw dungeon loot, Silver = Cleaned treasures, Gold = Legendary items ready for analysis.",
-        "type": "mission",
-        "workloads": ["DE", "DF"],
-        "difficulty": 3,
-        "duration_minutes": 40,
-        "icon": "🏰",
-        "tags": ["fantasy", "medallion", "pipeline", "etl"],
-        "achievements": ["bronze-collector", "silver-refiner", "gold-master"]
-    },
-    {
         "id": "retro-arcade",
         "name": "Retro Arcade",
         "description": "Build a Power BI report on a pre-made arcade-themed Direct Lake semantic model (Pac-Man, Galaga, Donkey Kong & friends). 5 levels graded by sempy: Foundation, Visuals, Interactivity, Storytelling, Polish. Earn a signed badge from Newbie to Kill Screen Survivor.",
@@ -80,18 +56,6 @@ CATALOG_DATA = [
         "icon": "🌊",
         "tags": ["ocean", "ml", "exploration", "satellite"],
         "achievements": ["deep-diver", "whale-spotter", "storm-predictor"]
-    },
-    {
-        "id": "target-practice",
-        "name": "Target Practice",
-        "description": "Quick-fire Real-Time Intelligence basics. Hit targets by correctly routing events through Eventstream to Eventhouse. Perfect for RTI beginners.",
-        "type": "challenge",
-        "workloads": ["RTI"],
-        "difficulty": 1,
-        "duration_minutes": 15,
-        "icon": "🎯",
-        "tags": ["beginner", "rti", "eventstream", "quick"],
-        "achievements": ["bullseye", "quick-draw"]
     },
     {
         "id": "city-builder",

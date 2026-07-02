@@ -41,9 +41,10 @@ Instead of boring technical tutorials, you learn by building:
 | Game | You Learn | Workloads |
 |------|-----------|-----------|
 | 🏎️ **Fabric Racing Game** | Custom Endpoints, JSON mapping, streaming dashboards | RTI |
-| ⚽ **Sports Tracker** | ML predictions on streaming data | RTI, DS |
-| 🏰 **Quest Data Pipeline** | Medallion architecture (Bronze/Silver/Gold) | DE, DF |
-| 🎯 **Target Practice** | Eventstream → Eventhouse basics | RTI |
+| 🏛️ **Calc Groups Cathedral** | Calculation Groups on Direct Lake semantic models | PBI |
+| 🏙️ **City Builder** | Warehouse modeling & medallion analytics | DW, DE |
+| 🕵️ **Ontology Detective** | Digital Twin Builder ontologies & relationships | RTI |
+| 🧙‍♂️ **Monster Breach** | Pipelines, Dataflows & real-time defense | DE, DF, RTI |
 
 ---
 
@@ -88,9 +89,17 @@ arcade.install("fabric-racing-game", workspace_id="your-workspace-guid")
 | Game | Type | Difficulty | Duration | Status |
 |------|------|------------|----------|--------|
 | 🏎️ Fabric Racing Game | Mission | ⭐⭐ | 30 min | ✅ Available |
-| ⚽ Sports Tracker | Challenge | ⭐⭐ | 25 min | 🔜 Coming Soon |
-| 🏰 Quest Data Pipeline | Mission | ⭐⭐⭐ | 40 min | 🔜 Coming Soon |
-| 🎯 Target Practice | Challenge | ⭐ | 15 min | 🔜 Coming Soon |
+| 🏛️ Calc Groups Cathedral | Puzzle | ⭐⭐⭐ | 60 min | ✅ Available |
+| 🏙️ City Builder | Mission | ⭐⭐⭐ | 50 min | ✅ Available |
+| 🕵️ Ontology Detective | Mission | ⭐⭐⭐ | 45 min | ✅ Available |
+| 🧙‍♂️ Monster Breach | Quest | ⭐⭐⭐ | 60 min | ✅ Available |
+| 🕹️ Retro Arcade | Arcade | ⭐⭐ | 45 min | ✅ Available |
+| 🔮 Oracle's Forge | Mission | ⭐⭐⭐⭐ | 75 min | 🔜 Coming Soon |
+| 🛡️ Sentinel Grid | Mission | ⭐⭐⭐ | — | 🔜 Coming Soon |
+| 🧪 Purity Protocol | Challenge | ⭐⭐⭐ | — | 🔜 Coming Soon |
+| 🌀 Portal Nexus | Mission | ⭐⭐⭐ | — | 🔜 Coming Soon |
+| 🔐 Vault Keeper | Mission | ⭐⭐⭐ | 45 min | 🔜 Coming Soon |
+| 🦁 The Sphinx | Challenge | ⭐⭐⭐ | 40 min | 🔜 Coming Soon |
 
 **Workload Legend:**
 - **RTI** = Real-Time Intelligence (Eventstream, Eventhouse, KQL)

@@ -1,6 +1,6 @@
 {
-    "version": "1.4.0",
-    "updated": "2026-07-01",
+    "version": "1.5.0",
+    "updated": "2026-07-02",
     "games": [
         {
             "id": "fabric-racing-game",
@@ -51,39 +51,6 @@
             "duration_minutes": 60,
             "icon": "🧙‍♂️",
             "tags": ["quest", "pipelines", "data-factory", "lakehouse", "eventhouse", "fabric", "learning"]
-        },
-        {
-            "id": "sports-tracker",
-            "name": "Sports Tracker",
-            "description": "⚽ Track live sports statistics from matches. Analyze player performance and predict outcomes using ML.",
-            "workloads": ["RTI", "DS"],
-            "difficulty": 2,
-            "duration_minutes": 25,
-            "icon": "⚽",
-            "tags": ["sports", "analytics", "ml", "predictions"],
-            "status": "coming-soon"
-        },
-        {
-            "id": "quest-pipeline",
-            "name": "Quest Data Pipeline",
-            "description": "🏰 Build a medallion architecture as a fantasy quest. Bronze = Raw loot, Silver = Cleaned treasures, Gold = Legendary items.",
-            "workloads": ["DE", "DF"],
-            "difficulty": 3,
-            "duration_minutes": 40,
-            "icon": "🏰",
-            "tags": ["fantasy", "medallion", "pipeline", "etl"],
-            "status": "coming-soon"
-        },
-        {
-            "id": "target-practice",
-            "name": "Target Practice",
-            "description": "🎯 Quick-fire RTI basics. Hit targets by routing events through Eventstream to Eventhouse. Perfect for beginners.",
-            "workloads": ["RTI"],
-            "difficulty": 1,
-            "duration_minutes": 15,
-            "icon": "🎯",
-            "tags": ["beginner", "rti", "eventstream", "quick"],
-            "status": "coming-soon"
         },
         {
             "id": "oracles-forge",
