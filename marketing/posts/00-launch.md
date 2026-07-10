@@ -27,7 +27,7 @@ Un comando e sei dentro:
 
 L'idea è semplice: **il tuo piano di studio diventa una lista di livelli da battere.** Ogni gioco è un pezzo di Fabric che ti porti a casa davvero, non a memoria.
 
-👉 6 giochi sono live ora, altri 6 sono in forgia.
+👉 Diversi giochi sono già live, e il catalogo cresce di continuo.
 
 Provalo, scegli il tuo primo livello, e dimmi che punteggio fai 👇
 🔗 https://maenglar78.github.io/fabric-arcade/
@@ -58,7 +58,7 @@ One command and you're in:
 
 The idea is simple: **your study plan becomes a list of levels to beat.** Every game is a piece of Fabric you actually take home — not memorized, built.
 
-👉 6 games are live now, 6 more are in the forge.
+👉 Several games are live now — and the catalog keeps growing.
 
 Try it, pick your first level, and tell me your score 👇
 🔗 https://maenglar78.github.io/fabric-arcade/

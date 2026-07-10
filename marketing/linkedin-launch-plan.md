@@ -11,7 +11,7 @@
 ## Fonti / razionale (source-backed)
 
 - Il sito è servito da GitHub Pages e Netlify dalla cartella `website/` — verificato in `.github/workflows/deploy-pages.yml` e `netlify.toml`.
-- I 6 giochi **disponibili** e i 6 **coming-soon** provengono dal sito live `https://maenglar78.github.io/fabric-arcade/` e da `catalog_index.json`.
+- I giochi **disponibili** e quelli **coming-soon** provengono dal sito live `https://maenglar78.github.io/fabric-arcade/` e da `catalog_index.json` (il catalogo cresce nel tempo).
 - LinkedIn accetta come media **GIF/MP4**, non SVG animati → la GIF va prodotta registrando la pagina in `marketing/gif/arcade-intro.html`.
   Source: official — https://www.linkedin.com/help/linkedin/answer/a564109 — supports: formati media accettati da LinkedIn.
 - Best practice orario/giorni (Tue–Thu, mattina) → linea guida di community, non garanzia. Source: community — https://blog.hootsuite.com/best-time-to-post-on-linkedin/ — supports: finestra di pubblicazione consigliata.
@@ -29,7 +29,7 @@
 | 4 | 2026-08-04 | Mar | 🏙️ City Builder | `posts/04-city-builder.md` |
 | 5 | 2026-08-07 | Ven | 🕵️ Ontology Detective | `posts/05-ontology-detective.md` |
 | 6 | 2026-08-11 | Mar | 🕹️ Retro Arcade | `posts/06-retro-arcade.md` |
-| 7 | 2026-08-14 | Ven | **Recap** + teaser dei 6 giochi coming-soon | (opzionale, vedi sotto) |
+| 7 | 2026-08-14 | Ven | **Recap** + teaser dei giochi coming-soon | (opzionale, vedi sotto) |
 
 > Le date cadono tutte tra Mar e Ven, la finestra migliore su LinkedIn. Adatta l'orario alle 08:30–10:00 CET.
 
@@ -64,6 +64,6 @@ Per workload: `#PowerBI` `#DAX` `#DataEngineering` `#DataWarehouse` `#RealTimeIn
 
 ## Post di recap #7 (opzionale) — traccia
 
-- IT: "6 giochi live, altri 6 in forgia. Quale vuoi vedere per primo? 👇"
-- EN: "6 games live, 6 more in the forge. Which one should I ship next? 👇"
+- IT: "Il catalogo cresce: nuovi giochi in arrivo. Quale vuoi vedere per primo? 👇"
+- EN: "The catalog keeps growing: new games incoming. Which one should I ship next? 👇"
 - Elenca i coming-soon: Oracle's Forge (Data Science), Sentinel Grid (Activator), Purity Protocol (Dataflow), Portal Nexus (Mirroring), Vault Keeper (SQL DB), The Sphinx (AI/Copilot).
