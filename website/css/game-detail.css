@@ -557,3 +557,75 @@
     color: rgba(255, 255, 255, 0.85);
     font-size: 0.9rem;
 }
+
+/* ===== Feedback + Share (per-game) ===== */
+.game-feedback {
+    margin-top: 50px;
+    padding: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(255, 0, 255, 0.06));
+}
+
+.game-feedback h2 {
+    margin-bottom: 8px;
+}
+
+.game-feedback > p {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.share-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.share-label {
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    margin-right: 4px;
+}
+
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+}
+
+.share-btn.linkedin:hover { border-color: #0a66c2; box-shadow: 0 0 14px rgba(10, 102, 194, 0.6); }
+.share-btn.x:hover        { border-color: #fff;     box-shadow: 0 0 14px rgba(255, 255, 255, 0.4); }
+.share-btn.reddit:hover   { border-color: #ff4500; box-shadow: 0 0 14px rgba(255, 69, 0, 0.6); }
+.share-btn.bug:hover      { border-color: var(--secondary); box-shadow: 0 0 14px rgba(255, 0, 255, 0.6); }
+
+.comments {
+    margin-top: 10px;
+    min-height: 40px;
+}
+
+.comments-todo {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.comments-todo a {
+    color: var(--primary);
+}

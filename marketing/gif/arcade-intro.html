@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabric Arcade — Intro GIF (80s)</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#00d4ff; --magenta:#ff00ff; --green:#00ff88; --amber:#ffbe0b; --bg:#0a0a1a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+  /* 800x800 stage — square works well on LinkedIn feed. Change to 1200x630 for link previews. */
+  .stage{
+    position:relative;
+    width:800px;height:800px;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(255,0,255,.12), transparent 60%),
+      var(--bg);
+    font-family:'Press Start 2P', monospace;
+    overflow:hidden;
+    image-rendering:pixelcrisp;
+  }
+
+  /* CRT scanlines + vignette */
+  .stage::before{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:5;
+    background:repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.25) 2px 4px);
+  }
+  .stage::after{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:6;
+    box-shadow:inset 0 0 160px rgba(0,0,0,.9);
+  }
+
+  /* animated starfield grid (retro perspective floor) */
+  .grid{
+    position:absolute;left:-50%;right:-50%;bottom:-10%;height:60%;
+    background-image:
+      linear-gradient(var(--magenta) 1px, transparent 1px),
+      linear-gradient(90deg, var(--magenta) 1px, transparent 1px);
+    background-size:40px 40px;
+    transform:perspective(300px) rotateX(70deg);
+    opacity:.35;
+    animation:floor 1.2s linear infinite;
+  }
+  @keyframes floor{from{background-position:0 0}to{background-position:0 40px}}
+
+  /* title */
+  .title{
+    position:absolute;top:90px;left:0;right:0;text-align:center;z-index:3;
+    color:var(--cyan);
+    font-size:44px;line-height:1.4;letter-spacing:2px;
+    text-shadow:0 0 8px var(--cyan),0 0 18px var(--cyan), 4px 4px 0 var(--magenta);
+    animation:flick 3s steps(1) infinite;
+  }
+  @keyframes flick{0%,92%,100%{opacity:1}94%{opacity:.4}96%{opacity:1}}
+
+  .subtitle{
+    position:absolute;top:200px;left:0;right:0;text-align:center;z-index:3;
+    color:var(--green);font-size:14px;letter-spacing:1px;
+    text-shadow:0 0 6px var(--green);
+  }
+
+  /* rotating keyword line */
+  .word-wrap{
+    position:absolute;top:360px;left:0;right:0;height:60px;text-align:center;z-index:4;
+  }
+  .word{
+    position:absolute;left:0;right:0;
+    font-size:32px;color:var(--amber);
+    text-shadow:0 0 10px var(--amber), 3px 3px 0 #7a3b00;
+    opacity:0;
+    animation:cycle 12s steps(1) infinite;
+  }
+  /* 8 words, each shown 1.5s -> 12s loop */
+  .word:nth-child(1){animation-delay:0s}
+  .word:nth-child(2){animation-delay:1.5s}
+  .word:nth-child(3){animation-delay:3s}
+  .word:nth-child(4){animation-delay:4.5s}
+  .word:nth-child(5){animation-delay:6s}
+  .word:nth-child(6){animation-delay:7.5s}
+  .word:nth-child(7){animation-delay:9s}
+  .word:nth-child(8){animation-delay:10.5s}
+  @keyframes cycle{
+    0%{opacity:0;transform:translateY(20px) scale(.9)}
+    2%{opacity:1;transform:translateY(0) scale(1)}
+    10%{opacity:1;transform:translateY(0) scale(1)}
+    12.5%{opacity:0;transform:translateY(-20px) scale(1.05)}
+    100%{opacity:0}
+  }
+
+  /* scrolling marquee message */
+  .marquee{
+    position:absolute;bottom:150px;left:0;right:0;overflow:hidden;z-index:4;white-space:nowrap;
+  }
+  .marquee span{
+    display:inline-block;color:var(--magenta);font-size:18px;letter-spacing:2px;
+    text-shadow:0 0 8px var(--magenta);
+    padding-left:100%;
+    animation:scroll 10s linear infinite;
+  }
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+
+  /* blinking CTA */
+  .cta{
+    position:absolute;bottom:70px;left:0;right:0;text-align:center;z-index:4;
+    color:#fff;font-size:20px;letter-spacing:1px;
+    text-shadow:0 0 10px var(--cyan);
+    animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:.15}}
+
+  /* pixel sprites floating */
+  .sprite{position:absolute;font-size:34px;z-index:2;animation:bob 2s ease-in-out infinite}
+  .s1{top:300px;left:80px;animation-delay:0s}
+  .s2{top:520px;right:90px;animation-delay:.4s}
+  .s3{top:640px;left:140px;animation-delay:.8s}
+  .s4{top:150px;right:120px;animation-delay:1.2s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid"></div>
+
+    <div class="sprite s1">🏎️</div>
+    <div class="sprite s2">🧙‍♂️</div>
+    <div class="sprite s3">🕵️</div>
+    <div class="sprite s4">🏛️</div>
+
+    <div class="title">FABRIC<br>ARCADE</div>
+    <div class="subtitle">LEARN MICROSOFT FABRIC · BY PLAYING</div>
+
+    <div class="word-wrap">
+      <div class="word">POWER BI</div>
+      <div class="word">REAL-TIME</div>
+      <div class="word">WAREHOUSE</div>
+      <div class="word">PIPELINES</div>
+      <div class="word">KQL</div>
+      <div class="word">DATA SCIENCE</div>
+      <div class="word">DAX</div>
+      <div class="word">LAKEHOUSE</div>
+    </div>
+
+    <div class="marquee"><span>★ 6 GAMES LIVE ★ ONE COMMAND TO DEPLOY ★ REAL FABRIC WORKSPACE ★ YOUR STUDY PLAN = A LIST OF LEVELS ★</span></div>
+
+    <div class="cta">▶ INSERT COIN — PRESS START</div>
+  </div>
+
+<!--
+  HOW TO TURN THIS INTO A GIF/MP4 — see README.md in this folder.
+  The full animation loop is 12s. Record 12s for a seamless loop.
+-->
+</body>
+</html>
