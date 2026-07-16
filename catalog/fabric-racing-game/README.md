@@ -72,7 +72,7 @@ arcade.install("fabric-racing-game")
 
 This creates in your Fabric workspace:
 
-- `RacingEventstream` - receives game telemetry
+- `RacingStream` - receives game telemetry
 
 - `RacingEventhouse` with `RaceData` database
 
@@ -84,17 +84,19 @@ This creates in your Fabric workspace:
 
 ### Step 1: Configure Eventstream
 
-1. Open **RacingEventstream**
+1. Open **RacingStream**
 
 2. Click **Edit**
 
 3. Add **Custom Endpoint** source → Name: `TelemetryInput`
 
 4. Add **Eventhouse** destination:
+   - Data ingestion mode: `Event processing before ingestion`
    - Eventhouse: `RacingEventhouse`
    - Database: `RaceData`
-   - Table: `GameEvents`
+   - KQL Destination table: **Create new** → `GameEvents`
    - Format: `Json`
+   - 💡 The **Inspect** step reads a live sample to map the schema — if it shows *no data*, run the game first (Steps 2–3), then come back and finish this destination.
 
 5. Connect Source → Destination
 
@@ -218,7 +220,7 @@ GameEvents
 
 | File | Description |
 |------|-------------|
-| `racing_game_v2.ipynb` | Main game notebook with telemetry |
+| `racing_game_v3.ipynb` | Main game notebook with telemetry |
 | `race_dashboard.ipynb` | KQL analytics dashboard |
 
 ---

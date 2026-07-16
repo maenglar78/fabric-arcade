@@ -5,12 +5,12 @@
         {
             "id": "fabric-racing-game",
             "name": "Fabric Racing Game",
-            "description": "🏎️ HTML5 multiplayer racing game for 4 drivers with real-time telemetry. Custom Endpoint, JSON mapping, live dashboard.",
+            "description": "🏎️ HTML5 single-player championship: race 10 Fabric-themed tracks, stream telemetry via Custom Endpoint + JSON mapping to Eventhouse, analyze in a live KQL dashboard.",
             "workloads": ["RTI"],
             "difficulty": 2,
             "duration_minutes": 30,
             "icon": "🏎️",
-            "tags": ["racing", "html5", "multiplayer", "gaming"]
+            "tags": ["racing", "html5", "rti", "gaming"]
         },
         {
             "id": "calc-groups-cathedral",

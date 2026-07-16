@@ -67,14 +67,11 @@ def _get_game_items(game_id: str) -> List[Dict[str, str]]:
     # Game-specific item definitions
     GAME_ITEMS = {
         "fabric-racing-game": [
-            {"type": "Eventhouse", "name": "racing-events"},
-            {"type": "Eventstream", "name": "racing-stream"},
-            {"type": "KQLDatabase", "name": "race-data"},
-            {"type": "Notebook", "name": "Deploy_FabricRacingGame"},
-            {"type": "Notebook", "name": "Race_P1"},
-            {"type": "Notebook", "name": "Race_P2"},
-            {"type": "Notebook", "name": "Race_P3"},
-            {"type": "Notebook", "name": "Race_P4"},
+            {"type": "Eventhouse", "name": "RacingEventhouse"},
+            {"type": "KQLDatabase", "name": "RaceData"},
+            {"type": "Eventstream", "name": "RacingStream"},
+            {"type": "Notebook", "name": "Racing_Championship"},
+            {"type": "Notebook", "name": "Race_Dashboard"},
             {"type": "Notebook", "name": "Race_Check"},
         ],
         "calc-groups-cathedral": [

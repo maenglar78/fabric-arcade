@@ -449,7 +449,7 @@ def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, create
 
 ### Step 1: Configure the Eventstream
 
-1. Open **RacingEventstream** in your workspace
+1. Open **RacingStream** in your workspace
 
 2. Click **Edit** to enter edit mode
 
@@ -460,7 +460,7 @@ def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, create
    - Data ingestion mode: **Event processing before ingestion**
    - Eventhouse: **RacingEventhouse**
    - KQL Database: **RaceData**
-   - KQL Destination table: **GameEvents**
+   - KQL Destination table: **Create new** → **GameEvents**
    - Input data format: **Json**
 
 5. Connect Source → Destination
@@ -469,20 +469,22 @@ def _create_readme_notebook(game_id: str, game_name: str, manifest: dict, create
 
 ---
 
-### Step 2: Get the Connection String
+### Step 2: Get the 4 SAS Values
 
 1. In the Eventstream editor, click on **TelemetryInput** (Custom Endpoint)
 
-2. In the **Details** panel, click **SAS Key Authentication**
+2. In the **Details** panel, open **SAS Key Authentication**
 
-3. Click the **eye icon** next to **Connection string-primary key**
-
-4. Click the **copy icon** to copy the full connection string
-
-The connection string looks like:
+3. Reveal and copy the **Connection string-primary key**. It looks like:
 ```
-Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx;EntityPath=xxx
+Endpoint=sb://esXXXX.servicebus.windows.net/;SharedAccessKeyName=key_abc;SharedAccessKey=AbC...=;EntityPath=esXXXX_eh
 ```
+
+4. Map it to the 4 notebook variables:
+   - `EH_NS` = host after `sb://` and before `/` (e.g. `esXXXX.servicebus.windows.net`)
+   - `EH_NAME` = value of `EntityPath=`
+   - `EH_KEY_NAME` = value of `SharedAccessKeyName=`
+   - `EH_KEY` = value of `SharedAccessKey=`
 
 ---
 
@@ -490,15 +492,13 @@ Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKe
 
 1. Open the **Racing_Championship** notebook
 
-2. In the **Configuration cell**, paste:
-   - `CONNECTION_STRING` = your copied connection string
-   - `PLAYER_NAME` = your name
+2. In **Cell 1**, paste your `EH_NS`, `EH_NAME`, `EH_KEY_NAME`, `EH_KEY` and set `PLAYER_NAME`
 
-3. Run **Cell 1** (Configuration)
+3. Run **Cell 1** (Configuration) - the SAS token is generated automatically (valid 4h)
 
-4. Run **Cell 2** (SAS Token Generator) - you should see ✅ messages
+4. Run **Cell 2** (Play!) - the game appears and streams telemetry every 2s
 
-5. Run **Cell 3** (Game) - the game will appear!
+5. (Optional) Run **Cell 3** to verify events landed in Eventhouse
 
 ---
 

@@ -8,13 +8,11 @@
     PlayerId: string,
     EventType: string,
     Level: int,
+    LevelName: string,
     Score: int,
-    Multiplier: int,
-    StarsCollected: int,
-    Lap: int,
-    PositionX: real,
-    PositionY: real,
-    Speed: real
+    TotalScore: int,
+    Lives: int,
+    Multiplier: int
 )
 
 // Enable streaming ingestion for real-time data
@@ -29,11 +27,9 @@
 '    {"column": "PlayerId", "path": "$.PlayerId", "datatype": "string"},'
 '    {"column": "EventType", "path": "$.EventType", "datatype": "string"},'
 '    {"column": "Level", "path": "$.Level", "datatype": "int"},'
+'    {"column": "LevelName", "path": "$.LevelName", "datatype": "string"},'
 '    {"column": "Score", "path": "$.Score", "datatype": "int"},'
-'    {"column": "Multiplier", "path": "$.Multiplier", "datatype": "int"},'
-'    {"column": "StarsCollected", "path": "$.StarsCollected", "datatype": "int"},'
-'    {"column": "Lap", "path": "$.Lap", "datatype": "int"},'
-'    {"column": "PositionX", "path": "$.PositionX", "datatype": "real"},'
-'    {"column": "PositionY", "path": "$.PositionY", "datatype": "real"},'
-'    {"column": "Speed", "path": "$.Speed", "datatype": "real"}'
+'    {"column": "TotalScore", "path": "$.TotalScore", "datatype": "int"},'
+'    {"column": "Lives", "path": "$.Lives", "datatype": "int"},'
+'    {"column": "Multiplier", "path": "$.Multiplier", "datatype": "int"}'
 ']'

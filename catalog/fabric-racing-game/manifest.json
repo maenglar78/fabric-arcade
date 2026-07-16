@@ -28,16 +28,16 @@
     "features": {
         "levels": 10,
         "tracks": [
-            { "level": 1, "name": "Lakehouse Lane", "targetScore": 500, "dataPoints": 12, "bugs": 5 },
-            { "level": 2, "name": "Pipeline Pass", "targetScore": 800, "dataPoints": 14, "bugs": 7 },
-            { "level": 3, "name": "Warehouse Way", "targetScore": 1200, "dataPoints": 16, "bugs": 9 },
-            { "level": 4, "name": "Dataflow Drive", "targetScore": 1600, "dataPoints": 18, "bugs": 11 },
-            { "level": 5, "name": "Notebook Narrows", "targetScore": 2000, "dataPoints": 20, "bugs": 14 },
-            { "level": 6, "name": "Eventhouse Express", "targetScore": 2500, "dataPoints": 22, "bugs": 17 },
-            { "level": 7, "name": "Shortcut Sprint", "targetScore": 3000, "dataPoints": 24, "bugs": 20 },
-            { "level": 8, "name": "Capacity Canyon", "targetScore": 3500, "dataPoints": 26, "bugs": 24 },
-            { "level": 9, "name": "OneLake Overdrive", "targetScore": 4000, "dataPoints": 28, "bugs": 28 },
-            { "level": 10, "name": "Spark Summit", "targetScore": 5000, "dataPoints": 32, "bugs": 32 }
+            { "level": 1, "name": "Lakehouse Lane", "targetScore": 350, "dataPoints": 14, "bugs": 4 },
+            { "level": 2, "name": "Pipeline Pass", "targetScore": 650, "dataPoints": 16, "bugs": 6 },
+            { "level": 3, "name": "Warehouse Way", "targetScore": 1000, "dataPoints": 18, "bugs": 8 },
+            { "level": 4, "name": "Dataflow Drive", "targetScore": 1400, "dataPoints": 20, "bugs": 11 },
+            { "level": 5, "name": "Notebook Narrows", "targetScore": 1900, "dataPoints": 22, "bugs": 14 },
+            { "level": 6, "name": "Eventhouse Express", "targetScore": 2450, "dataPoints": 24, "bugs": 17 },
+            { "level": 7, "name": "Shortcut Sprint", "targetScore": 3050, "dataPoints": 26, "bugs": 20 },
+            { "level": 8, "name": "Capacity Canyon", "targetScore": 3700, "dataPoints": 28, "bugs": 24 },
+            { "level": 9, "name": "OneLake Overdrive", "targetScore": 4400, "dataPoints": 30, "bugs": 28 },
+            { "level": 10, "name": "Spark Summit", "targetScore": 5200, "dataPoints": 32, "bugs": 32 }
         ],
         "scoring": {
             "dataPointBonus": 50,
@@ -115,25 +115,15 @@
             "description": "🏅 Validate at least one completed race + a working dashboard, then mint your signed achievement badge."
         }
     ],
-    "tables": [
-        {
-            "name": "GameEvents",
-            "database": "RaceData",
-            "schema": "schemas/GameEvents.kql",
-            "columns": [
-                "EventId", "Timestamp", "SessionId", "PlayerId", "EventType",
-                "Level", "Score", "Multiplier", "StarsCollected", "Lap",
-                "PositionX", "PositionY", "Speed"
-            ]
-        }
-    ],
     "eventTypes": [
-        { "name": "RaceStart", "description": "Player starts a race" },
-        { "name": "Telemetry", "description": "Periodic position/score update" },
+        { "name": "GameStart", "description": "Player starts a new game" },
+        { "name": "LevelStart", "description": "A track/level begins" },
         { "name": "StarCollected", "description": "Player collected a star bonus" },
-        { "name": "ObstacleHit", "description": "Player hit an obstacle" },
-        { "name": "LapComplete", "description": "Player completed a lap" },
-        { "name": "LevelComplete", "description": "Player finished the level" }
+        { "name": "BugHit", "description": "Player hit a bug obstacle" },
+        { "name": "LevelComplete", "description": "Player completed a track with enough points" },
+        { "name": "LevelFailed", "description": "Player missed the target score on a track" },
+        { "name": "GameComplete", "description": "Player finished all tracks" },
+        { "name": "GameOver", "description": "Player ran out of lives" }
     ],
     "story": {
         "intro": "Welcome to the Fabric Racing Championship! Race through 10 unique tracks, collect stars for points, and avoid obstacles. Build the RTI infrastructure that powers the competition!",
@@ -157,10 +147,10 @@
         ]
     },
     "post_deploy_steps": [
-        "Open RacingStream Eventstream and add Custom Endpoint source",
-        "Add KQL Database destination (RacingEventhouse → RaceData → GameEvents)",
+        "Open RacingStream Eventstream and add a Custom Endpoint source (TelemetryInput)",
+        "Add an Eventhouse destination in 'Event processing before ingestion' mode (RacingEventhouse → RaceData → create new table GameEvents, Json)",
         "Publish the Eventstream",
-        "Copy the Custom Endpoint URL to the Racing_Championship notebook",
+        "Copy the 4 SAS values from the Custom Endpoint into Racing_Championship Cell 1",
         "Run the notebook and start racing!"
     ]
 }
