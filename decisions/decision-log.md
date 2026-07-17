@@ -34,3 +34,26 @@ Decisioni tecniche durature. Ogni voce: contesto → decisione → motivo.
 ### D6 — Pubblicazione: push su `main` per gli asset, PyPI solo per la logica
 - **Decisione:** asset (notebook/manifest) via `git push main`; `fabric_api.py` via GitHub Release → PyPI.
 - **Motivo:** `arcade.install` scarica gli asset da GitHub raw main a runtime.
+
+## 2026-07-17 · Sito — analytics, share e anteprime social
+
+### D7 — Analytics sito via Cloudflare Web Analytics (client-side)
+- **Contesto:** il sito è su GitHub Pages, che NON offre analytics di traffico (Insights→Traffic mostra solo la pagina repo).
+- **Decisione:** beacon Cloudflare Web Analytics (script prima di `</body>`) su tutte le 15 pagine pubbliche.
+- **Motivo:** gratis, senza cookie/banner. Download PyPI monitorati a parte (pepy.tech / pypistats).
+- Source: official - https://developers.cloudflare.com/web-analytics/ - supports: beacon JS senza cookie.
+
+### D8 — Pulsanti share: strategia per-piattaforma
+- **Contesto:** l'endpoint LinkedIn `share-offsite?url=` accetta SOLO l'URL (niente testo pre-compilato).
+- **Decisione:** LinkedIn via compositore `feed/?shareActive=true&text=` (testo+hashtag+link); X via `intent/tweet` con `hashtags=`; Reddit solo `title`. Nome gioco dall'`<h1>`.
+- **Motivo:** massimizza il pre-compilato dove supportato. NB: `shareActive` è NON documentato → fallback = `share-offsite`.
+- Source: official - https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/share-on-linkedin - supports: la Share API richiede il testo; l'URL-share pubblico no.
+
+### D9 — Anteprime social via Open Graph + card generate
+- **Decisione:** meta OG/Twitter con URL ASSOLUTI GitHub Pages; 6 social card 1200×630 per gioco + 1 hub, generate da `dev/gen_social_cards.py` (PIL + font Windows arialbd/seguiemj).
+- **Motivo:** i crawler non leggono path relativi; PNG statico = anteprima ricca affidabile (no GIF).
+
+### D10 — Cache anteprime LinkedIn → Post Inspector
+- **Contesto:** LinkedIn mostrava il testo del corpo e nessuna immagine pur con OG corretti e immagine HTTP 200.
+- **Decisione:** forzare il re-scrape con LinkedIn Post Inspector (cache ~7gg) per gli URL già condivisi.
+- **Motivo:** LinkedIn non ri-legge in automatico; l'inspector aggiorna la cache. Verificato: dopo l'inspector la card compare.

@@ -15,12 +15,12 @@ Così ho costruito una cosa a cui tenevo da tempo: **Fabric Arcade** 🕹️
 
 Non è un corso. Non è un video da guardare. Sono **veri giochi** che, con una riga di codice in un notebook Fabric, creano risorse reali nel tuo workspace e ti fanno imparare *costruendo*:
 
-🏎️ corri su tracciati che sono pipeline in tempo reale
-🏛️ sostituisci 12 misure con un solo elegante Calculation Group
-🧙‍♂️ costruisci pipeline per sconfiggere il Re della Corruzione
-🏙️ diventa Sindaco e progetta uno star schema, distretto per distretto
-🕵️ risolvi casi noir modellando ontologie e scrivendo KQL
-🕹️ scala 5 livelli costruendo un report Power BI
+🏎️ corri su tracciati che sono **#Eventstream** in tempo reale
+🏛️ sostituisci 12 misure con un solo elegante **#CalculationGroup**
+🧙‍♂️ costruisci **#DataPipeline** per sconfiggere il Re della Corruzione
+🏙️ diventa Sindaco e progetta lo star schema del tuo **#Warehouse**, distretto per distretto
+🕵️ risolvi casi noir modellando un'**#Ontology** e interrogandola in **#KQL**
+🕹️ scala 5 livelli costruendo un report **#PowerBI**
 
 Un comando e sei dentro:
 `%pip install fabric-arcade` → `arcade.install("fabric-racing-game")`
@@ -46,12 +46,12 @@ So I built something I've wanted to make for a long time: **Fabric Arcade** 🕹
 
 It's not a course. It's not a video to watch. These are **real games** that — with one line of code in a Fabric notebook — spin up real resources in your workspace and let you learn by *building*:
 
-🏎️ race across tracks that are real-time pipelines
-🏛️ replace 12 measures with one elegant Calculation Group
-🧙‍♂️ build pipelines to defeat the Corruption King
-🏙️ become Mayor and design a star schema, district by district
-🕵️ crack noir cases by modeling ontologies and writing KQL
-🕹️ climb 5 levels building a Power BI report
+🏎️ race on tracks made of real-time **#Eventstream**
+🏛️ replace 12 measures with a single elegant **#CalculationGroup**
+🧙‍♂️ build **#DataPipeline** to defeat the Corruption King
+🏙️ become Mayor and design your **#Warehouse** star schema, district by district
+🕵️ crack noir cases by modeling an **#Ontology** and querying it in **#KQL**
+🕹️ climb 5 levels by building a **#PowerBI** report
 
 One command and you're in:
 `%pip install fabric-arcade` → `arcade.install("fabric-racing-game")`
