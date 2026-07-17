@@ -101,4 +101,39 @@ for slug, title, emoji, tags, accent in GAMES:
     img.save(out, "PNG")
     print("wrote", os.path.relpath(out))
 
+
+# ---- Hub card (home page + features) ----
+def build_hub():
+    accent = (139, 92, 246)
+    img = gradient(accent)
+    d = ImageDraw.Draw(img)
+    d.rectangle([8, 8, W - 9, H - 9], outline=accent, width=4)
+    d.rectangle([0, 0, W - 1, 6], fill=accent)
+
+    # row of game emojis
+    emojis = [g[2] for g in GAMES]
+    step = 150
+    start_x = W // 2 - (len(emojis) - 1) * step // 2
+    for i, em in enumerate(emojis):
+        draw_emoji(img, em, start_x + i * step, 210, 84)
+
+    tf = ImageFont.truetype(FB, 96)
+    d.text((W // 2, 380), "FABRIC ARCADE", font=tf, fill=(240, 240, 250), anchor="mm")
+    sf = ImageFont.truetype(FR, 36)
+    d.text((W // 2, 452), "Learn Microsoft Fabric by playing", font=sf, fill=(205, 205, 220), anchor="mm")
+
+    cf = ImageFont.truetype(FB, 30)
+    tags = "#MicrosoftFabric   \u00B7   #PowerBI   \u00B7   Free & Open Source"
+    bb = cf.getbbox(tags)
+    chip_w = (bb[2] - bb[0]) + 52
+    cx0 = (W - chip_w) // 2
+    d.rounded_rectangle([cx0, 520, cx0 + chip_w, 576], radius=28, fill=(255, 255, 255, 20), outline=accent, width=2)
+    d.text((W // 2, 548), tags, font=cf, fill=(235, 235, 245), anchor="mm")
+
+    out = os.path.join(OUT, "fabric-arcade.png")
+    img.save(out, "PNG")
+    print("wrote", os.path.relpath(out))
+
+
+build_hub()
 print("done")
