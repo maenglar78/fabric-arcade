@@ -19,13 +19,33 @@ const GISCUS_CATEGORY = "Game Feedback";
 const GISCUS_CATEGORY_ID = "REPLACE_WITH_CATEGORY_ID"; // <-- from giscus.app
 
 (function () {
-  // ---- Share buttons ----
-  const url = encodeURIComponent(window.location.href);
-  const title = encodeURIComponent(document.title);
+  // ---- Share buttons: pre-filled post with #FabricArcade #<Game> + link ----
+  const pageUrl = window.location.href;
+  const h1 = document.querySelector("h1");
+  const gameName = (h1 ? h1.textContent : document.title.split(/[-–—]/)[0]).trim();
+  // Hashtag from the game name, e.g. "Fabric Racing Game" -> "FabricRacingGame"
+  const gameTag = gameName.replace(/[^A-Za-z0-9]/g, "");
+  const message =
+    "Just played " + gameName +
+    " on Fabric Arcade — learn Microsoft Fabric by playing! 🎮";
+
+  const url = encodeURIComponent(pageUrl);
+  const xText = encodeURIComponent(message);
+  // LinkedIn ignores pre-filled text on share-offsite, so we open the composer
+  // (shareActive) with the text + hashtags + link; LinkedIn builds the preview
+  // from the URL contained in the text.
+  const liText = encodeURIComponent(
+    message + "\n\n#FabricArcade #" + gameTag + "\n" + pageUrl
+  );
+  // Reddit link posts only take a title (no hashtags).
+  const redditTitle = encodeURIComponent(
+    gameName + " — learn Microsoft Fabric by playing 🎮 (Fabric Arcade)"
+  );
+
   const shareMap = {
-    "share-linkedin": "https://www.linkedin.com/sharing/share-offsite/?url=" + url,
-    "share-x": "https://twitter.com/intent/tweet?url=" + url + "&text=" + title,
-    "share-reddit": "https://www.reddit.com/submit?url=" + url + "&title=" + title
+    "share-linkedin": "https://www.linkedin.com/feed/?shareActive=true&text=" + liText,
+    "share-x": "https://twitter.com/intent/tweet?text=" + xText + "&url=" + url + "&hashtags=FabricArcade," + gameTag,
+    "share-reddit": "https://www.reddit.com/submit?url=" + url + "&title=" + redditTitle
   };
   Object.keys(shareMap).forEach(function (id) {
     const el = document.getElementById(id);
