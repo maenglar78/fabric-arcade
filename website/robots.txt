@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maenglar78.github.io/fabric-arcade/sitemap.xml
