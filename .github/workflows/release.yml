@@ -189,5 +189,5 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Links" >> $GITHUB_STEP_SUMMARY
           echo "- 📦 [PyPI Package](https://pypi.org/project/fabric-arcade/)" >> $GITHUB_STEP_SUMMARY
-          echo "- 🌐 [Website](https://fabricarcade.github.io/fabric-arcade/)" >> $GITHUB_STEP_SUMMARY
-          echo "- 📚 [Documentation](https://fabricarcade.github.io/fabric-arcade/docs/)" >> $GITHUB_STEP_SUMMARY
+          echo "- 🌐 [Website](https://maenglar78.github.io/fabric-arcade/)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📚 [Documentation](https://maenglar78.github.io/fabric-arcade/docs/)" >> $GITHUB_STEP_SUMMARY

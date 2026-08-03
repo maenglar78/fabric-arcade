@@ -250,7 +250,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ## 🔗 Resources
 
 - [Fabric Documentation](https://learn.microsoft.com/fabric/)
-- [GitHub Repository](https://github.com/fabricarcade/fabric-arcade)
+- [GitHub Repository](https://github.com/maenglar78/fabric-arcade)
 - [Discord Community](https://discord.gg/fabricarcade)
 
 ---

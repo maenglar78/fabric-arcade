@@ -2,6 +2,8 @@
 
 > **Learn Microsoft Fabric by Playing** - A gamified catalog of projects to learn Real-Time Intelligence, Data Engineering, Power BI and Data Science through fun experiences.
 
+🌐 **Website:** [Explore Fabric Arcade games and learn Microsoft Fabric by playing](https://maenglar78.github.io/fabric-arcade/)
+
 [![PyPI version](https://img.shields.io/pypi/v/fabric-arcade?color=blue)](https://pypi.org/project/fabric-arcade/)
 [![Python](https://img.shields.io/pypi/pyversions/fabric-arcade)](https://pypi.org/project/fabric-arcade/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
